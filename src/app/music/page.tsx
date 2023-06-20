@@ -35,8 +35,8 @@ export default async function Page() {
         <TableHeader>
           <TableRow>
             <TableHead className="">Title</TableHead>
-            <TableHead className="">Album</TableHead>
-            <TableHead className="">Length</TableHead>
+            <TableHead className="hidden lg:table-cell">Album</TableHead>
+            <TableHead className="hidden lg:table-cell">Length</TableHead>
             <TableHead className="">
               <div className="ml-auto h-4 w-4">
                 <TimePlayed />
@@ -65,8 +65,12 @@ export default async function Page() {
                   </span>
                 </div>
               </TableCell>
-              <TableCell className="text-gray-400">{track.album}</TableCell>
-              <TableCell className="text-gray-400">{track.duration}</TableCell>
+              <TableCell className="hidden text-gray-400 lg:table-cell">
+                {track.album}
+              </TableCell>
+              <TableCell className="hidden text-gray-400 lg:table-cell">
+                {track.duration}
+              </TableCell>
               <TableCell className="text-right text-gray-400">
                 {track.isPlaying ? (
                   <NowPlayingIcon />
