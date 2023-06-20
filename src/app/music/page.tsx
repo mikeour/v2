@@ -47,7 +47,7 @@ export default async function Page() {
         <TableBody>
           {tracks.map((track) => (
             <TableRow key={track.id}>
-              <TableCell className="flex items-center gap-8">
+              <TableCell className="flex items-center gap-5">
                 <Image
                   src={track.albumImageUrl}
                   alt={`${track.artist} album art`}
