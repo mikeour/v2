@@ -40,8 +40,9 @@ export default function Home() {
             <Link href="/music"> I&apos;m listening</Link>, what{" "}
             <Link href="/movies">I&apos;m watching</Link>, or{" "}
             <span className="line-through decoration-blue-500 decoration-2">
-              writing about web development.
+              writing about web development
             </span>
+            .
           </p>
         </div>
 
