@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { TimePlayed } from "~/components/icons";
 import {
   Table,
@@ -31,6 +32,10 @@ export default async function Page() {
 
   return (
     <div className="mx-auto flex h-full w-full max-w-[952px] flex-col gap-8">
+      <Link href="/" className="self-start">
+        Go Back
+      </Link>
+
       <Table>
         <TableHeader>
           <TableRow>

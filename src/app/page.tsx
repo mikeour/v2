@@ -38,10 +38,15 @@ export default function Home() {
             I&apos;m excited to have this little corner of the internet to talk
             about all the things I love — whether it&apos;s sharing what{" "}
             <Link href="/music"> I&apos;m listening</Link>, what{" "}
-            <Link href="/movies">I&apos;m watching</Link>, or{" "}
-            <span className="line-through decoration-blue-500 decoration-2">
-              writing about web development
-            </span>
+            <Link href="/movies">I&apos;m watching</Link>, or writing about web
+            development{" "}
+            <Link href="/blog/elevate-your-web-development-stack-with-tailwind-css">
+              here
+            </Link>{" "}
+            or{" "}
+            <Link href="/blog/leveraging-the-power-of-react-and-typescript">
+              maybe here
+            </Link>
             .
           </p>
         </div>
