@@ -28,6 +28,14 @@ const nextConfig = {
   images: {
     domains: ["a.ltrbxd.com", "i.scdn.co"],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/music",
+        destination: "/music/page/1",
+      },
+    ];
+  },
 };
 
 export default withMDX(mdxConfig)(nextConfig);

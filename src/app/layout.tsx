@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="dark h-full">
       <body
         className={`container min-h-full bg-zinc-900 py-32 text-white ${karla.className} ${fira.variable} flex items-center justify-center`}
       >

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Github, LinkedIn, Twitter } from "~/components/icons";
+import { Github, Linkedin, Twitter } from "lucide-react";
 
 const externalLinks = [
   {
@@ -12,7 +12,7 @@ const externalLinks = [
     id: 2,
     name: "LinkedIn",
     url: "https://www.linkedin.co/in/michaelroeslein",
-    Icon: LinkedIn,
+    Icon: Linkedin,
   },
   {
     id: 3,
@@ -61,7 +61,7 @@ export default function Home() {
               >
                 <span className="sr-only">{externalLink.name}</span>
                 <div className="flex aspect-square w-11 shrink-0 items-center justify-center rounded bg-gray-800 p-3 transition-colors group-hover:bg-gray-700 group-hover:text-blue-400">
-                  <externalLink.Icon />
+                  <externalLink.Icon fill="currentColor" />
                 </div>
               </a>
             );
