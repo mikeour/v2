@@ -34,6 +34,10 @@ const nextConfig = {
         source: "/music",
         destination: "/music/page/1",
       },
+      {
+        source: "/movies",
+        destination: "/movies/page/1",
+      },
     ];
   },
 };

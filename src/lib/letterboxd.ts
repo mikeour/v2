@@ -1,5 +1,7 @@
 import * as crypto from "crypto";
+import letterboxd from "letterboxd";
 import { v4 as uuidv4 } from "uuid";
+import { getFormattedDate } from "./utils";
 
 export const BASE_URL = "https://api.letterboxd.com/api/v0";
 
@@ -120,4 +122,28 @@ export function request<T extends APIResponse>(opts: {
 
     return response;
   });
+}
+
+export async function getFilms() {
+  const response: Array<LetterboxdFilm> = await letterboxd("mikeour");
+
+  const diaryEntries = response.filter((film) => film.type === "diary");
+
+  const films = diaryEntries.map(transformFilm);
+
+  return films;
+}
+
+function transformFilm(film: LetterboxdFilm): Film {
+  return {
+    id: `${film.film.title}-${film.date.watched}`,
+    watched: getFormattedDate(film.date.watched),
+    title: film.film.title,
+    year: film.film.year,
+    poster: film.film.image.large,
+    rating: film.rating.text,
+    review: film.review,
+    url: film.uri,
+    isRewatch: film.isRewatch,
+  };
 }

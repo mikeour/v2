@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   getCurrentlyPlayingTrack,
   getRecentlyPlayedTracks,
@@ -22,11 +21,7 @@ export default async function Page() {
     .slice(0, 50);
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-[952px] flex-col gap-8">
-      <Link href="/" className="self-start">
-        Go Back
-      </Link>
-
+    <div className="flex h-full w-full flex-col gap-8">
       <MusicTable columns={columns} data={tracks} />
     </div>
   );

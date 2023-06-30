@@ -10,12 +10,8 @@ export const columns: Array<ColumnDef<TrackData>> = [
   {
     accessorKey: "title",
     header: "Title",
-
-    cell: ({ row, table }) => {
+    cell: ({ row }) => {
       const track = row.original;
-
-      // @ts-expect-error
-      const currentPageNumber = table?.options?.meta?.currentPageNumber ?? 1;
 
       return (
         <div className="relative flex items-center gap-5">
@@ -32,10 +28,6 @@ export const columns: Array<ColumnDef<TrackData>> = [
               {track.title}
             </span>
             <span className="text-sm/[14px] text-gray-400">{track.artist}</span>
-          </div>
-
-          <div className="absolute left-0 top-1/2 hidden h-6 w-6 -translate-x-11 -translate-y-1/2 items-center justify-center rounded-full bg-gray-700 text-xs text-white lg:flex">
-            {row.index + 1 + (currentPageNumber - 1) * 10}
           </div>
         </div>
       );
