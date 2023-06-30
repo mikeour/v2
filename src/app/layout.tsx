@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import { fira, karla } from "~/lib/fonts";
 
 import "./globals.css";
@@ -19,6 +20,7 @@ export default function RootLayout({
         className={`container min-h-full bg-zinc-900 py-16 text-white ${karla.className} ${fira.variable} flex items-center justify-center`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
