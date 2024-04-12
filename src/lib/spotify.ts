@@ -109,7 +109,8 @@ export async function getRecentlyPlayedTracks() {
   const data: SpotifyApi.UsersRecentlyPlayedTracksResponse =
     await response.json();
 
-  const tracks = data.items.map((item) => {
+  const items = data.items ?? [];
+  const tracks = items.map((item) => {
     const { track, played_at } = item;
 
     const recentlyPlayedTrack: TrackData = {
