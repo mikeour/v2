@@ -1,14 +1,4 @@
-export interface TrackData {
-  id: number;
-  artist: string;
-  album: string;
-  songUrl: string | null;
-  title: string;
-  albumImageUrl: string;
-  playedAt: string | number;
-  isPlaying: boolean;
-  duration: string;
-}
+import type { TrackData } from "~/types";
 
 const {
   SPOTIFY_CLIENT_ID: client_id,

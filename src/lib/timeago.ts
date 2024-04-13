@@ -4,6 +4,4 @@ import en from "javascript-time-ago/locale/en.json";
 TimeAgo.setDefaultLocale(en.locale);
 TimeAgo.addLocale(en);
 
-const timeAgo = new TimeAgo("en-US");
-
-export default timeAgo;
+export const time = new TimeAgo("en-US");

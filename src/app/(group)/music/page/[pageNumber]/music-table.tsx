@@ -1,10 +1,8 @@
 "use client";
 
-import { ComponentProps } from "react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -23,8 +21,10 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/table";
-import { TrackData } from "~/lib/spotify";
 import { cn } from "~/lib/utils";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import type { TrackData } from "~/types";
 
 export function MusicTable({
   data,
@@ -114,7 +114,7 @@ export function MusicTable({
         </TableBody>
       </Table>
 
-      <div className="mb-4 flex items-center justify-between lg:justify-end gap-8 py-4">
+      <div className="mb-4 flex items-center justify-between gap-8 py-4 lg:justify-end">
         <span className="text-gray-400">
           Page {currentPageNumber} of {totalPages}
         </span>
@@ -168,7 +168,7 @@ function StyledLink({
 }: {
   children: React.ReactNode;
   disabled: boolean;
-} & ComponentProps<typeof Link>) {
+} & React.ComponentProps<typeof Link>) {
   return (
     <Link
       className={cn(

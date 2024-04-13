@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { type ColumnDef } from "@tanstack/react-table";
 import { Check } from "lucide-react";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Film } from "~/types";
 
 export const columns: Array<ColumnDef<Film>> = [
   {

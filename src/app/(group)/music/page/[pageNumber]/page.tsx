@@ -5,7 +5,7 @@ import {
 import { columns } from "./columns";
 import { MusicTable } from "./music-table";
 
-import type { TrackData } from "~/lib/spotify";
+import type { TrackData } from "~/types";
 
 export const revalidate = 5;
 

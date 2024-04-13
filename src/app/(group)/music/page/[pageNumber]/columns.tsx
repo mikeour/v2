@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { type ColumnDef } from "@tanstack/react-table";
 import { TimePlayed } from "~/components/icons";
-import { type TrackData } from "~/lib/spotify";
-import timeAgo from "~/lib/timeago";
+import { time } from "~/lib/timeago";
+
+import type { ColumnDef } from "@tanstack/react-table";
+import type { TrackData } from "~/types";
 
 export const columns: Array<ColumnDef<TrackData>> = [
   {
@@ -74,7 +75,7 @@ export const columns: Array<ColumnDef<TrackData>> = [
           {track.isPlaying ? (
             <NowPlayingIcon />
           ) : (
-            timeAgo.format(new Date(track.playedAt), "mini")
+            time.format(new Date(track.playedAt), "mini")
           )}
         </div>
       );

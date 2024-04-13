@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import {
-  ColumnDef,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -24,7 +23,8 @@ import {
 } from "~/components/table";
 import { cn } from "~/lib/utils";
 
-import type { ComponentProps } from "react";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { Film } from "~/types";
 
 export function MovieTable({
   data,
@@ -176,7 +176,7 @@ function StyledLink({
 }: {
   children: React.ReactNode;
   disabled: boolean;
-} & ComponentProps<typeof Link>) {
+} & React.ComponentProps<typeof Link>) {
   return (
     <Link
       className={cn(
