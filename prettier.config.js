@@ -25,7 +25,7 @@ const config = {
     "<TYPES>",
   ],
   importOrderParserPlugins: ["typescript", "jsx", "decorators-legacy"],
-  importOrderTypeScriptVersion: "5.1.3",
+  importOrderTypeScriptVersion: "5.4.5",
 };
 
 module.exports = config;
