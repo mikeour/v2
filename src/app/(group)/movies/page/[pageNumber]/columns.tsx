@@ -15,13 +15,13 @@ export const columns: Array<ColumnDef<Film>> = [
 
       return (
         <div className="relative flex items-center gap-5">
-          <Image
-            src={film.poster}
-            alt={""}
-            width={64 * 1.25}
-            height={96 * 1.25}
-            className="rounded"
-          />
+          <div className="relative aspect-[2/3] w-20 overflow-hidden rounded bg-blue-400/25">
+            <Image
+              src={film.poster}
+              alt={`${film.title} movie poster`}
+              layout="fill"
+            />
+          </div>
 
           <span className="text-lg/[18px] font-medium text-gray-100">
             {film.title}

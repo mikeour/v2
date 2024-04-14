@@ -16,13 +16,13 @@ export const columns: Array<ColumnDef<TrackData>> = [
 
       return (
         <div className="relative flex items-center gap-5">
-          <Image
-            src={track.albumImageUrl}
-            alt={`${track.artist} album art`}
-            width={64}
-            height={64}
-            className="rounded"
-          />
+          <div className="relative aspect-square h-16 w-16 overflow-hidden rounded bg-blue-400/25">
+            <Image
+              src={track.albumImageUrl}
+              alt={`${track.artist} album art`}
+              layout="fill"
+            />
+          </div>
 
           <div className="flex flex-col gap-[2px]">
             <span className="text-base/[16px] text-gray-100">
