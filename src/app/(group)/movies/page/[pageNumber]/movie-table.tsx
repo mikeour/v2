@@ -29,12 +29,12 @@ import type { Film } from "~/types";
 export function MovieTable({
   data,
   columns,
+  currentPageNumber,
 }: {
   data: Array<Film>;
   columns: Array<ColumnDef<Film>>;
+  currentPageNumber: number;
 }) {
-  const params = useParams<{ pageNumber: string }>();
-  const currentPageNumber = parseInt(params.pageNumber ?? "1");
   const tracksPerPage = 10;
 
   const totalPages = Math.ceil(data.length / tracksPerPage);

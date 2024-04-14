@@ -26,15 +26,17 @@ import { cn } from "~/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TrackData } from "~/types";
 
+type MusicTableProps = {
+  data: Array<TrackData>;
+  currentPageNumber: number;
+  columns: Array<ColumnDef<TrackData>>;
+};
+
 export function MusicTable({
   data,
+  currentPageNumber,
   columns,
-}: {
-  data: Array<TrackData>;
-  columns: Array<ColumnDef<TrackData>>;
-}) {
-  const params = useParams<{ pageNumber: string }>();
-  const currentPageNumber = parseInt(params.pageNumber ?? "1");
+}: MusicTableProps) {
   const tracksPerPage = 10;
 
   const totalPages = Math.ceil(data.length / tracksPerPage);

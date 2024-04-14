@@ -7,9 +7,19 @@ import { MusicTable } from "./music-table";
 
 import type { TrackData } from "~/types";
 
-export const revalidate = 5;
+export const revalidate = 60;
 
-export default async function Page() {
+export async function generateStaticParams() {
+  return [1, 2, 3, 4, 5].map((pageNumber) => ({
+    pageNumber: String(pageNumber),
+  }));
+}
+
+export default async function Page({
+  params,
+}: {
+  params: { pageNumber: string };
+}) {
   const [currentlyPlayingTrack, recentlyPlayedTracks] = await Promise.all([
     getCurrentlyPlayingTrack(),
     getRecentlyPlayedTracks(),
@@ -22,7 +32,11 @@ export default async function Page() {
 
   return (
     <div className="flex h-full w-full flex-col gap-8">
-      <MusicTable columns={columns} data={tracks} />
+      <MusicTable
+        columns={columns}
+        data={tracks}
+        currentPageNumber={parseInt(params.pageNumber ?? "1")}
+      />
     </div>
   );
 }
