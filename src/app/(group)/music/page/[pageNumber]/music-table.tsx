@@ -33,7 +33,7 @@ export function MusicTable({
   data: Array<TrackData>;
   columns: Array<ColumnDef<TrackData>>;
 }) {
-  const params = useParams();
+  const params = useParams<{ pageNumber: string }>();
   const currentPageNumber = parseInt(params.pageNumber ?? "1");
   const tracksPerPage = 10;
 

@@ -26,7 +26,10 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
   images: {
-    domains: ["a.ltrbxd.com", "i.scdn.co"],
+    remotePatterns: [
+      { protocol: "https", hostname: "a.ltrbxd.com" },
+      { protocol: "https", hostname: "i.scdn.co" },
+    ],
   },
   async rewrites() {
     return [

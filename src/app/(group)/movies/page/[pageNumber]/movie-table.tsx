@@ -33,7 +33,7 @@ export function MovieTable({
   data: Array<Film>;
   columns: Array<ColumnDef<Film>>;
 }) {
-  const params = useParams();
+  const params = useParams<{ pageNumber: string }>();
   const currentPageNumber = parseInt(params.pageNumber ?? "1");
   const tracksPerPage = 10;
 
