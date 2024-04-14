@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   flexRender,
   getCoreRowModel,
@@ -28,27 +28,23 @@ import type { TrackData } from "~/types";
 
 type MusicTableProps = {
   data: Array<TrackData>;
-  currentPageNumber: number;
   columns: Array<ColumnDef<TrackData>>;
+  currentPageNumber: number;
 };
+
+const songsPerPage = 10;
 
 export function MusicTable({
   data,
-  currentPageNumber,
   columns,
+  currentPageNumber,
 }: MusicTableProps) {
-  const tracksPerPage = 10;
-
-  const totalPages = Math.ceil(data.length / tracksPerPage);
-  const numberOfTracksToSkip = (currentPageNumber - 1) * tracksPerPage;
-
-  if (currentPageNumber > totalPages || currentPageNumber <= 0) {
-    notFound();
-  }
+  const totalPages = Math.ceil(data.length / songsPerPage);
+  const numberOfTracksToSkip = (currentPageNumber - 1) * songsPerPage;
 
   const currentTracks = data.slice(
     numberOfTracksToSkip,
-    numberOfTracksToSkip + tracksPerPage
+    numberOfTracksToSkip + songsPerPage
   );
 
   const table = useReactTable({
@@ -59,8 +55,12 @@ export function MusicTable({
     meta: { currentPageNumber },
   });
 
+  if (currentPageNumber > totalPages || currentPageNumber <= 0) {
+    return notFound();
+  }
+
   return (
-    <div className="scroll-m-[200px]" key={currentPageNumber}>
+    <div className="scroll-m-[200px]">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (

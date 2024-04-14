@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { notFound, useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
   flexRender,
   getCoreRowModel,
@@ -26,27 +26,25 @@ import { cn } from "~/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Film } from "~/types";
 
+const moviesPerPage = 10;
+
+type MovieTableProps = {
+  data: Array<Film>;
+  columns: Array<ColumnDef<Film>>;
+  currentPageNumber: number;
+};
+
 export function MovieTable({
   data,
   columns,
   currentPageNumber,
-}: {
-  data: Array<Film>;
-  columns: Array<ColumnDef<Film>>;
-  currentPageNumber: number;
-}) {
-  const tracksPerPage = 10;
-
-  const totalPages = Math.ceil(data.length / tracksPerPage);
-  const numberOfTracksToSkip = (currentPageNumber - 1) * tracksPerPage;
-
-  if (currentPageNumber > totalPages || currentPageNumber <= 0) {
-    notFound();
-  }
+}: MovieTableProps) {
+  const totalPages = Math.ceil(data.length / moviesPerPage);
+  const numberOfMoviesToSkip = (currentPageNumber - 1) * moviesPerPage;
 
   const currentTracks = data.slice(
-    numberOfTracksToSkip,
-    numberOfTracksToSkip + tracksPerPage
+    numberOfMoviesToSkip,
+    numberOfMoviesToSkip + moviesPerPage
   );
 
   const table = useReactTable({
@@ -57,8 +55,12 @@ export function MovieTable({
     meta: { currentPageNumber },
   });
 
+  if (currentPageNumber > totalPages || currentPageNumber <= 0) {
+    return notFound();
+  }
+
   return (
-    <div className="scroll-m-[200px]" key={currentPageNumber}>
+    <div className="scroll-m-[200px]">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
