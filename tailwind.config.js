@@ -17,6 +17,16 @@ module.exports = {
       },
     },
     extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            a: {
+              // Intentionally break `tw-color-links` to force fallback `<a>` colors
+              color: "",
+            },
+          },
+        },
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

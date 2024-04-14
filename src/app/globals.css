@@ -66,16 +66,16 @@
 
     --ring: 240 3.7% 15.9%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
   }
 
   p {
@@ -83,6 +83,6 @@
   }
 
   a {
-    @apply text-blue-400 underline underline-offset-2 hover:text-blue-300;
+    @apply text-blue-400 underline underline-offset-2 transition-colors hover:text-blue-300;
   }
 }
