@@ -13,7 +13,7 @@ const mdxConfig = {
         {
           lineNumbers: false,
           showCopyButton: true,
-          theme: "nord",
+          theme: "poimandres",
         },
       ],
       remarkToc,
