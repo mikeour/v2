@@ -19,7 +19,8 @@ export const columns: Array<ColumnDef<Film>> = [
             <Image
               src={film.poster}
               alt={`${film.title} movie poster`}
-              layout="fill"
+              fill
+              sizes="80px"
             />
           </div>
 

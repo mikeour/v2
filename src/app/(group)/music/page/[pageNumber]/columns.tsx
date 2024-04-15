@@ -20,7 +20,8 @@ export const columns: Array<ColumnDef<TrackData>> = [
             <Image
               src={track.albumImageUrl}
               alt={`${track.artist} album art`}
-              layout="fill"
+              fill
+              sizes="64px"
             />
           </div>
 
@@ -71,7 +72,7 @@ export const columns: Array<ColumnDef<TrackData>> = [
     cell: ({ row }) => {
       const track = row.original;
       return (
-        <div className="text-right text-gray-400">
+        <div className="text-right text-gray-400" suppressHydrationWarning>
           {track.isPlaying ? (
             <NowPlayingIcon />
           ) : (
