@@ -11,7 +11,7 @@ const externalLinks = [
   {
     id: 2,
     name: "LinkedIn",
-    url: "https://www.linkedin.co/in/michaelroeslein",
+    url: "https://www.linkedin.com/in/michaelroeslein",
     Icon: Linkedin,
   },
   {
