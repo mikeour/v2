@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+import { ScreenSize } from "~/components/utility/screen-size";
 import { fira, karla } from "~/lib/fonts";
 
 import "./globals.css";
@@ -21,6 +22,7 @@ export default function RootLayout({
       >
         {children}
 
+        {/* <ScreenSize /> */}
         <Analytics />
       </body>
     </html>
