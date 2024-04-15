@@ -16,7 +16,7 @@ export const columns: Array<ColumnDef<TrackData>> = [
 
       return (
         <div className="relative flex items-center gap-5">
-          <div className="relative aspect-square h-16 w-16 overflow-hidden rounded bg-blue-400/25">
+          <div className="relative aspect-square h-16 w-16 shrink-0 overflow-hidden rounded bg-blue-400/25">
             <Image
               src={track.albumImageUrl}
               alt={`${track.artist} album art`}
