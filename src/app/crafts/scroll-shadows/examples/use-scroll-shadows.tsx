@@ -1,29 +1,127 @@
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll, useSpring, useTransform } from "framer-motion";
 
-// some inspo here: https://www.qovery.com/blog/adding-elegant-shadows-with-react-to-invite-users-to-scroll/
-export function useScrollShadows<T extends HTMLElement>(
-  ref: React.RefObject<T>
-) {
-  const { scrollYProgress } = useScroll({
+type AxisType = "x" | "y";
+type OptionsType = {
+  ref: React.RefObject<HTMLElement>;
+  axis: AxisType;
+};
+
+export function useScrollShadows({ ref, axis }: OptionsType) {
+  const { scrollProgress, isOverflowing } = useScrollProgress({
+    ref,
+    axis,
+  });
+
+  const startingShadowVisibility = useTransform(
+    scrollProgress,
+    (latest) => {
+      const element = ref.current;
+      if (element === null) return latest;
+
+      if (isOverflowing(element)) {
+        return latest; // preserve existing behavior
+      } else {
+        return 0; // override default behavior
+      }
+    }
+  );
+
+  const endingShadowVisibility = useTransform(
+    scrollProgress,
+    (latest) => 1 - latest
+  );
+
+  return [startingShadowVisibility, endingShadowVisibility] as const;
+}
+
+function useScrollProgress({ ref, axis }: OptionsType) {
+  const { scrollXProgress, scrollYProgress } = useScroll({
     container: ref,
   });
 
-  const modifiedScrollYProgress = useTransform(scrollYProgress, (latest) => {
-    const element = ref.current;
+  if (axis === "x") {
+    return {
+      scrollProgress: scrollXProgress,
+      isOverflowing: (element: HTMLElement) => {
+        return element.scrollWidth > element.clientWidth;
+      },
+    };
+  } else {
+    return {
+      scrollProgress: scrollYProgress,
+      isOverflowing: (element: HTMLElement) => {
+        return element.scrollHeight > element.clientHeight;
+      },
+    };
+  }
+}
 
-    // if the element is overflowing, pass along the value as expected
-    if (element) {
-      const isOverflowing = element.scrollHeight > element.clientHeight;
-      if (isOverflowing) return latest;
+type UseBrokenScrollShadowsType<T> = {
+  ref: React.RefObject<T>;
+};
+
+export function useBrokenScrollShadows<T extends HTMLElement>(
+  options: UseBrokenScrollShadowsType<T>
+) {
+  const { ref } = options;
+  const { scrollYProgress } = useScroll({ container: ref });
+
+  const startingShadowVisibility = scrollYProgress;
+  const endingShadowVisibility = useTransform(
+    scrollYProgress,
+    (latest) => 1 - latest
+  );
+
+  return [
+    startingShadowVisibility,
+    endingShadowVisibility,
+    scrollYProgress,
+  ] as const;
+}
+
+export function useFixedScrollShadows<T extends HTMLElement>(
+  options: UseBrokenScrollShadowsType<T>
+) {
+  const { ref } = options;
+  const { scrollYProgress } = useScroll({ container: ref });
+
+  const startingShadowVisibility = useTransform(
+    scrollYProgress,
+    (latest) => {
+      const element = ref.current;
+      if (element === null) return latest;
+
+      const isOverflowing =
+        element.scrollHeight > element.clientHeight;
+
+      if (isOverflowing) {
+        return latest; // preserve existing behavior
+      } else {
+        return 0; // override the default value
+      }
     }
+  );
 
-    // if the element is not overflowing
-    // override framer-motion defaults and pass 0 instead of 1
-    return 0;
-  });
+  const endingShadowVisibility = useTransform(
+    scrollYProgress,
+    (latest) => {
+      const element = ref.current;
+      if (element === null) return latest;
 
-  const top = useTransform(modifiedScrollYProgress, [0, 1], [0, 1]);
-  const bottom = useTransform(scrollYProgress, [0, 1], [1, 0]);
+      const isOverflowing =
+        element.scrollHeight > element.clientHeight;
 
-  return [top, bottom] as const;
+      if (isOverflowing) {
+        return 1 - latest;
+      } else {
+        return 0; // override the default value
+      }
+    }
+  );
+
+  return [
+    startingShadowVisibility,
+    endingShadowVisibility,
+    scrollYProgress,
+  ] as const;
 }

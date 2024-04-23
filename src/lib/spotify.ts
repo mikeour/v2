@@ -6,7 +6,9 @@ const {
   SPOTIFY_REFRESH_TOKEN: refresh_token,
 } = process.env;
 
-const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
+const basic = Buffer.from(`${client_id}:${client_secret}`).toString(
+  "base64"
+);
 const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
 const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`;
 const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
@@ -47,7 +49,8 @@ export async function getCurrentlyPlayingTrack() {
     return null;
   }
 
-  const data: SpotifyApi.CurrentlyPlayingObject = await response.json();
+  const data: SpotifyApi.CurrentlyPlayingObject =
+    await response.json();
 
   if (data.item === null) {
     return null;

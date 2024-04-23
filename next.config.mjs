@@ -1,7 +1,8 @@
 import { remarkCodeHike } from "@code-hike/mdx";
-import withMDX from "@next/mdx";
+import createMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
+import theme from "./src/themes/one-monokai.mjs";
 
 /** @type {import('@next/mdx').NextMDXOptions} */
 const mdxConfig = {
@@ -13,13 +14,15 @@ const mdxConfig = {
         {
           lineNumbers: false,
           showCopyButton: true,
-          theme: "poimandres",
+          theme,
         },
       ],
       remarkToc,
     ],
   },
 };
+
+const withMDX = createMDX(mdxConfig);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -29,6 +32,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "a.ltrbxd.com" },
       { protocol: "https", hostname: "i.scdn.co" },
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
   },
   async rewrites() {
@@ -45,4 +49,4 @@ const nextConfig = {
   },
 };
 
-export default withMDX(mdxConfig)(nextConfig);
+export default withMDX(nextConfig);

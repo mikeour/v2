@@ -21,7 +21,10 @@ const TableHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_tr]:border-b-2 [&_tr]:border-gray-400", className)}
+    className={cn(
+      "[&_tr]:border-b-2 [&_tr]:border-gray-400",
+      className
+    )}
     {...props}
   />
 ));
@@ -45,7 +48,10 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn("bg-primary font-medium text-primary-foreground", className)}
+    className={cn(
+      "bg-primary font-medium text-primary-foreground",
+      className
+    )}
     {...props}
   />
 ));
@@ -85,7 +91,11 @@ const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
-  <td ref={ref} className={cn("py-5 align-middle", className)} {...props} />
+  <td
+    ref={ref}
+    className={cn("py-5 align-middle", className)}
+    {...props}
+  />
 ));
 TableCell.displayName = "TableCell";
 

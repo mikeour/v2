@@ -4,6 +4,16 @@
 
 @layer base {
   :root {
+    --gutter: 16px;
+  }
+
+  @screen lg {
+    :root {
+      --gutter: 48px;
+    }
+  }
+
+  :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
 
@@ -68,21 +78,116 @@
   }
 
   * {
-    @apply border-border;
+    @apply box-border;
   }
 
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
-  }
-
-  p {
-    @apply text-lg tracking-wide text-gray-400;
+  p,
+  li,
+  label {
+    @apply text-lg tracking-wide text-gray-300;
   }
 
   a {
     @apply text-blue-400 underline underline-offset-2 transition-colors hover:text-blue-300;
+  }
+
+  code {
+    @apply !font-medium;
+  }
+}
+
+/* codeblocks from code-hike */
+.ch-codeblock {
+  @apply !my-8 bg-slate-800;
+}
+
+/* interactive components */
+.code-example {
+  @apply my-12;
+}
+
+/* notes, callouts, etc */
+.text-block {
+  @apply my-8 md:my-10;
+}
+
+.text-block .ch-codeblock {
+  @apply !my-6;
+}
+
+.ch-codeblock .ch-code-button {
+  @apply opacity-0 transition-opacity;
+}
+
+.ch-codeblock:hover .ch-code-button {
+  @apply opacity-100;
+}
+
+.component-bg {
+  background-size: 12px 12px;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    theme(colors.slate.700) 0,
+    transparent 1px,
+    transparent 0,
+    transparent 50%
+  );
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-shadow-root {
+  --size: 25px;
+  position: relative;
+  display: flex;
+
+  .scroll-shadow-start,
+  .scroll-shadow-end {
+    pointer-events: none;
+    position: sticky;
+    flex-shrink: 0;
+  }
+
+  &[data-axis="x"] {
+    flex-direction: row;
+    overflow-x: auto;
+
+    .scroll-shadow-start {
+      bottom: 0;
+      left: 0;
+      margin-right: calc(var(--size) * -1);
+      width: var(--size);
+    }
+
+    .scroll-shadow-end {
+      bottom: 0;
+      right: 0;
+      top: 0;
+      margin-left: calc(var(--size) * -1);
+      width: var(--size);
+    }
+  }
+
+  &[data-axis="y"] {
+    flex-direction: column;
+    overflow-y: auto;
+
+    .scroll-shadow-start {
+      top: 0;
+      height: var(--size);
+      margin-bottom: calc(var(--size) * -1);
+    }
+
+    .scroll-shadow-end {
+      bottom: 0;
+      margin-top: calc(var(--size) * -1);
+      height: var(--size);
+    }
   }
 }

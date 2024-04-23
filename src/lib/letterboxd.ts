@@ -78,7 +78,8 @@ export function request<T extends APIResponse>(opts: {
   if (
     opts.headers &&
     opts.body &&
-    opts.headers["Content-Type"] === "application/x-www-form-urlencoded"
+    opts.headers["Content-Type"] ===
+      "application/x-www-form-urlencoded"
   ) {
     formBody = new URLSearchParams();
 
@@ -97,7 +98,8 @@ export function request<T extends APIResponse>(opts: {
 
   return fetch(url, {
     method: opts.method,
-    body: formBody || (opts.body ? JSON.stringify(opts.body) : undefined),
+    body:
+      formBody || (opts.body ? JSON.stringify(opts.body) : undefined),
     headers: {
       ...opts.headers,
       ...(auth.accessToken
@@ -107,7 +109,9 @@ export function request<T extends APIResponse>(opts: {
   }).then(async (res) => {
     // This mess allows us to easily handle `res.json()`, and falling back to `res.text()` if our
     // JSON response isn't actually JSON, without having to clone the response.
-    const buffer = await (await res.arrayBuffer().then(Buffer.from)).toString();
+    const buffer = await (
+      await res.arrayBuffer().then(Buffer.from)
+    ).toString();
 
     let data;
     try {
@@ -129,7 +133,9 @@ export function request<T extends APIResponse>(opts: {
 export async function getFilms() {
   const response: Array<LetterboxdFilm> = await letterboxd("mikeour");
 
-  const diaryEntries = response.filter((film) => film.type === "diary");
+  const diaryEntries = response.filter(
+    (film) => film.type === "diary"
+  );
 
   const films = diaryEntries.map(transformFilm);
 

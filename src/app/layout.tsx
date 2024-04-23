@@ -16,13 +16,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark h-full">
+    <html lang="en" className="dark min-h-full overscroll-none">
+      <link
+        rel="icon"
+        href={
+          process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+            ? "/favicon.png"
+            : "/favicon-dev.png"
+        }
+      />
+
       <body
-        className={`container min-h-full bg-zinc-900 py-16 text-white ${karla.className} ${fira.variable} flex items-center justify-center`}
+        className={`flex min-h-[100dvh] w-full overscroll-none bg-zinc-900 px-[--gutter] ${karla.className} ${fira.variable}`}
       >
         {children}
 
-        {/* <ScreenSize /> */}
+        <ScreenSize />
         <Analytics />
       </body>
     </html>

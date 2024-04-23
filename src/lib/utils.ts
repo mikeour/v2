@@ -14,7 +14,26 @@ export function getFormattedDate(date: number | string): string {
     year: "numeric",
   };
 
-  const formattedDate = new Date(date).toLocaleDateString("en-US", options);
+  const formattedDate = new Date(date).toLocaleDateString(
+    "en-US",
+    options
+  );
 
   return formattedDate;
+}
+
+export function mergeRefs<T = any>(
+  refs: Array<
+    React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null
+  >
+): React.RefCallback<T> {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === "function") {
+        ref(value);
+      } else if (ref != null) {
+        (ref as React.MutableRefObject<T | null>).current = value;
+      }
+    });
+  };
 }

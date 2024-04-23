@@ -20,10 +20,11 @@ export default async function Page({
 }: {
   params: { pageNumber: string };
 }) {
-  const [currentlyPlayingTrack, recentlyPlayedTracks] = await Promise.all([
-    getCurrentlyPlayingTrack(),
-    getRecentlyPlayedTracks(),
-  ]);
+  const [currentlyPlayingTrack, recentlyPlayedTracks] =
+    await Promise.all([
+      getCurrentlyPlayingTrack(),
+      getRecentlyPlayedTracks(),
+    ]);
 
   // Remove currentlyPlayingTrack if null
   const tracks = [currentlyPlayingTrack, ...recentlyPlayedTracks]

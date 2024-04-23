@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 
 export function ScreenSize() {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [dimensions, setDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     function updateDimensions() {
@@ -22,6 +25,10 @@ export function ScreenSize() {
   }, []);
 
   const { width, height } = dimensions;
+
+  if (process.env.NEXT_PUBLIC_VERCEL_ENV === "production") {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-5 left-5 z-50 flex items-center space-x-2 rounded-full bg-black px-2.5 py-1 font-mono text-xs font-medium text-white">

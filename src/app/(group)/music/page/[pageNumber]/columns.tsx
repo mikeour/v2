@@ -29,7 +29,9 @@ export const columns: Array<ColumnDef<TrackData>> = [
             <span className="text-base/[16px] text-gray-100">
               {track.title}
             </span>
-            <span className="text-sm/[14px] text-gray-400">{track.artist}</span>
+            <span className="text-sm/[14px] text-gray-400">
+              {track.artist}
+            </span>
           </div>
         </div>
       );
@@ -72,7 +74,10 @@ export const columns: Array<ColumnDef<TrackData>> = [
     cell: ({ row }) => {
       const track = row.original;
       return (
-        <div className="text-right text-gray-400" suppressHydrationWarning>
+        <div
+          className="text-right text-gray-400"
+          suppressHydrationWarning
+        >
           {track.isPlaying ? (
             <NowPlayingIcon />
           ) : (

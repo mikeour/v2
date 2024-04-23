@@ -85,7 +85,9 @@ interface Product {
   price: number;
 }
 
-const ProductList: React.FC<{ products: Product[] }> = ({ products }) => {
+const ProductList: React.FC<{ products: Product[] }> = ({
+  products,
+}) => {
   return (
     <ul>
       {products.map((product) => (

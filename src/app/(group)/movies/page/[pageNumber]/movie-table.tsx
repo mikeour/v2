@@ -40,7 +40,8 @@ export function MovieTable({
   currentPageNumber,
 }: MovieTableProps) {
   const totalPages = Math.ceil(data.length / moviesPerPage);
-  const numberOfMoviesToSkip = (currentPageNumber - 1) * moviesPerPage;
+  const numberOfMoviesToSkip =
+    (currentPageNumber - 1) * moviesPerPage;
 
   const currentTracks = data.slice(
     numberOfMoviesToSkip,
@@ -115,7 +116,10 @@ export function MovieTable({
                         "table-cell text-right text-blue-400"
                     )}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
                   </TableCell>
                 );
               })}
@@ -183,7 +187,8 @@ function StyledLink({
     <Link
       className={cn(
         "rounded border border-input bg-background p-1 text-white  no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
-        disabled && "pointer-events-none cursor-not-allowed text-gray-500"
+        disabled &&
+          "pointer-events-none cursor-not-allowed text-gray-500"
       )}
       {...props}
     >

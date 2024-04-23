@@ -1,6 +1,6 @@
 /** @type {import("prettier").Config} */
 const config = {
-  printWidth: 80,
+  printWidth: 70,
   singleQuote: false,
   jsxSingleQuote: false,
   semi: true,

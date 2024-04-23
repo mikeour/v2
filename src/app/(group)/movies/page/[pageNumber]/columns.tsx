@@ -38,7 +38,9 @@ export const columns: Array<ColumnDef<Film>> = [
       const film = row.original;
 
       return (
-        <span className="hidden text-gray-400 lg:table-cell">{film.year}</span>
+        <span className="hidden text-gray-400 lg:table-cell">
+          {film.year}
+        </span>
       );
     },
   },
@@ -63,7 +65,11 @@ export const columns: Array<ColumnDef<Film>> = [
 
       if (film.isRewatch) {
         return (
-          <Check width={16} height={16} className="mx-auto text-blue-300" />
+          <Check
+            width={16}
+            height={16}
+            className="mx-auto text-blue-300"
+          />
         );
       }
 

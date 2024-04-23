@@ -66,7 +66,8 @@ export function MusicTable({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
-                const shouldHide = header.index === 1 || header.index === 2;
+                const shouldHide =
+                  header.index === 1 || header.index === 2;
                 return (
                   <TableHead
                     key={header.id}
@@ -95,7 +96,8 @@ export function MusicTable({
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => {
                 const shouldHide =
-                  cell.column.id === "album" || cell.column.id === "duration";
+                  cell.column.id === "album" ||
+                  cell.column.id === "duration";
 
                 return (
                   <TableCell
@@ -107,7 +109,10 @@ export function MusicTable({
                       cell.column.id === "duration" && "text-center"
                     )}
                   >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
                   </TableCell>
                 );
               })}
@@ -175,7 +180,8 @@ function StyledLink({
     <Link
       className={cn(
         "rounded border border-input bg-background p-1 text-white  no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
-        disabled && "pointer-events-none cursor-not-allowed text-gray-500"
+        disabled &&
+          "pointer-events-none cursor-not-allowed text-gray-500"
       )}
       {...props}
     >
