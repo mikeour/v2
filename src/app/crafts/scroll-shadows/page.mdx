@@ -27,6 +27,18 @@ Here is an interactive example of scroll shadows added to an especially long art
 
 By the end of this post, we'll create a reusable component called `<ScrollShadows />` that can be used to easily add shadows to anything with overflowing content, such as articles, carousels, or lists. It'll be powered internally by `useScrollShadows()` — which is where we'll start our journey.
 
+Ultimately our goal is to make the component as easy to use as:
+
+```tsx
+<ScrollShadows>
+  <ul>
+    <li>...</li>
+    <li>...</li>
+    <li>...</li>
+  </ul>
+</ScrollShadows>
+```
+
 <Important>
 Before we start, let's determine the scope of our implementation with some **acceptance criteria**:
 
@@ -211,19 +223,7 @@ enhance the user experience.
 
 </Note> */}
 
-Ultimately our goal is to create a reusable component that will be as easy to use as:
-
-```tsx
-<ScrollShadows>
-  <ul>
-    <li>...</li>
-    <li>...</li>
-    <li>...</li>
-  <ul>
-</ScrollShadows>
-```
-
-Knowing what our intended API looks like, let's get started by using our `useScrollShadows` hook that we created and connecting it to an overflowing element:
+Let's get started by using our `useScrollShadows` hook that we created and connecting it to an overflowing element:
 
 ```tsx
 import { useRef } from "react";
