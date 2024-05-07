@@ -29,6 +29,7 @@ export default async function Page() {
                 alt=""
                 fill
                 className="h-full w-full object-cover"
+                sizes="(max-width: 520px) 100vw, (max-width: 768px) 50vw, 25vw"
               />
             </div>
           );
