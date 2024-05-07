@@ -44,7 +44,9 @@ export default function Home() {
         talk about all the things I love — whether it&apos;s sharing
         what music <Link href="/music"> I&apos;m listening</Link> to,
         what movies <Link href="/movies">I&apos;m watching</Link>{" "}
-        lately, or what I&apos;m writing about UI/UX:
+        lately, my favorite photos{" "}
+        <Link href="/photos">I&apos;ve taken</Link>, or what I&apos;m
+        writing about UI/UX:
       </p>
 
       <div className="my-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -31,6 +31,7 @@
     "eslint": "8.43.0",
     "eslint-config-next": "14.2.1",
     "framer-motion": "^11.0.28",
+    "globby": "^14.0.1",
     "javascript-time-ago": "^2.5.9",
     "letterboxd": "^3.1.1",
     "lucide-react": "^0.368.0",
