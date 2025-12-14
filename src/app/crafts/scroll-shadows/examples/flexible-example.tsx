@@ -8,15 +8,8 @@ import {
 
 export function FlexibleExample() {
   return (
-    <ExampleContainer
-      mockBrowser
-      isolated
-      className="w-full max-w-[400px]"
-    >
-      <ScrollShadowRoot
-        axis="y"
-        className="max-h-[400px] [--size:45px]"
-      >
+    <ExampleContainer className="w-full max-w-[400px]" isolated mockBrowser>
+      <ScrollShadowRoot axis="y" className="max-h-[400px] [--size:45px]">
         <ScrollShadowStart className="bg-blue-400/50" />
 
         <List />

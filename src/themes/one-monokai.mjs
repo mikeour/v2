@@ -90,8 +90,7 @@ const theme = {
     },
     {
       name: "User-defined constant",
-      scope:
-        "constant.character, constant.other, variable.other.constant",
+      scope: "constant.character, constant.other, variable.other.constant",
       settings: {
         foreground: "#a6b1c9",
       },
@@ -322,8 +321,7 @@ const theme = {
     },
     {
       name: "StyleSheet Variable",
-      scope:
-        "variable.css, variable.scss, variable.less, variable.sass",
+      scope: "variable.css, variable.scss, variable.less, variable.sass",
       settings: {
         foreground: "#d491cf",
       },
@@ -367,8 +365,7 @@ const theme = {
     },
     {
       name: "StyleSheet Function",
-      scope:
-        "function.css, function.scss, function.less, function.sass",
+      scope: "function.css, function.scss, function.less, function.sass",
       settings: {
         foreground: "#d491cf",
       },
@@ -624,9 +621,9 @@ const theme = {
   ],
   colors: {
     "peekViewTitleLabel.foreground": "#fff",
-    "foreground": "#a6b1c9",
-    "errorForeground": "#e57685",
-    "disabledForeground": "#6b7794",
+    foreground: "#a6b1c9",
+    errorForeground: "#e57685",
+    disabledForeground: "#6b7794",
     "badge.background": "#303550",
     "dropdown.background": "#303550",
     "dropdown.border": "#303550",
@@ -793,7 +790,7 @@ const theme = {
     "gitDecoration.stageDeletedResourceForeground": "#e57685",
     "gitDecoration.conflictingResourceForeground": "#d491cf",
     "gitDecoration.submoduleResourceForeground": "#d491cf",
-    "focusBorder": "#282d4300",
+    focusBorder: "#282d4300",
     "widget.shadow": "#00000000",
     "panelTitle.activeBorder": "#1f223700",
     "editor.selectionHighlightBackground": "#4E5989bb",

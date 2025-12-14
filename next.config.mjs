@@ -2,6 +2,7 @@ import { remarkCodeHike } from "@code-hike/mdx";
 import createMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
+
 import theme from "./src/themes/one-monokai.mjs";
 
 /** @type {import('@next/mdx').NextMDXOptions} */

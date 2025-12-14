@@ -13,8 +13,6 @@ export function Editor() {
   return (
     <Sandpack
       files={files}
-      theme="dark"
-      template="react"
       options={{
         showConsoleButton: false,
         showInlineErrors: true,
@@ -22,6 +20,8 @@ export function Editor() {
         showLineNumbers: true,
         showTabs: true,
       }}
+      template="react"
+      theme="dark"
     />
   );
 }

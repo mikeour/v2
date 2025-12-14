@@ -1,4 +1,4 @@
-export interface LetterboxdFilm {
+export type LetterboxdFilm = {
   type: string;
   date: {
     published: number;
@@ -22,9 +22,9 @@ export interface LetterboxdFilm {
   spoilers: boolean;
   isRewatch: boolean;
   uri: string;
-}
+};
 
-export interface Film {
+export type Film = {
   id: string;
   watched: string;
   title: string;
@@ -34,4 +34,4 @@ export interface Film {
   review: string;
   url: string;
   isRewatch: boolean;
-}
+};

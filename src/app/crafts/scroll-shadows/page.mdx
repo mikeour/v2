@@ -101,9 +101,9 @@ For a helpful visualization of `scrollYProgress` in action, here we can see our 
 <ArticleProgress />
 
 <Note>
-  We're only tackling vertical scrolling for now, but rest assured —
-  we'll address horizontal scrolling later in the article for some
-  [extra credit](#extra-credit).
+  We're only tackling vertical scrolling for now, but rest assured — we'll
+  address horizontal scrolling later in the article for some [extra
+  credit](#extra-credit).
 </Note>
 
 Armed with this knowledge, we can start creating the foundation for our custom hook:
@@ -180,21 +180,18 @@ shadow will always appear.
 To account for this, we can use `useTransform` to essentially override the default value for scroll containers that aren't overflowing:
 
 ```tsx
-const startingShadowVisibility = useTransform(
-  scrollYProgress,
-  (latest) => {
-    const element = ref.current;
-    if (element === null) return latest;
+const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
+  const element = ref.current;
+  if (element === null) return latest;
 
-    const isOverflowing = element.scrollHeight > element.clientHeight;
+  const isOverflowing = element.scrollHeight > element.clientHeight;
 
-    if (isOverflowing) {
-      return latest; // preserve existing behavior
-    } else {
-      return 0; // override the default value
-    }
+  if (isOverflowing) {
+    return latest; // preserve existing behavior
+  } else {
+    return 0; // override the default value
   }
-);
+});
 ```
 
 With that change, we've corrected the edge case of a container that doesn't overflow and we have a working implementation:
@@ -235,8 +232,9 @@ function ScrollShadows({
   children,
 }: React.PropsWithChildren<{ className?: string }>) {
   const ref = useRef(null);
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref,
+  });
 
   return (
     <div ref={ref} className={cn("overflow-y-auto", className)}>
@@ -305,16 +303,14 @@ function ScrollShadows({
   className?: string;
 }>) {
   const ref = useRef<HTMLDivElement>(null);
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref,
+  });
 
   return (
     <div
       ref={ref}
-      className={cn(
-        "group relative flex flex-col overflow-y-auto",
-        className
-      )}
+      className={cn("group relative flex flex-col overflow-y-auto", className)}
     >
       <motion.div
         style={{ opacity: startingShadowVisibility }}
@@ -478,8 +474,10 @@ function ScrollShadows({
 }>) {
   const ref = useRef<HTMLDivElement>(null);
   // focus(1:2)
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref, axis });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref,
+    axis,
+  });
 
   return (
     <div
@@ -527,8 +525,10 @@ function ScrollShadows({
   className?: string;
 }>) {
   const ref = useRef<HTMLDivElement>(null);
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref, axis });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref,
+    axis,
+  });
 
   return (
     <div
@@ -585,8 +585,10 @@ function ScrollShadows({
   className?: string;
 }>) {
   const ref = useRef<HTMLDivElement>(null);
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref, axis });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref,
+    axis,
+  });
 
   return (
     <div
@@ -639,19 +641,16 @@ export function useScrollShadows({ ref, axis }: OptionsType) {
     axis,
   });
 
-  const startingShadowVisibility = useTransform(
-    scrollProgress,
-    (latest) => {
-      const element = ref.current;
-      if (element === null) return latest;
+  const startingShadowVisibility = useTransform(scrollProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) return latest;
 
-      if (isOverflowing(element)) {
-        return latest; // preserve existing behavior
-      } else {
-        return 0; // override default behavior
-      }
+    if (isOverflowing(element)) {
+      return latest; // preserve existing behavior
+    } else {
+      return 0; // override default behavior
     }
-  );
+  });
 
   const endingShadowVisibility = useTransform(
     scrollProgress,

@@ -2,11 +2,9 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
+
 import { cn } from "~/lib/utils";
-import {
-  useBrokenScrollShadows,
-  useScrollShadows,
-} from "./use-scroll-shadows";
+import { useBrokenScrollShadows, useScrollShadows } from "./use-scroll-shadows";
 
 export function ScrollContainer({
   axis = "y",
@@ -21,33 +19,33 @@ export function ScrollContainer({
 
   return (
     <div
-      ref={ref}
-      data-axis={axis}
       className={cn(
         "group relative flex",
         "data-[axis=x]:flex-row data-[axis=x]:overflow-x-auto",
         "data-[axis=y]:flex-col data-[axis=y]:overflow-y-auto",
         className
       )}
+      data-axis={axis}
+      ref={ref}
     >
       <motion.div
-        style={{ opacity: start }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-[--size]",
+          "group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:top-0 group-data-[axis=y]:h-[--size]"
         )}
+        style={{ opacity: start }}
       />
 
       {children}
 
       <motion.div
-        style={{ opacity: end }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-[--size]",
+          "group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-[--size]"
         )}
+        style={{ opacity: end }}
       />
     </div>
   );
@@ -66,33 +64,33 @@ export function BrokenScrollContainer({
 
   return (
     <div
-      ref={ref}
-      data-axis={axis}
       className={cn(
         "group relative flex",
         "data-[axis=x]:flex-row data-[axis=x]:overflow-x-auto",
         "data-[axis=y]:flex-col data-[axis=y]:overflow-y-auto",
         className
       )}
+      data-axis={axis}
+      ref={ref}
     >
       <motion.div
-        style={{ opacity: start }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-[--size]",
+          "group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:top-0 group-data-[axis=y]:h-[--size]"
         )}
+        style={{ opacity: start }}
       />
 
       {children}
 
       <motion.div
-        style={{ opacity: end }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-[--size]",
+          "group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-[--size]"
         )}
+        style={{ opacity: end }}
       />
     </div>
   );

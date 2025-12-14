@@ -1,4 +1,4 @@
-export interface TrackData {
+export type TrackData = {
   id: number;
   artist: string;
   album: string;
@@ -8,4 +8,4 @@ export interface TrackData {
   playedAt: string | number;
   isPlaying: boolean;
   duration: string;
-}
+};
