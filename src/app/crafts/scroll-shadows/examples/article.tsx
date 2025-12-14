@@ -6,7 +6,7 @@ import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import { DemoScrollContainer } from "./demo-scroll-container";
 import { ScrollContainer } from "./scroll-container";
 import {

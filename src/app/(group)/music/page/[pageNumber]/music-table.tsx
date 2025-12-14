@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/table";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import type { TrackData } from "~/types";
 
 type MusicTableProps = {

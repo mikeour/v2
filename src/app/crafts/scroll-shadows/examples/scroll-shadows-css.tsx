@@ -4,7 +4,7 @@ import { createContext, forwardRef, useContext, useRef } from "react";
 import type { MotionValue } from "framer-motion";
 import { motion } from "framer-motion";
 
-import { cn, mergeRefs } from "~/lib/utils";
+import { cn, mergeRefs } from "~/utils";
 import { useScrollShadows } from "./use-scroll-shadows";
 
 const ScrollContext = createContext<ScrollContextType | null>(null);

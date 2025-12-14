@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 // biome-ignore lint/performance/noNamespaceImport: Radix UI convention
 import * as SliderPrimitive from "@radix-ui/react-slider";
 
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 
 const Slider = forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,

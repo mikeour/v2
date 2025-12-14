@@ -13,7 +13,8 @@
               ["react", "react-*", "react/**"],
               ":PACKAGE:",
               ":BLANK_LINE:",
-              ":ALIAS:"
+              { "type": false, "source": ":ALIAS:" },
+              { "type": true, "source": ":ALIAS:" }
             ]
           }
         }

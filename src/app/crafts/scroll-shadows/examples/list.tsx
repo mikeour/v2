@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { ExampleContainer } from "~/components/crafts/example-container";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import { ScrollContainer } from "./scroll-container";
 
 export function ListExample() {

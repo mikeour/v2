@@ -4,7 +4,7 @@ import { forwardRef } from "react";
 // biome-ignore lint/performance/noNamespaceImport: Radix UI convention
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 
 const Switch = forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,

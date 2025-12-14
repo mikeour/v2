@@ -15,7 +15,7 @@ import type { UseEmblaCarouselType } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
 
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 
 type CarouselContextType = {
   currentIndex: number;

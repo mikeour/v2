@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { ExampleContainer } from "~/components/crafts/example-container";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import { BrokenScrollContainer, ScrollContainer } from "./scroll-container";
 
 export function CarouselExample({ count }: { count?: number }) {

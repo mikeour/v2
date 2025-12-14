@@ -2,8 +2,8 @@ import { createHmac } from "node:crypto";
 import letterboxd from "letterboxd";
 import { v4 as uuidv4 } from "uuid";
 
+import { getFormattedDate } from "~/utils";
 import type { Film, LetterboxdFilm } from "~/types";
-import { getFormattedDate } from "./utils";
 
 export const BASE_URL = "https://api.letterboxd.com/api/v0";
 

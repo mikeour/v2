@@ -23,7 +23,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/table";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import type { Film } from "~/types";
 
 const moviesPerPage = 10;
