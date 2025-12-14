@@ -22,7 +22,7 @@ export function ExampleContainer({
       <div
         className={cn(
           "not-prose component-bg relative flex flex-col items-center justify-center",
-          isolated && "px-[--gutter] py-8 sm:py-12"
+          !!isolated && "px-[--gutter] py-8 sm:py-12"
         )}
       >
         {/* <div className="pointer-events-none absolute inset-0 z-0 bg-slate-800 [mask-image:radial-gradient(ellipse,rgba(27,30,40,0)_0%,rgba(27,30,40,1)_100%)]" /> */}
@@ -30,17 +30,17 @@ export function ExampleContainer({
         <div
           className={cn(
             "relative flex flex-col overflow-hidden",
-            isolated && "rounded-lg",
+            !!isolated && "rounded-lg",
             className
           )}
         >
-          {mockBrowser && <MockBrowser />}
+          {!!mockBrowser && <MockBrowser />}
 
           {children}
         </div>
       </div>
 
-      {controls && (
+      {!!controls && (
         <div className="relative w-full bg-slate-700 px-[--gutter] py-4">
           {controls}
         </div>
