@@ -127,7 +127,7 @@
   background-size: 12px 12px;
   background-image: repeating-linear-gradient(
     -45deg,
-    theme(colors.slate.700) 0,
+    rgb(51 65 85) 0,
     transparent 1px,
     transparent 0,
     transparent 50%
