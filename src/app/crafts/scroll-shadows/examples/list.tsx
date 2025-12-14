@@ -1,17 +1,14 @@
 "use client";
 
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { cn } from "~/lib/utils";
 import { ScrollContainer } from "./scroll-container";
 
 export function ListExample() {
   return (
-    <ExampleContainer
-      mockBrowser
-      isolated
-      className="w-full sm:max-w-[420px]"
-    >
+    <ExampleContainer className="w-full sm:max-w-[420px]" isolated mockBrowser>
       <ScrollContainer className="max-h-[400px] bg-white [--size:25px]">
         <List />
       </ScrollContainer>
@@ -21,23 +18,19 @@ export function ListExample() {
 
 export function BasicListExample() {
   return (
-    <ExampleContainer
-      mockBrowser
-      isolated
-      className="w-full sm:max-w-[420px]"
-    >
+    <ExampleContainer className="w-full sm:max-w-[420px]" isolated mockBrowser>
       <div
         className={cn(
           "relative flex max-h-[400px] flex-col overflow-y-auto [--size:48px]"
         )}
       >
-        <div className="pointer-events-none sticky top-0 -mb-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ top: 0 }"}</code>
         </div>
 
         <List />
 
-        <div className="pointer-events-none sticky bottom-0 -mt-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ bottom: 0 }"}</code>
         </div>
       </div>
@@ -48,22 +41,21 @@ export function BasicListExample() {
 export function List() {
   return (
     <ul className="divide-y divide-zinc-200 bg-white">
-      {Array.from({ length: 30 }).map((_, index) => {
-        return (
-          <li key={index} className="flex gap-4 p-5">
-            <span className="size-4 rounded bg-zinc-200" />
-            <p
-              className={cn(
-                "h-4 rounded bg-zinc-200",
-                index % 0 === 0 && "w-3/4",
-                index % 1 === 0 && "w-2/4",
-                index % 2 === 0 && "w-1/4",
-                index % 3 === 0 && "w-full"
-              )}
-            />
-          </li>
-        );
-      })}
+      {Array.from({ length: 30 }).map((_, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static content
+        <li className="flex gap-4 p-5" key={index}>
+          <span className="size-4 rounded bg-zinc-200" />
+          <p
+            className={cn(
+              "h-4 rounded bg-zinc-200",
+              index % 0 === 0 && "w-3/4",
+              index % 1 === 0 && "w-2/4",
+              index % 2 === 0 && "w-1/4",
+              index % 3 === 0 && "w-full"
+            )}
+          />
+        </li>
+      ))}
     </ul>
   );
 }
@@ -73,16 +65,16 @@ export function PlainList() {
   const [start, end] = useScrollProgress({ ref });
 
   return (
-    <ExampleContainer mockBrowser isolated className="w-full">
+    <ExampleContainer className="w-full" isolated mockBrowser>
       <div
-        ref={ref}
         className={cn(
           "relative flex max-h-[400px] flex-col overflow-y-auto [--size:48px]"
         )}
+        ref={ref}
       >
         <div
+          className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: start }}
-          className="pointer-events-none sticky top-0 -mb-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
         >
           <code>{`{ start: ${start.toFixed(1)} }`}</code>
         </div>
@@ -90,8 +82,8 @@ export function PlainList() {
         <List />
 
         <div
+          className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: end }}
-          className="pointer-events-none sticky bottom-0 -mt-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
         >
           <code>{`{ end: ${end.toFixed(1)} }`}</code>
         </div>
@@ -100,17 +92,15 @@ export function PlainList() {
   );
 }
 
-function useScrollProgress({
-  ref,
-}: {
-  ref: React.RefObject<HTMLElement>;
-}) {
+function useScrollProgress({ ref }: { ref: React.RefObject<HTMLElement> }) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isOverflowing, setIsOverflowing] = useState(true);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     function handleScroll() {
       if (element) {
@@ -131,7 +121,9 @@ function useScrollProgress({
 
   useLayoutEffect(() => {
     const element = ref.current;
-    if (!element) return;
+    if (!element) {
+      return;
+    }
 
     function checkOverflow() {
       if (element) {
@@ -156,10 +148,10 @@ function useScrollProgress({
 }
 
 function format(number: number) {
-  return parseFloat(number.toFixed(1));
+  return Number.parseFloat(number.toFixed(1));
 }
 
 function roundToDecimal(number: number, decimals: number) {
-  const powerOfTen = Math.pow(10, decimals);
+  const powerOfTen = 10 ** decimals;
   return Math.round(number * powerOfTen) / powerOfTen;
 }

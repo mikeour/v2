@@ -20,9 +20,9 @@ export default async function Page({
   return (
     <div>
       <MovieTable
-        data={films}
         columns={columns}
-        currentPageNumber={parseInt(params.pageNumber ?? "1")}
+        currentPageNumber={Number.parseInt(params.pageNumber ?? "1", 10)}
+        data={films}
       />
     </div>
   );

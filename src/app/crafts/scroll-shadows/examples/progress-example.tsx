@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useScroll } from "framer-motion";
+
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { Carousel } from "./carousel";
 import { useBrokenScrollShadows } from "./use-scroll-shadows";
@@ -25,10 +26,10 @@ export function ProgressExample({ count }: { count?: number }) {
       }
     >
       <div
-        ref={carouselRef}
         className="group relative flex w-full flex-row overflow-x-auto bg-white"
+        ref={carouselRef}
       >
-        <Carousel count={count} className="bg-white" />
+        <Carousel className="bg-white" count={count} />
       </div>
     </ExampleContainer>
   );
@@ -37,7 +38,7 @@ export function ProgressExample({ count }: { count?: number }) {
 export function BrokenProgressExample({ count }: { count?: number }) {
   const [starting, setStarting] = useState("0.0");
   const [ending, setEnding] = useState("0.0");
-  const [progress, setProgress] = useState("0.0");
+  const [_progress, setProgress] = useState("0.0");
   const carouselRef = useRef(null);
 
   const [start, end, scrollXProgress] = useBrokenScrollShadows({
@@ -46,16 +47,13 @@ export function BrokenProgressExample({ count }: { count?: number }) {
 
   start.on("change", (latest) => setStarting(formatDecimal(latest)));
   end.on("change", (latest) => setEnding(formatDecimal(latest)));
-  scrollXProgress.on("change", (latest) =>
-    setProgress(formatDecimal(latest))
-  );
+  scrollXProgress.on("change", (latest) => setProgress(formatDecimal(latest)));
 
   return (
     <ExampleContainer
       className="w-full"
-      mockBrowser
       controls={
-        <div className="flex flex-col items-center justify-center gap-2 prose-p:my-0 md:flex-row md:justify-evenly">
+        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-2 md:flex-row md:justify-evenly">
           <p className="text-center tabular-nums">
             <code>startShadowVisibility</code> is {starting}
           </p>
@@ -65,23 +63,24 @@ export function BrokenProgressExample({ count }: { count?: number }) {
           </p>
         </div>
       }
+      mockBrowser
     >
       <div
-        ref={carouselRef}
         className="group relative flex w-full flex-row overflow-x-auto bg-white"
+        ref={carouselRef}
       >
-        <Carousel count={count} className="bg-white" />
+        <Carousel className="bg-white" count={count} />
       </div>
     </ExampleContainer>
   );
 }
 
-function Info({ label, value }: { label: string; value: string }) {
+function _Info({ label, value }: { label: string; value: string }) {
   return (
     <div className="inline-flex items-center gap-2 overflow-hidden rounded bg-slate-800 pl-2 text-slate-50 shadow">
       <p className="text-base/none text-slate-50">{label}</p>
 
-      <p className="bg-slate-50 py-2 pl-2 pr-2 text-base/none font-semibold tabular-nums text-slate-800">
+      <p className="bg-slate-50 py-2 pr-2 pl-2 font-semibold text-base/none text-slate-800 tabular-nums">
         {value}
       </p>
     </div>

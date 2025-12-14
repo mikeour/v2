@@ -2,10 +2,9 @@ import {
   getCurrentlyPlayingTrack,
   getRecentlyPlayedTracks,
 } from "~/lib/spotify";
+import type { TrackData } from "~/types";
 import { columns } from "./columns";
 import { MusicTable } from "./music-table";
-
-import type { TrackData } from "~/types";
 
 export const revalidate = 60;
 
@@ -20,11 +19,10 @@ export default async function Page({
 }: {
   params: { pageNumber: string };
 }) {
-  const [currentlyPlayingTrack, recentlyPlayedTracks] =
-    await Promise.all([
-      getCurrentlyPlayingTrack(),
-      getRecentlyPlayedTracks(),
-    ]);
+  const [currentlyPlayingTrack, recentlyPlayedTracks] = await Promise.all([
+    getCurrentlyPlayingTrack(),
+    getRecentlyPlayedTracks(),
+  ]);
 
   // Remove currentlyPlayingTrack if null
   const tracks = [currentlyPlayingTrack, ...recentlyPlayedTracks]
@@ -35,8 +33,8 @@ export default async function Page({
     <div className="flex h-full w-full flex-col gap-8">
       <MusicTable
         columns={columns}
+        currentPageNumber={Number.parseInt(params.pageNumber ?? "1", 10)}
         data={tracks}
-        currentPageNumber={parseInt(params.pageNumber ?? "1")}
       />
     </div>
   );
