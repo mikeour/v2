@@ -18,10 +18,12 @@ if (!refresh_token) {
   throw new Error("Missing SPOTIFY_REFRESH_TOKEN");
 }
 
+const REFRESH_TOKEN = refresh_token;
+
 async function getAccessToken() {
   const body = new URLSearchParams({
     grant_type: "refresh_token",
-    refresh_token,
+    refresh_token: REFRESH_TOKEN,
   });
 
   const response = await fetch(TOKEN_ENDPOINT, {

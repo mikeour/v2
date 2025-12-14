@@ -290,10 +290,12 @@ const CarouselItem = forwardRef<
   const { className, ...rest } = props;
 
   return (
-    <fieldset
+    // biome-ignore lint/a11y/useSemanticElements: carousel item needs div for styling
+    <div
       aria-roledescription="slide"
       className={cn("min-w-0 shrink-0 grow-0 basis-full", className)}
       ref={ref}
+      role="group"
       {...rest}
     />
   );
