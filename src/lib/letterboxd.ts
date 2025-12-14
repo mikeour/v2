@@ -1,35 +1,49 @@
-import * as crypto from "crypto";
+import { createHmac } from "node:crypto";
 import letterboxd from "letterboxd";
 import { v4 as uuidv4 } from "uuid";
-import { getFormattedDate } from "./utils";
 
 import type { Film, LetterboxdFilm } from "~/types";
+import { getFormattedDate } from "./utils";
 
 export const BASE_URL = "https://api.letterboxd.com/api/v0";
 
-export interface Auth {
+export type Auth = {
   apiKey: string;
   apiSecret: string;
   accessToken: string;
+};
+
+if (
+  !(
+    process.env.LETTERBOXD_API_KEY &&
+    process.env.LETTERBOXD_API_SECRET &&
+    process.env.LETTERBOXD_ACCESS_TOKEN
+  )
+) {
+  throw new Error("Missing Letterboxd environment variables");
 }
 
 const auth: Auth = {
-  apiKey: process.env.LETTERBOXD_API_KEY!,
-  apiSecret: process.env.LETTERBOXD_API_SECRET!,
-  accessToken: process.env.LETTERBOXD_ACCESS_TOKEN!,
+  apiKey: process.env.LETTERBOXD_API_KEY,
+  apiSecret: process.env.LETTERBOXD_API_SECRET,
+  accessToken: process.env.LETTERBOXD_ACCESS_TOKEN,
 };
 
-export interface APIResponse {
+export type APIResponse = {
   status: number;
-  data?: any;
-}
+  data?: unknown;
+};
 
-function buildUrl(url: string, params?: Record<string, any>) {
+type Params = Record<string, string | number>;
+
+function buildUrl(url: string, params?: Params) {
   const urlObj = new URL(`${BASE_URL}${url}`);
 
   if (params) {
     for (const key in params) {
-      urlObj.searchParams.set(key, params[key]);
+      if (Object.hasOwn(params, key)) {
+        urlObj.searchParams.set(key, String(params[key]));
+      }
     }
   }
 
@@ -39,26 +53,27 @@ function buildUrl(url: string, params?: Record<string, any>) {
 function buildParams(
   method: string,
   url: string,
-  body?: Record<string, any>,
-  params: Record<string, any> = {}
+  body?: Params | URLSearchParams,
+  params: Params = {}
 ) {
   const fullParams = params;
   fullParams.apikey = auth.apiKey;
   fullParams.nonce = uuidv4();
   fullParams.timestamp = Math.floor(Date.now() / 1000);
 
+  let bodyString = "";
+  if (body) {
+    bodyString =
+      body instanceof URLSearchParams ? body.toString() : JSON.stringify(body);
+  }
+
   const sigBase = [
     method.toUpperCase(),
     buildUrl(url, fullParams),
-    body
-      ? body instanceof URLSearchParams
-        ? body.toString()
-        : JSON.stringify(body)
-      : "",
+    bodyString,
   ].join("\u0000");
 
-  fullParams.signature = crypto
-    .createHmac("sha256", auth.apiSecret)
+  fullParams.signature = createHmac("sha256", auth.apiSecret)
     .update(sigBase)
     .digest("hex")
     .toLowerCase();
@@ -69,22 +84,21 @@ function buildParams(
 export function request<T extends APIResponse>(opts: {
   method: "get" | "post" | "patch" | "delete";
   path: string;
-  params?: Record<string, any>;
-  body?: Record<string, any>;
+  params?: Params;
+  body?: Params;
   headers?: Record<string, string>;
 }) {
-  let formBody;
+  let formBody: URLSearchParams | undefined;
 
   if (
     opts.headers &&
     opts.body &&
-    opts.headers["Content-Type"] ===
-      "application/x-www-form-urlencoded"
+    opts.headers["Content-Type"] === "application/x-www-form-urlencoded"
   ) {
     formBody = new URLSearchParams();
 
-    for (const key in opts.body) {
-      formBody.append(key, opts.body[key]);
+    for (const key of Object.keys(opts.body)) {
+      formBody.append(key, String(opts.body[key]));
     }
   }
 
@@ -98,8 +112,7 @@ export function request<T extends APIResponse>(opts: {
 
   return fetch(url, {
     method: opts.method,
-    body:
-      formBody || (opts.body ? JSON.stringify(opts.body) : undefined),
+    body: formBody || (opts.body ? JSON.stringify(opts.body) : undefined),
     headers: {
       ...opts.headers,
       ...(auth.accessToken
@@ -109,14 +122,12 @@ export function request<T extends APIResponse>(opts: {
   }).then(async (res) => {
     // This mess allows us to easily handle `res.json()`, and falling back to `res.text()` if our
     // JSON response isn't actually JSON, without having to clone the response.
-    const buffer = await (
-      await res.arrayBuffer().then(Buffer.from)
-    ).toString();
+    const buffer = await (await res.arrayBuffer().then(Buffer.from)).toString();
 
-    let data;
+    let data: unknown;
     try {
       data = JSON.parse(buffer);
-    } catch (err) {
+    } catch {
       data = buffer;
     }
 
@@ -131,11 +142,9 @@ export function request<T extends APIResponse>(opts: {
 }
 
 export async function getFilms() {
-  const response: Array<LetterboxdFilm> = await letterboxd("mikeour");
+  const response: LetterboxdFilm[] = await letterboxd("mikeour");
 
-  const diaryEntries = response.filter(
-    (film) => film.type === "diary"
-  );
+  const diaryEntries = response.filter((film) => film.type === "diary");
 
   const films = diaryEntries.map(transformFilm);
 

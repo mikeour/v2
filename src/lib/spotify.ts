@@ -6,24 +6,28 @@ const {
   SPOTIFY_REFRESH_TOKEN: refresh_token,
 } = process.env;
 
-const basic = Buffer.from(`${client_id}:${client_secret}`).toString(
-  "base64"
-);
-const NOW_PLAYING_ENDPOINT = `https://api.spotify.com/v1/me/player/currently-playing`;
-const TOP_TRACKS_ENDPOINT = `https://api.spotify.com/v1/me/top/tracks`;
-const TOKEN_ENDPOINT = `https://accounts.spotify.com/api/token`;
-const RECENTLY_PLAYED_ENDPOINT = `https://api.spotify.com/v1/me/player/recently-played?limit=50`;
+const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
+const NOW_PLAYING_ENDPOINT =
+  "https://api.spotify.com/v1/me/player/currently-playing";
+const TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks";
+const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
+const RECENTLY_PLAYED_ENDPOINT =
+  "https://api.spotify.com/v1/me/player/recently-played?limit=50";
+
+if (!refresh_token) {
+  throw new Error("Missing SPOTIFY_REFRESH_TOKEN");
+}
 
 async function getAccessToken() {
   const body = new URLSearchParams({
     grant_type: "refresh_token",
-    refresh_token: refresh_token!,
+    refresh_token,
   });
 
   const response = await fetch(TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
-      "Authorization": `Basic ${basic}`,
+      Authorization: `Basic ${basic}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: body.toString(),
@@ -49,8 +53,7 @@ export async function getCurrentlyPlayingTrack() {
     return null;
   }
 
-  const data: SpotifyApi.CurrentlyPlayingObject =
-    await response.json();
+  const data: SpotifyApi.CurrentlyPlayingObject = await response.json();
 
   if (data.item === null) {
     return null;
@@ -80,7 +83,7 @@ export async function getCurrentlyPlayingTrack() {
 export async function getTopTracks(range: string) {
   const { access_token } = await getAccessToken();
 
-  return fetch(TOP_TRACKS_ENDPOINT + `?time_range=${range}`, {
+  return fetch(`${TOP_TRACKS_ENDPOINT}?time_range=${range}`, {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
@@ -125,7 +128,7 @@ export async function getRecentlyPlayedTracks() {
 }
 
 function millisToMinutesAndSeconds(millis: number) {
-  const minutes = Math.floor(millis / 60000);
-  const seconds = ((millis % 60000) / 1000).toFixed(0);
-  return minutes + ":" + (Number(seconds) < 10 ? "0" : "") + seconds;
+  const minutes = Math.floor(millis / 60_000);
+  const seconds = ((millis % 60_000) / 1000).toFixed(0);
+  return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
 }
