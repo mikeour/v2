@@ -1,0 +1,13 @@
+{
+  "name": "@mikeour/typescript-config",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "clean": "rm -rf node_modules .turbo"
+  },
+  "files": [
+    "base.json",
+    "nextjs.json",
+    "react-library.json"
+  ]
+}

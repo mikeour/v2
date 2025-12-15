@@ -1,0 +1,41 @@
+{
+  "name": "@mikeour/ui",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./carousel": "./src/carousel.tsx",
+    "./checkbox": "./src/checkbox.tsx",
+    "./icons": "./src/icons.tsx",
+    "./slider": "./src/slider.tsx",
+    "./switch": "./src/switch.tsx",
+    "./table": "./src/table.tsx",
+    "./utils": "./src/utils.ts"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "clean": "rm -rf node_modules .turbo"
+  },
+  "dependencies": {
+    "@radix-ui/react-checkbox": "^1.0.4",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@radix-ui/react-switch": "^1.0.3",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "embla-carousel": "^8.0.2",
+    "embla-carousel-react": "^8.0.2",
+    "embla-carousel-wheel-gestures": "^8.0.0-rc05",
+    "lucide-react": "^0.368.0",
+    "tailwind-merge": "^2.2.2"
+  },
+  "devDependencies": {
+    "@mikeour/typescript-config": "workspace:*",
+    "@types/react": "18.2.78",
+    "@types/react-dom": "18.2.25",
+    "react": "18.2.0",
+    "typescript": "5.4.5"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
+}

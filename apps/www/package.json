@@ -1,0 +1,46 @@
+{
+  "name": "@mikeour/www",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "check": "tsc --noEmit",
+    "clean": "rm -rf node_modules .next .turbo"
+  },
+  "dependencies": {
+    "@code-hike/mdx": "^0.9.0",
+    "@codesandbox/sandpack-react": "^2.13.8",
+    "@mdx-js/loader": "^3.0.1",
+    "@mdx-js/react": "^3.0.1",
+    "@mikeour/ui": "workspace:*",
+    "@next/mdx": "^14.2.1",
+    "@tanstack/react-table": "^8.16.0",
+    "@types/mdx": "^2.0.13",
+    "@vercel/analytics": "^1.2.2",
+    "framer-motion": "^11.0.28",
+    "globby": "^14.0.1",
+    "javascript-time-ago": "^2.5.9",
+    "letterboxd": "^3.1.1",
+    "next": "^14.2.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "rehype-slug": "^6.0.0",
+    "remark-toc": "^9.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@mikeour/tailwind-config": "workspace:*",
+    "@mikeour/typescript-config": "workspace:*",
+    "@types/node": "20.12.7",
+    "@types/react": "18.2.78",
+    "@types/react-dom": "18.2.25",
+    "@types/spotify-api": "^0.0.25",
+    "@types/uuid": "^9.0.8",
+    "autoprefixer": "10.4.19",
+    "postcss": "8.4.38",
+    "tailwindcss": "3.4.3",
+    "typescript": "5.4.5"
+  }
+}
