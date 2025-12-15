@@ -7,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: baseUrl, lastModified: new Date() },
     { url: `${baseUrl}/crafts`, lastModified: new Date() },
     { url: `${baseUrl}/crafts/scroll-shadows`, lastModified: new Date() },
+    { url: `${baseUrl}/crafts/scroll-shadows-pt-2`, lastModified: new Date() },
     { url: `${baseUrl}/photos`, lastModified: new Date() },
     { url: `${baseUrl}/music`, lastModified: new Date() },
     { url: `${baseUrl}/movies`, lastModified: new Date() },

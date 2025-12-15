@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import img from "./crafts/scroll-shadows/scroll-shadows.jpg";
+import img2 from "./crafts/scroll-shadows/scroll-shadows.jpg";
 
 const externalLinks = [
   {
@@ -47,6 +48,29 @@ export default function Home() {
       </p>
 
       <div className="my-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Link
+          className="group flex flex-col gap-4 no-underline"
+          href="/crafts/scroll-shadows-pt-2"
+        >
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
+            <Image
+              alt=""
+              className="my-0 h-full w-full object-cover"
+              fill
+              src={img2}
+            />
+
+            <div className="absolute inset-0 bg-blue-400/0 transition-colors group-hover:bg-blue-400/20" />
+          </div>
+
+          <div className="not-prose flex flex-col gap-0">
+            <span>December 14, 2024</span>
+            <p className="transition-colors group-hover:text-gray-200">
+              Scroll Shadows (Pt. 2)
+            </p>
+          </div>
+        </Link>
+
         <Link
           className="group flex flex-col gap-4 no-underline"
           href="/crafts/scroll-shadows"
