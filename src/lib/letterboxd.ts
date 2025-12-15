@@ -13,21 +13,23 @@ export type Auth = {
   accessToken: string;
 };
 
-if (
-  !(
-    process.env.LETTERBOXD_API_KEY &&
-    process.env.LETTERBOXD_API_SECRET &&
-    process.env.LETTERBOXD_ACCESS_TOKEN
-  )
-) {
-  throw new Error("Missing Letterboxd environment variables");
-}
+function getAuth(): Auth {
+  if (!process.env.LETTERBOXD_API_KEY) {
+    throw new Error("Missing LETTERBOXD_API_KEY");
+  }
+  if (!process.env.LETTERBOXD_API_SECRET) {
+    throw new Error("Missing LETTERBOXD_API_SECRET");
+  }
+  if (!process.env.LETTERBOXD_ACCESS_TOKEN) {
+    throw new Error("Missing LETTERBOXD_ACCESS_TOKEN");
+  }
 
-const auth: Auth = {
-  apiKey: process.env.LETTERBOXD_API_KEY,
-  apiSecret: process.env.LETTERBOXD_API_SECRET,
-  accessToken: process.env.LETTERBOXD_ACCESS_TOKEN,
-};
+  return {
+    apiKey: process.env.LETTERBOXD_API_KEY,
+    apiSecret: process.env.LETTERBOXD_API_SECRET,
+    accessToken: process.env.LETTERBOXD_ACCESS_TOKEN,
+  };
+}
 
 export type APIResponse = {
   status: number;
@@ -56,6 +58,7 @@ function buildParams(
   body?: Params | URLSearchParams,
   params: Params = {}
 ) {
+  const auth = getAuth();
   const fullParams = params;
   fullParams.apikey = auth.apiKey;
   fullParams.nonce = uuidv4();
@@ -102,6 +105,7 @@ export function request<T extends APIResponse>(opts: {
     }
   }
 
+  const auth = getAuth();
   const params = buildParams(
     opts.method,
     opts.path,
