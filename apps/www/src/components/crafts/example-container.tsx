@@ -41,7 +41,7 @@ export function ExampleContainer({
       </div>
 
       {!!controls && (
-        <div className="relative w-full bg-slate-700 px-(--gutter) py-4">
+        <div className="relative w-full bg-slate-700 px-(--gutter)">
           {controls}
         </div>
       )}

@@ -22,7 +22,7 @@ export function InteractiveArticleExample() {
     <ExampleContainer
       className="w-full"
       controls={
-        <div className="relative flex select-none flex-col items-center gap-3 text-white md:flex-row md:justify-evenly">
+        <div className="relative flex select-none flex-col items-center gap-3 py-4 text-white md:flex-row md:justify-evenly">
           <div className="flex items-center gap-3">
             <Switch
               checked={isEnabled}
@@ -131,7 +131,7 @@ export function BrokenArticleProgress({
     <ExampleContainer
       className="h-75 w-full items-stretch"
       controls={
-        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
+        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 py-4 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
           <div className="flex items-center gap-3">
             <Switch
               checked={showingShadows}
