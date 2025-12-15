@@ -158,7 +158,13 @@
   }
 }
 
-/* Override prose link styles - need to match typography plugin specificity */
+/* Override prose styles to use our base colors */
+.prose {
+  --tw-prose-body: var(--color-gray-300);
+  --tw-prose-headings: var(--color-gray-100);
+  --tw-prose-bold: var(--color-gray-200);
+}
+
 .prose :where(a):not(:where([class~=not-prose],[class~=not-prose] *)) {
   @apply text-blue-400 underline underline-offset-2 transition-colors hover:text-blue-300;
 }
