@@ -90,9 +90,6 @@ importers:
         specifier: ^4.1.13
         version: 4.1.13
     devDependencies:
-      '@mikeour/tailwind-config':
-        specifier: workspace:*
-        version: link:../../packages/tailwind-config
       '@mikeour/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -120,12 +117,6 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
-
-  packages/tailwind-config:
-    dependencies:
-      tailwindcss:
-        specifier: ^4.1.18
-        version: 4.1.18
 
   packages/typescript-config: {}
 
