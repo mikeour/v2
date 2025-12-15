@@ -1,4 +1,4 @@
-import { useScroll, useSpring, useTransform } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 
 type AxisType = "x" | "y";
 type OptionsType = {
@@ -12,19 +12,17 @@ export function useScrollShadows({ ref, axis }: OptionsType) {
     axis,
   });
 
-  const startingShadowVisibility = useTransform(
-    scrollProgress,
-    (latest) => {
-      const element = ref.current;
-      if (element === null) return latest;
-
-      if (isOverflowing(element)) {
-        return latest; // preserve existing behavior
-      } else {
-        return 0; // override default behavior
-      }
+  const startingShadowVisibility = useTransform(scrollProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) {
+      return latest;
     }
-  );
+
+    if (isOverflowing(element)) {
+      return latest; // preserve existing behavior
+    }
+    return 0; // override default behavior
+  });
 
   const endingShadowVisibility = useTransform(
     scrollProgress,
@@ -42,18 +40,15 @@ function useScrollProgress({ ref, axis }: OptionsType) {
   if (axis === "x") {
     return {
       scrollProgress: scrollXProgress,
-      isOverflowing: (element: HTMLElement) => {
-        return element.scrollWidth > element.clientWidth;
-      },
-    };
-  } else {
-    return {
-      scrollProgress: scrollYProgress,
-      isOverflowing: (element: HTMLElement) => {
-        return element.scrollHeight > element.clientHeight;
-      },
+      isOverflowing: (element: HTMLElement) =>
+        element.scrollWidth > element.clientWidth,
     };
   }
+  return {
+    scrollProgress: scrollYProgress,
+    isOverflowing: (element: HTMLElement) =>
+      element.scrollHeight > element.clientHeight,
+  };
 }
 
 type UseBrokenScrollShadowsType<T> = {
@@ -85,39 +80,33 @@ export function useFixedScrollShadows<T extends HTMLElement>(
   const { ref } = options;
   const { scrollYProgress } = useScroll({ container: ref });
 
-  const startingShadowVisibility = useTransform(
-    scrollYProgress,
-    (latest) => {
-      const element = ref.current;
-      if (element === null) return latest;
-
-      const isOverflowing =
-        element.scrollHeight > element.clientHeight;
-
-      if (isOverflowing) {
-        return latest; // preserve existing behavior
-      } else {
-        return 0; // override the default value
-      }
+  const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) {
+      return latest;
     }
-  );
 
-  const endingShadowVisibility = useTransform(
-    scrollYProgress,
-    (latest) => {
-      const element = ref.current;
-      if (element === null) return latest;
+    const isOverflowing = element.scrollHeight > element.clientHeight;
 
-      const isOverflowing =
-        element.scrollHeight > element.clientHeight;
-
-      if (isOverflowing) {
-        return 1 - latest;
-      } else {
-        return 0; // override the default value
-      }
+    if (isOverflowing) {
+      return latest; // preserve existing behavior
     }
-  );
+    return 0; // override the default value
+  });
+
+  const endingShadowVisibility = useTransform(scrollYProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) {
+      return latest;
+    }
+
+    const isOverflowing = element.scrollHeight > element.clientHeight;
+
+    if (isOverflowing) {
+      return 1 - latest;
+    }
+    return 0; // override the default value
+  });
 
   return [
     startingShadowVisibility,

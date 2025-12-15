@@ -1,3 +1,4 @@
+/* biome-ignore-all lint/nursery/noShadow: forwardRef pattern */
 "use client";
 
 import {
@@ -9,12 +10,12 @@ import {
   useState,
 } from "react";
 import { Slot } from "@radix-ui/react-slot";
-import useEmblaCarousel from "embla-carousel-react";
-import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
-import { cn } from "~/lib/utils";
-
 import type { EmblaOptionsType } from "embla-carousel";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
+import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
+
+import { cn } from "~/utils";
 
 type CarouselContextType = {
   currentIndex: number;
@@ -30,8 +31,9 @@ const CarouselContext = createContext<CarouselContextType | null>(null);
 
 function useCarouselContext() {
   const context = useContext(CarouselContext);
-  if (context === null)
+  if (context === null) {
     throw new Error("Must be used inside of a <Carousel /> component");
+  }
   return context;
 }
 
@@ -66,32 +68,44 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
     const [canScrollNext, setCanScrollNext] = useState(true);
 
     const scrollPrev = useCallback(() => {
-      if (carouselApi) carouselApi.scrollPrev();
+      if (carouselApi) {
+        carouselApi.scrollPrev();
+      }
     }, [carouselApi]);
 
     const scrollNext = useCallback(() => {
-      if (carouselApi) carouselApi.scrollNext();
+      if (carouselApi) {
+        carouselApi.scrollNext();
+      }
     }, [carouselApi]);
 
     const goTo = useCallback(
       (index: number) => {
-        if (carouselApi) carouselApi.scrollTo(index);
+        if (carouselApi) {
+          carouselApi.scrollTo(index);
+        }
       },
       [carouselApi]
     );
 
     useEffect(() => {
-      if (!carouselApi) return;
+      if (!carouselApi) {
+        return;
+      }
 
       function onSelect() {
-        if (!carouselApi) return;
+        if (!carouselApi) {
+          return;
+        }
 
         setCanScrollPrevious(carouselApi.canScrollPrev());
         setCanScrollNext(carouselApi.canScrollNext());
       }
 
       function onScroll() {
-        if (!carouselApi) return;
+        if (!carouselApi) {
+          return;
+        }
 
         setCurrentIndex(carouselApi.selectedScrollSnap());
       }
@@ -103,10 +117,14 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
     }, [carouselApi]);
 
     useEffect(() => {
-      if (!carouselApi || !attachHandlers) return;
+      if (!(carouselApi && attachHandlers)) {
+        return;
+      }
 
       function handleKeyPress(e: KeyboardEvent) {
-        if (!carouselApi) return;
+        if (!carouselApi) {
+          return;
+        }
 
         if (e.key === "ArrowLeft") {
           carouselApi.scrollPrev();
@@ -127,7 +145,9 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
     // blocks excessive scrolling
     // https://github.com/davidjerleke/embla-carousel/issues/42#issuecomment-1670221979
     useEffect(() => {
-      if (!carouselApi) return;
+      if (!carouselApi) {
+        return;
+      }
 
       carouselApi.on("scroll", (carouselApi) => {
         const {
@@ -142,8 +162,12 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
 
         let edge: number | null = null;
 
-        if (limit.reachedMax(location.get())) edge = limit.max;
-        if (limit.reachedMin(location.get())) edge = limit.min;
+        if (limit.reachedMax(location.get())) {
+          edge = limit.max;
+        }
+        if (limit.reachedMin(location.get())) {
+          edge = limit.min;
+        }
 
         if (edge !== null) {
           offsetLocation.set(edge);
@@ -151,6 +175,7 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
           target.set(edge);
           translate.to(edge);
           translate.toggleActive(false);
+          // biome-ignore lint/correctness/useHookAtTopLevel: Embla API methods, not React hooks
           scrollBody.useDuration(0).useFriction(0);
           scrollTo.distance(0, false);
         } else {
@@ -171,11 +196,9 @@ const CarouselRoot = forwardRef<HTMLDivElement, CarouselProps>(
           carouselRef,
         }}
       >
-        <div
-          ref={ref}
+        <section
           className={cn("group relative", className)}
-          role="region"
-          aria-roledescription="carousel"
+          ref={ref}
           {...rest}
         />
       </CarouselContext.Provider>
@@ -191,15 +214,15 @@ const CarouselBack = forwardRef<
 
   return (
     <button
-      ref={ref}
       className={cn({ "opacity-30": !canScrollPrevious }, className)}
+      disabled={canScrollPrevious === false}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
 
         scrollPrev();
       }}
-      disabled={canScrollPrevious === false}
+      ref={ref}
       {...rest}
     />
   );
@@ -213,15 +236,15 @@ const CarouselForward = forwardRef<
 
   return (
     <button
-      ref={ref}
       className={cn({ "opacity-30": !canScrollNext }, className)}
+      disabled={canScrollNext === false}
       onClick={(event) => {
         event.preventDefault();
         event.stopPropagation();
 
         scrollNext();
       }}
-      disabled={canScrollNext === false}
+      ref={ref}
       {...rest}
     />
   );
@@ -230,14 +253,14 @@ const CarouselForward = forwardRef<
 const CarouselViewport = forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(function CarouselViewport(props, ref) {
+>(function CarouselViewport(props, _ref) {
   const { className, ...rest } = props;
   const { carouselRef } = useCarouselContext();
 
   return (
     <div
-      ref={carouselRef}
       className={cn("overflow-hidden", className)}
+      ref={carouselRef}
       {...rest}
     />
   );
@@ -252,9 +275,9 @@ const CarouselItems = forwardRef<
 
   return (
     <div
-      ref={ref}
       className={cn("flex gap-4 lg:gap-6", className)}
       data-current-index={currentIndex}
+      ref={ref}
       {...rest}
     />
   );
@@ -267,11 +290,12 @@ const CarouselItem = forwardRef<
   const { className, ...rest } = props;
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: carousel item needs div for styling
     <div
-      ref={ref}
-      role="group"
       aria-roledescription="slide"
       className={cn("min-w-0 shrink-0 grow-0 basis-full", className)}
+      ref={ref}
+      role="group"
       {...rest}
     />
   );
@@ -288,12 +312,14 @@ const CarouselGoTo = forwardRef<
 
   return (
     <button
-      ref={ref}
       onClick={(event) => {
         goTo(index);
 
-        if (onClick) onClick(event);
+        if (onClick) {
+          onClick(event);
+        }
       }}
+      ref={ref}
       {...rest}
     />
   );
@@ -309,7 +335,7 @@ const CarouselDot = forwardRef<
   const { currentIndex } = useCarouselContext();
   const isActive = currentIndex === index;
 
-  return <Slot ref={ref} data-is-active={isActive} {...rest} />;
+  return <Slot data-is-active={isActive} ref={ref} {...rest} />;
 });
 
 const Root = CarouselRoot;

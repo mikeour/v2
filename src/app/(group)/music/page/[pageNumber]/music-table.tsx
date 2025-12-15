@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,6 +12,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import {
   Table,
   TableBody,
@@ -21,14 +23,12 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/table";
-import { cn } from "~/lib/utils";
-
-import type { ColumnDef } from "@tanstack/react-table";
+import { cn } from "~/utils";
 import type { TrackData } from "~/types";
 
 type MusicTableProps = {
-  data: Array<TrackData>;
-  columns: Array<ColumnDef<TrackData>>;
+  data: TrackData[];
+  columns: ColumnDef<TrackData>[];
   currentPageNumber: number;
 };
 
@@ -66,18 +66,17 @@ export function MusicTable({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
-                const shouldHide =
-                  header.index === 1 || header.index === 2;
+                const shouldHide = header.index === 1 || header.index === 2;
                 return (
                   <TableHead
-                    key={header.id}
                     className={cn(
-                      shouldHide && "hidden lg:table-cell",
+                      !!shouldHide && "hidden lg:table-cell",
                       header.index === 0 && "lg:w-[55%]",
                       header.index === 1 && "lg:w-[30%]",
                       header.index === 2 && "lg:w-[10%]",
                       header.index === 3 && "lg:w-[5%]"
                     )}
+                    key={header.id}
                   >
                     {header.isPlaceholder
                       ? null
@@ -96,23 +95,19 @@ export function MusicTable({
             <TableRow key={row.id}>
               {row.getVisibleCells().map((cell) => {
                 const shouldHide =
-                  cell.column.id === "album" ||
-                  cell.column.id === "duration";
+                  cell.column.id === "album" || cell.column.id === "duration";
 
                 return (
                   <TableCell
-                    key={cell.id}
                     className={cn(
-                      shouldHide && "hidden lg:table-cell",
+                      !!shouldHide && "hidden lg:table-cell",
                       cell.column.id === "title" && "pr-5",
                       cell.column.id === "album" && "pr-5",
                       cell.column.id === "duration" && "text-center"
                     )}
+                    key={cell.id}
                   >
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 );
               })}
@@ -129,7 +124,7 @@ export function MusicTable({
           <StyledLink
             disabled={currentPageNumber === 1}
             href={{
-              pathname: `/music`,
+              pathname: "/music",
             }}
           >
             <span className="sr-only">Go to first page</span>
@@ -179,9 +174,8 @@ function StyledLink({
   return (
     <Link
       className={cn(
-        "rounded border border-input bg-background p-1 text-white  no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
-        disabled &&
-          "pointer-events-none cursor-not-allowed text-gray-500"
+        "rounded border border-input bg-background p-1 text-white no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
+        !!disabled && "pointer-events-none cursor-not-allowed text-gray-500"
       )}
       {...props}
     >

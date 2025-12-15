@@ -4,7 +4,7 @@ type OptionsType = {
   ref: React.RefObject<HTMLElement>;
 };
 
-function useScrollShadows({ ref }: OptionsType) {
+function _useScrollShadows({ ref }: OptionsType) {
   const { scrollYProgress } = useScroll({ container: ref });
 
   const startingShadowVisibility = scrollYProgress;

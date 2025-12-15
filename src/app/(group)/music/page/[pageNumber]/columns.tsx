@@ -1,13 +1,13 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+
 import { TimePlayed } from "~/components/icons";
 import { time } from "~/lib/timeago";
-
-import type { ColumnDef } from "@tanstack/react-table";
 import type { TrackData } from "~/types";
 
-export const columns: Array<ColumnDef<TrackData>> = [
+export const columns: ColumnDef<TrackData>[] = [
   {
     accessorKey: "title",
     header: "Title",
@@ -18,10 +18,10 @@ export const columns: Array<ColumnDef<TrackData>> = [
         <div className="relative flex items-center gap-5">
           <div className="relative aspect-square h-16 w-16 shrink-0 overflow-hidden rounded bg-blue-400/25">
             <Image
-              src={track.albumImageUrl}
               alt={`${track.artist} album art`}
               fill
               sizes="64px"
+              src={track.albumImageUrl}
             />
           </div>
 
@@ -29,9 +29,7 @@ export const columns: Array<ColumnDef<TrackData>> = [
             <span className="text-base/[16px] text-gray-100">
               {track.title}
             </span>
-            <span className="text-sm/[14px] text-gray-400">
-              {track.artist}
-            </span>
+            <span className="text-gray-400 text-sm/[14px]">{track.artist}</span>
           </div>
         </div>
       );
@@ -74,10 +72,7 @@ export const columns: Array<ColumnDef<TrackData>> = [
     cell: ({ row }) => {
       const track = row.original;
       return (
-        <div
-          className="text-right text-gray-400"
-          suppressHydrationWarning
-        >
+        <div className="text-right text-gray-400" suppressHydrationWarning>
           {track.isPlaying ? (
             <NowPlayingIcon />
           ) : (

@@ -1,4 +1,5 @@
 import { Analytics } from "@vercel/analytics/react";
+
 import { ScreenSize } from "~/components/utility/screen-size";
 import { fira, karla } from "~/lib/fonts";
 
@@ -16,14 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark min-h-full overscroll-none">
+    <html className="dark min-h-full overscroll-none" lang="en">
       <link
-        rel="icon"
         href={
           process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
             ? "/favicon.png"
             : "/favicon-dev.png"
         }
+        rel="icon"
       />
 
       <body

@@ -1,15 +1,12 @@
 "use client";
 
-import { forwardRef, Fragment, useRef, useState } from "react";
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
+import { Fragment, forwardRef, useRef, useState } from "react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { Slider } from "~/components/ui/slider";
 import { Switch } from "~/components/ui/switch";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils";
 import { DemoScrollContainer } from "./demo-scroll-container";
 import { ScrollContainer } from "./scroll-container";
 import {
@@ -19,30 +16,26 @@ import {
 
 export function InteractiveArticleExample() {
   const [isEnabled, setIsEnabled] = useState(true);
-  const [isRealistic, setIsRealistic] = useState(false);
+  const [isRealistic, _setIsRealistic] = useState(false);
 
   return (
     <ExampleContainer
-      mockBrowser
       className="w-full"
       controls={
         <div className="relative flex select-none flex-col items-center gap-3 text-white md:flex-row md:justify-evenly">
           <div className="flex items-center gap-3">
             <Switch
-              id="enabled"
               checked={isEnabled}
+              className=""
+              id="enabled"
               onCheckedChange={(val) => {
                 if (typeof val === "boolean") {
                   setIsEnabled(val);
                 }
               }}
-              className=""
             />
 
-            <label
-              htmlFor="enabled"
-              className="text-base/none text-white"
-            >
+            <label className="text-base/none text-white" htmlFor="enabled">
               Toggle Shadows
             </label>
           </div>
@@ -66,11 +59,12 @@ export function InteractiveArticleExample() {
           </div> */}
         </div>
       }
+      mockBrowser
     >
       <DemoScrollContainer
+        className="max-h-[400px] [--size:24px] md:[--size:36px]"
         isEnabled={isEnabled}
         isRealistic={isRealistic}
-        className="max-h-[400px] [--size:24px] md:[--size:36px]"
       >
         <Article />
       </DemoScrollContainer>
@@ -90,7 +84,6 @@ export function ArticleProgress() {
   return (
     <ExampleContainer
       className="max-h-[300px] w-full"
-      mockBrowser
       controls={
         <p className="my-0 flex items-center justify-center gap-2 text-center text-base/none tabular-nums">
           <code>
@@ -99,8 +92,9 @@ export function ArticleProgress() {
           </code>
         </p>
       }
+      mockBrowser
     >
-      <div ref={articleRef} className="overflow-y-auto">
+      <div className="overflow-y-auto" ref={articleRef}>
         <Article />
       </div>
     </ExampleContainer>
@@ -116,16 +110,12 @@ export function BrokenArticleProgress({
 }) {
   const [showingShadows, setIsEnabled] = useState(false);
 
-  const useShadows = working
-    ? useFixedScrollShadows
-    : useBrokenScrollShadows;
+  const useShadows = working ? useFixedScrollShadows : useBrokenScrollShadows;
 
   const articleRef = useRef(null);
   const [start, end] = useShadows({ ref: articleRef });
 
-  const [starting, setStarting] = useState(
-    formatDecimal(start.get())
-  );
+  const [starting, setStarting] = useState(formatDecimal(start.get()));
   const [ending, setEnding] = useState(formatDecimal(end.get()));
 
   useMotionValueEvent(start, "change", (latest) =>
@@ -140,25 +130,21 @@ export function BrokenArticleProgress({
   return (
     <ExampleContainer
       className="h-[300px] w-full items-stretch"
-      mockBrowser
       controls={
-        <div className="flex flex-col items-center justify-center gap-6 prose-p:my-0 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
+        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
           <div className="flex items-center gap-3">
             <Switch
-              id={shadowsId}
               checked={showingShadows}
+              className=""
+              id={shadowsId}
               onCheckedChange={(val) => {
                 if (typeof val === "boolean") {
                   setIsEnabled(val);
                 }
               }}
-              className=""
             />
 
-            <label
-              htmlFor={shadowsId}
-              className="text-base/none text-white"
-            >
+            <label className="text-base/none text-white" htmlFor={shadowsId}>
               Toggle Shadows
             </label>
           </div>
@@ -180,26 +166,27 @@ export function BrokenArticleProgress({
           </div>
         </div>
       }
+      mockBrowser
     >
       <div
-        ref={articleRef}
         className="group flex grow flex-col overflow-y-auto [--size:36px]"
+        ref={articleRef}
       >
-        {showingShadows && (
+        {!!showingShadows && (
           <motion.div
+            className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: start }}
-            className="pointer-events-none sticky top-0 -mb-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
           >
             <code className="text-sm">opacity: {starting}</code>
           </motion.div>
         )}
 
-        <Article count={count} className="grow" />
+        <Article className="grow" count={count} />
 
-        {showingShadows && (
+        {!!showingShadows && (
           <motion.div
+            className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: end }}
-            className="pointer-events-none sticky bottom-0 -mt-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
           >
             <code className="text-sm">opacity: {ending}</code>
           </motion.div>
@@ -212,41 +199,40 @@ export function BrokenArticleProgress({
 export function ArticleMarkupExample() {
   const [size, setSize] = useState([48]);
   const articleRef = useRef(null);
-  const { scrollYProgress } = useScroll({ container: articleRef });
 
   return (
     <ExampleContainer
       className="max-h-[300px] w-full"
-      mockBrowser
       controls={
         <p className="my-0 flex items-center justify-center gap-4 text-center text-base/none tabular-nums">
           <code>size:</code>
 
           <Slider
-            value={size}
-            onValueChange={setSize}
+            className="w-40"
             max={64}
             min={16}
+            onValueChange={setSize}
             step={16}
-            className="w-40"
+            value={size}
           />
 
           <code>{size}px</code>
         </p>
       }
+      mockBrowser
     >
       <div
-        ref={articleRef}
         className="overflow-y-auto"
-        style={{ ["--size"]: `${size}px` } as any}
+        ref={articleRef}
+        style={{ "--size": `${size}px` } as React.CSSProperties}
       >
-        <div className="pointer-events-none sticky top-0 -mb-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${size}px, marginBottom: -${size}px }`}</code>
         </div>
 
         <Article />
 
-        <div className="pointer-events-none sticky bottom-0 -mt-[--size] flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${size}px, marginTop: -${size}px }`}</code>
         </div>
       </div>
@@ -256,7 +242,7 @@ export function ArticleMarkupExample() {
 
 export function ArticleExample() {
   return (
-    <ExampleContainer mockBrowser isolated className="w-full">
+    <ExampleContainer className="w-full" isolated mockBrowser>
       <ScrollContainer className="max-h-[400px] [--size:25px]">
         <Article />
       </ScrollContainer>
@@ -266,8 +252,12 @@ export function ArticleExample() {
 
 export function ArticleIframe() {
   return (
-    <ExampleContainer mockBrowser className="w-full">
-      <iframe src="/examples/article" className="h-full w-full" />
+    <ExampleContainer className="w-full" mockBrowser>
+      <iframe
+        className="h-full w-full"
+        src="/examples/article"
+        title="Article example"
+      />
     </ExampleContainer>
   );
 }
@@ -275,38 +265,36 @@ export function ArticleIframe() {
 export const Article = forwardRef<
   HTMLDivElement,
   { count?: number; className?: string }
->(function Article(props, ref) {
+>(function ArticleInner(props, ref) {
   const { count = 3, className } = props;
 
   return (
     <article
-      ref={ref}
       className={cn("bg-white p-6 sm:px-10 sm:py-12", className)}
+      ref={ref}
     >
       <Header />
 
       <Credits />
 
       <div className="mt-6 flex flex-col items-center gap-6">
-        {Array.from({ length: count }).map((_, index) => {
-          return (
-            <Fragment key={index}>
-              <TextBlockA />
-              <TextBlockB />
-            </Fragment>
-          );
-        })}
+        {Array.from({ length: count }).map((_, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static content
+          <Fragment key={`block-a-${index}`}>
+            <TextBlockA />
+            <TextBlockB />
+          </Fragment>
+        ))}
 
         {count > 2 && <ImageBlock />}
 
-        {Array.from({ length: count }).map((_, index) => {
-          return (
-            <Fragment key={index}>
-              <TextBlockA />
-              <TextBlockB />
-            </Fragment>
-          );
-        })}
+        {Array.from({ length: count }).map((_, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static content
+          <Fragment key={`block-b-${index}`}>
+            <TextBlockA />
+            <TextBlockB />
+          </Fragment>
+        ))}
 
         {count > 2 && (
           <>
@@ -339,7 +327,7 @@ function ImageBlock() {
   return (
     <div className="my-4 flex w-8/12 flex-col gap-2">
       <div className="aspect-[7/3] w-full rounded bg-zinc-200" />
-      <p className="h-4 w-2/6 self-end rounded bg-zinc-200"></p>
+      <p className="h-4 w-2/6 self-end rounded bg-zinc-200" />
     </div>
   );
 }
@@ -347,11 +335,11 @@ function ImageBlock() {
 function TextBlockA() {
   return (
     <div className="space-y-2 self-stretch text-sm">
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-2/6 rounded bg-zinc-200"></p>
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-2/6 rounded bg-zinc-200" />
     </div>
   );
 }
@@ -359,10 +347,10 @@ function TextBlockA() {
 function TextBlockB() {
   return (
     <div className="space-y-2 self-stretch text-sm">
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-full rounded bg-zinc-200"></p>
-      <p className="h-4 w-4/6 rounded bg-zinc-200"></p>
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-full rounded bg-zinc-200" />
+      <p className="h-4 w-4/6 rounded bg-zinc-200" />
     </div>
   );
 }

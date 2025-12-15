@@ -1,7 +1,7 @@
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const svgToDataUri = require("mini-svg-data-uri");
 
-const colors = require("tailwindcss/colors");
+const _colors = require("tailwindcss/colors");
 const {
   default: flattenColorPalette,
 } = require("tailwindcss/lib/util/flattenColorPalette");
@@ -69,8 +69,8 @@ module.exports = {
         },
       },
       borderRadius: {
-        lg: `var(--radius)`,
-        md: `calc(var(--radius) - 2px)`,
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
@@ -106,7 +106,7 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("tailwindcss-radix"),
     addVariablesForColors,
-    function ({ matchUtilities, theme }) {
+    ({ matchUtilities, theme }) => {
       matchUtilities(
         {
           "bg-grid": (value) => ({

@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,6 +12,9 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
 import {
   Table,
   TableBody,
@@ -21,16 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/table";
-import { cn } from "~/lib/utils";
-
-import type { ColumnDef } from "@tanstack/react-table";
+import { cn } from "~/utils";
 import type { Film } from "~/types";
 
 const moviesPerPage = 10;
 
 type MovieTableProps = {
-  data: Array<Film>;
-  columns: Array<ColumnDef<Film>>;
+  data: Film[];
+  columns: ColumnDef<Film>[];
   currentPageNumber: number;
 };
 
@@ -40,8 +40,7 @@ export function MovieTable({
   currentPageNumber,
 }: MovieTableProps) {
   const totalPages = Math.ceil(data.length / moviesPerPage);
-  const numberOfMoviesToSkip =
-    (currentPageNumber - 1) * moviesPerPage;
+  const numberOfMoviesToSkip = (currentPageNumber - 1) * moviesPerPage;
 
   const currentTracks = data.slice(
     numberOfMoviesToSkip,
@@ -74,15 +73,15 @@ export function MovieTable({
 
                 return (
                   <TableHead
-                    key={header.id}
                     className={cn(
-                      shouldHide && "hidden lg:table-cell",
+                      !!shouldHide && "hidden lg:table-cell",
                       header.index === 0 && "lg:w-[45%]",
                       header.index === 1 && "lg:w-[10%]",
                       header.index === 2 && "lg:w-[15%]",
                       header.index === 3 && "text-center lg:w-[10%]",
                       header.index === 4 && "text-right lg:w-[10%]"
                     )}
+                    key={header.id}
                   >
                     {header.isPlaceholder
                       ? null
@@ -107,19 +106,16 @@ export function MovieTable({
 
                 return (
                   <TableCell
-                    key={cell.id}
                     className={cn(
-                      shouldHide && "hidden lg:table-cell",
+                      !!shouldHide && "hidden lg:table-cell",
                       cell.column.id === "title" && "pr-5",
                       cell.column.id === "album" && "pr-5",
                       cell.column.id === "rating" &&
                         "table-cell text-right text-blue-400"
                     )}
+                    key={cell.id}
                   >
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 );
               })}
@@ -136,7 +132,7 @@ export function MovieTable({
           <StyledLink
             disabled={currentPageNumber === 1}
             href={{
-              pathname: `/movies`,
+              pathname: "/movies",
             }}
           >
             <span className="sr-only">Go to first page</span>
@@ -186,9 +182,8 @@ function StyledLink({
   return (
     <Link
       className={cn(
-        "rounded border border-input bg-background p-1 text-white  no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
-        disabled &&
-          "pointer-events-none cursor-not-allowed text-gray-500"
+        "rounded border border-input bg-background p-1 text-white no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
+        !!disabled && "pointer-events-none cursor-not-allowed text-gray-500"
       )}
       {...props}
     >

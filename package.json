@@ -5,9 +5,11 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,mdx,json}\" --ignore-path .gitignore",
+    "check": "ultracite check",
+    "fix": "ultracite fix",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@code-hike/mdx": "^0.9.0",
@@ -28,8 +30,6 @@
     "embla-carousel-react": "^8.0.2",
     "embla-carousel-wheel-gestures": "^8.0.0-rc05",
     "encoding": "^0.1.13",
-    "eslint": "8.43.0",
-    "eslint-config-next": "14.2.1",
     "framer-motion": "^11.0.28",
     "globby": "^14.0.1",
     "javascript-time-ago": "^2.5.9",
@@ -50,15 +50,14 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
+    "@biomejs/biome": "^2.3.8",
     "@tailwindcss/typography": "^0.5.12",
     "@types/node": "20.12.7",
     "@types/react": "18.2.78",
     "@types/react-dom": "18.2.25",
     "@types/spotify-api": "^0.0.25",
     "@types/uuid": "^9.0.8",
-    "prettier": "^3.2.5",
-    "prettier-plugin-packagejson": "^2.5.0",
-    "prettier-plugin-tailwindcss": "^0.5.13"
+    "lefthook": "^2.0.9",
+    "ultracite": "^6.4.0"
   }
 }

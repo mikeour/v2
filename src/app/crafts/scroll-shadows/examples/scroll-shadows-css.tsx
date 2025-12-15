@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, forwardRef, useContext, useRef } from "react";
-import { motion } from "framer-motion";
-import { cn, mergeRefs } from "~/lib/utils";
-import { useScrollShadows } from "./use-scroll-shadows";
-
 import type { MotionValue } from "framer-motion";
+import { motion } from "framer-motion";
+
+import { cn, mergeRefs } from "~/utils";
+import { useScrollShadows } from "./use-scroll-shadows";
 
 const ScrollContext = createContext<ScrollContextType | null>(null);
 
@@ -16,7 +16,9 @@ type ScrollContextType = {
 
 function useScrollContext() {
   const context = useContext(ScrollContext);
-  if (context === null) throw new Error("Missing context");
+  if (context === null) {
+    throw new Error("Missing context");
+  }
   return context;
 }
 
@@ -25,21 +27,23 @@ export const ScrollShadowRoot = forwardRef<
   React.ComponentProps<"div"> & {
     axis: "x" | "y";
   }
->(function ScrollShadowRoot(props, forwardedRef) {
+>(function ScrollShadowRootInner(props, forwardedRef) {
   const { axis, className, ...rest } = props;
 
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [startingShadowVisibility, endingShadowVisibility] =
-    useScrollShadows({ ref: scrollRef, axis });
+  const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
+    ref: scrollRef,
+    axis,
+  });
 
   return (
     <ScrollContext.Provider
       value={{ startingShadowVisibility, endingShadowVisibility }}
     >
       <div
-        ref={mergeRefs([scrollRef, forwardedRef])}
-        data-axis={axis}
         className={cn("scroll-shadow-root", className)}
+        data-axis={axis}
+        ref={mergeRefs([scrollRef, forwardedRef])}
         {...rest}
       />
     </ScrollContext.Provider>
@@ -49,15 +53,15 @@ export const ScrollShadowRoot = forwardRef<
 export const ScrollShadowStart = forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof motion.div>
->(function ScrollShadowStart(props, ref) {
+>(function ScrollShadowStartInner(props, ref) {
   const { className, style = {}, ...rest } = props;
   const { startingShadowVisibility } = useScrollContext();
 
   return (
     <motion.div
+      className={cn("scroll-shadow-start", className)}
       ref={ref}
       style={{ ...style, opacity: startingShadowVisibility }}
-      className={cn("scroll-shadow-start", className)}
       {...rest}
     />
   );
@@ -66,15 +70,15 @@ export const ScrollShadowStart = forwardRef<
 export const ScrollShadowEnd = forwardRef<
   HTMLDivElement,
   React.ComponentProps<typeof motion.div>
->(function ScrollShadowEnd(props, ref) {
+>(function ScrollShadowEndInner(props, ref) {
   const { className, style = {}, ...rest } = props;
   const { endingShadowVisibility } = useScrollContext();
 
   return (
     <motion.div
+      className={cn("scroll-shadow-end", className)}
       ref={ref}
       style={{ ...style, opacity: endingShadowVisibility }}
-      className={cn("scroll-shadow-end", className)}
       {...rest}
     />
   );

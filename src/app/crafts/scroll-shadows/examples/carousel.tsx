@@ -1,16 +1,14 @@
 "use client";
 
 import Image from "next/image";
+
 import { ExampleContainer } from "~/components/crafts/example-container";
-import { cn } from "~/lib/utils";
-import {
-  BrokenScrollContainer,
-  ScrollContainer,
-} from "./scroll-container";
+import { cn } from "~/utils";
+import { BrokenScrollContainer, ScrollContainer } from "./scroll-container";
 
 export function CarouselExample({ count }: { count?: number }) {
   return (
-    <ExampleContainer mockBrowser isolated className="w-full">
+    <ExampleContainer className="w-full" isolated mockBrowser>
       <ScrollContainer
         axis="x"
         className="max-h-[400px] w-full bg-white [--size:25px]"
@@ -23,7 +21,7 @@ export function CarouselExample({ count }: { count?: number }) {
 
 export function BrokenCarouselExample({ count }: { count: number }) {
   return (
-    <ExampleContainer mockBrowser className="w-full">
+    <ExampleContainer className="w-full" mockBrowser>
       <BrokenScrollContainer
         axis="x"
         className="max-h-[400px] w-full bg-white [--size:25px]"
@@ -40,14 +38,13 @@ export function Carousel({
 }: React.PropsWithChildren<{ count?: number; className?: string }>) {
   return (
     <div className={cn("flex gap-6 p-6", className)}>
-      {Array.from({ length: count }).map((_, index) => {
-        return (
-          <div
-            key={index}
-            className="aspect-square size-[176px] rounded-xl bg-zinc-200"
-          />
-        );
-      })}
+      {Array.from({ length: count }).map((_, index) => (
+        <div
+          className="aspect-square size-[176px] rounded-xl bg-zinc-200"
+          // biome-ignore lint/suspicious/noArrayIndexKey: static content
+          key={index}
+        />
+      ))}
     </div>
   );
 }
@@ -91,44 +88,34 @@ const carousels = [
 
 export function NetflixCarousel() {
   return (
-    <ExampleContainer mockBrowser className="w-full bg-gray-900">
-      <ScrollContainer
-        axis="y"
-        className="no-scrollbar max-h-[550px] w-full"
-      >
+    <ExampleContainer className="w-full bg-gray-900" mockBrowser>
+      <ScrollContainer axis="y" className="no-scrollbar max-h-[550px] w-full">
         <div className="flex flex-col gap-8 py-10">
-          {carousels.map((carousel) => {
-            return (
-              <div key={carousel.id} className="flex flex-col gap-4">
-                <h3 className="px-6 text-xl/none font-semibold text-white">
-                  {carousel.label}
-                </h3>
+          {carousels.map((carousel) => (
+            <div className="flex flex-col gap-4" key={carousel.id}>
+              <h3 className="px-6 font-semibold text-white text-xl/none">
+                {carousel.label}
+              </h3>
 
-                <ScrollContainer
-                  axis="x"
-                  className="no-scrollbar w-full"
-                >
-                  <div className="flex gap-6 px-6">
-                    {carousel.images.map((image) => {
-                      return (
-                        <div
-                          key={image.id}
-                          className="relative aspect-video w-[296px] overflow-hidden rounded bg-zinc-200"
-                        >
-                          <Image
-                            src={image.src}
-                            alt=""
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                </ScrollContainer>
-              </div>
-            );
-          })}
+              <ScrollContainer axis="x" className="no-scrollbar w-full">
+                <div className="flex gap-6 px-6">
+                  {carousel.images.map((image) => (
+                    <div
+                      className="relative aspect-video w-[296px] overflow-hidden rounded bg-zinc-200"
+                      key={image.id}
+                    >
+                      <Image
+                        alt=""
+                        className="object-cover"
+                        fill
+                        src={image.src}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </ScrollContainer>
+            </div>
+          ))}
         </div>
       </ScrollContainer>
     </ExampleContainer>

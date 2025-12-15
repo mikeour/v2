@@ -1,7 +1,6 @@
+import type { ClassValue } from "clsx";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-
-import type { ClassValue } from "clsx";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -14,26 +13,21 @@ export function getFormattedDate(date: number | string): string {
     year: "numeric",
   };
 
-  const formattedDate = new Date(date).toLocaleDateString(
-    "en-US",
-    options
-  );
+  const formattedDate = new Date(date).toLocaleDateString("en-US", options);
 
   return formattedDate;
 }
 
-export function mergeRefs<T = any>(
-  refs: Array<
-    React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null
-  >
+export function mergeRefs<T = unknown>(
+  refs: Array<React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null>
 ): React.RefCallback<T> {
   return (value) => {
-    refs.forEach((ref) => {
+    for (const ref of refs) {
       if (typeof ref === "function") {
         ref(value);
-      } else if (ref != null) {
+      } else if (ref !== null && ref !== undefined) {
         (ref as React.MutableRefObject<T | null>).current = value;
       }
-    });
+    }
   };
 }

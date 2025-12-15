@@ -1,111 +1,106 @@
-import * as React from "react";
-import { cn } from "~/lib/utils";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  type TdHTMLAttributes,
+  type ThHTMLAttributes,
+} from "react";
 
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="w-full">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
-      {...props}
-    />
-  </div>
-));
+import { cn } from "~/utils";
+
+const Table = forwardRef<HTMLTableElement, HTMLAttributes<HTMLTableElement>>(
+  ({ className, ...props }, ref) => (
+    <div className="w-full">
+      <table
+        className={cn("w-full caption-bottom text-sm", className)}
+        ref={ref}
+        {...props}
+      />
+    </div>
+  )
+);
 Table.displayName = "Table";
 
-const TableHeader = React.forwardRef<
+const TableHeader = forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
+  HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <thead
+    className={cn("[&_tr]:border-gray-400 [&_tr]:border-b-2", className)}
     ref={ref}
-    className={cn(
-      "[&_tr]:border-b-2 [&_tr]:border-gray-400",
-      className
-    )}
     {...props}
   />
 ));
 TableHeader.displayName = "TableHeader";
 
-const TableBody = React.forwardRef<
+const TableBody = forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
+  HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <tbody
+    className={cn("border-gray-400 border-b-2", className)}
     ref={ref}
-    className={cn("border-b-2 border-gray-400", className)}
     {...props}
   />
 ));
 TableBody.displayName = "TableBody";
 
-const TableFooter = React.forwardRef<
+const TableFooter = forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
+  HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <tfoot
+    className={cn("bg-primary font-medium text-primary-foreground", className)}
     ref={ref}
-    className={cn(
-      "bg-primary font-medium text-primary-foreground",
-      className
-    )}
     {...props}
   />
 ));
 TableFooter.displayName = "TableFooter";
 
-const TableRow = React.forwardRef<
+const TableRow = forwardRef<
   HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
+  HTMLAttributes<HTMLTableRowElement>
 >(({ className, ...props }, ref) => (
   <tr
-    ref={ref}
     className={cn(
       "transition-colors data-[state=selected]:bg-muted",
       className
     )}
+    ref={ref}
     {...props}
   />
 ));
 TableRow.displayName = "TableRow";
 
-const TableHead = React.forwardRef<
+const TableHead = forwardRef<
   HTMLTableCellElement,
-  React.ThHTMLAttributes<HTMLTableCellElement>
+  ThHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
   <th
-    ref={ref}
     className={cn(
-      "h-12 text-left align-middle text-xs font-medium uppercase tracking-widest text-gray-300 [&:has([role=checkbox])]:pr-0",
+      "h-12 text-left align-middle font-medium text-gray-300 text-xs uppercase tracking-widest [&:has([role=checkbox])]:pr-0",
       className
     )}
+    ref={ref}
     {...props}
   />
 ));
 TableHead.displayName = "TableHead";
 
-const TableCell = React.forwardRef<
+const TableCell = forwardRef<
   HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement>
+  TdHTMLAttributes<HTMLTableCellElement>
 >(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn("py-5 align-middle", className)}
-    {...props}
-  />
+  <td className={cn("py-5 align-middle", className)} ref={ref} {...props} />
 ));
 TableCell.displayName = "TableCell";
 
-const TableCaption = React.forwardRef<
+const TableCaption = forwardRef<
   HTMLTableCaptionElement,
-  React.HTMLAttributes<HTMLTableCaptionElement>
+  HTMLAttributes<HTMLTableCaptionElement>
 >(({ className, ...props }, ref) => (
   <caption
+    className={cn("mt-5 text-muted-foreground text-sm", className)}
     ref={ref}
-    className={cn("mt-5 text-sm text-muted-foreground", className)}
     {...props}
   />
 ));

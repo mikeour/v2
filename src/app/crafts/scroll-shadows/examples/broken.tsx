@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import { motion } from "framer-motion";
-import { cn } from "~/lib/utils";
+
+import { cn } from "~/utils";
 import { useBrokenScrollShadows } from "./use-scroll-shadows";
 
 export function ScrollContainer({
@@ -16,22 +17,19 @@ export function ScrollContainer({
 
   return (
     <div
+      className={cn("group relative flex flex-col overflow-y-auto", className)}
       ref={ref}
-      className={cn(
-        "group relative flex flex-col overflow-y-auto",
-        className
-      )}
     >
       <motion.div
+        className="-mb-[--size] pointer-events-none sticky top-0 h-[--size] shrink-0 bg-blue-400/30"
         style={{ opacity: start }}
-        className="pointer-events-none sticky top-0 -mb-[--size] h-[--size] shrink-0 bg-blue-400/30"
       />
 
       {children}
 
       <motion.div
+        className="-mt-[--size] pointer-events-none sticky bottom-0 h-[--size] shrink-0 bg-blue-400/30"
         style={{ opacity: end }}
-        className="pointer-events-none sticky bottom-0 -mt-[--size] h-[--size] shrink-0 bg-blue-400/30"
       />
     </div>
   );
