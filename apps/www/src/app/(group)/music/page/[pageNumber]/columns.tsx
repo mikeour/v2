@@ -25,7 +25,7 @@ export const columns: ColumnDef<TrackData>[] = [
             />
           </div>
 
-          <div className="flex flex-col gap-[2px]">
+          <div className="flex flex-col gap-0.5">
             <span className="text-base/[16px] text-gray-100">
               {track.title}
             </span>

@@ -62,7 +62,7 @@ export function InteractiveArticleExample() {
       mockBrowser
     >
       <DemoScrollContainer
-        className="max-h-[400px] [--size:24px] md:[--size:36px]"
+        className="max-h-100 [--size:24px] md:[--size:36px]"
         isEnabled={isEnabled}
         isRealistic={isRealistic}
       >
@@ -83,7 +83,7 @@ export function ArticleProgress() {
 
   return (
     <ExampleContainer
-      className="max-h-[300px] w-full"
+      className="max-h-75 w-full"
       controls={
         <p className="my-0 flex items-center justify-center gap-2 text-center text-base/none tabular-nums">
           <code>
@@ -129,7 +129,7 @@ export function BrokenArticleProgress({
 
   return (
     <ExampleContainer
-      className="h-[300px] w-full items-stretch"
+      className="h-75 w-full items-stretch"
       controls={
         <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
           <div className="flex items-center gap-3">
@@ -202,7 +202,7 @@ export function ArticleMarkupExample() {
 
   return (
     <ExampleContainer
-      className="max-h-[300px] w-full"
+      className="max-h-75 w-full"
       controls={
         <p className="my-0 flex items-center justify-center gap-4 text-center text-base/none tabular-nums">
           <code>size:</code>
@@ -243,7 +243,7 @@ export function ArticleMarkupExample() {
 export function ArticleExample() {
   return (
     <ExampleContainer className="w-full" isolated mockBrowser>
-      <ScrollContainer className="max-h-[400px] [--size:25px]">
+      <ScrollContainer className="max-h-100 [--size:25px]">
         <Article />
       </ScrollContainer>
     </ExampleContainer>

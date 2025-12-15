@@ -60,7 +60,7 @@ export function MusicTable({
   }
 
   return (
-    <div className="scroll-m-[200px]">
+    <div className="scroll-m-50">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -174,7 +174,7 @@ function StyledLink({
   return (
     <Link
       className={cn(
-        "rounded border border-input bg-background p-1 text-white no-underline transition-colors hover:bg-accent hover:text-accent-foreground hover:text-white",
+        "rounded border border-input bg-background p-1 text-white no-underline transition-colors hover:bg-accent hover:text-accent-foreground",
         !!disabled && "pointer-events-none cursor-not-allowed text-gray-500"
       )}
       {...props}

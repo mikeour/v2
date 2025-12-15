@@ -11,7 +11,7 @@ export function CarouselExample({ count }: { count?: number }) {
     <ExampleContainer className="w-full" isolated mockBrowser>
       <ScrollContainer
         axis="x"
-        className="max-h-[400px] w-full bg-white [--size:25px]"
+        className="max-h-100 w-full bg-white [--size:25px]"
       >
         <Carousel count={count} />
       </ScrollContainer>
@@ -24,7 +24,7 @@ export function BrokenCarouselExample({ count }: { count: number }) {
     <ExampleContainer className="w-full" mockBrowser>
       <BrokenScrollContainer
         axis="x"
-        className="max-h-[400px] w-full bg-white [--size:25px]"
+        className="max-h-100 w-full bg-white [--size:25px]"
       >
         <Carousel count={count} />
       </BrokenScrollContainer>
@@ -40,7 +40,7 @@ export function Carousel({
     <div className={cn("flex gap-6 p-6", className)}>
       {Array.from({ length: count }).map((_, index) => (
         <div
-          className="aspect-square size-[176px] rounded-xl bg-zinc-200"
+          className="aspect-square size-44 rounded-xl bg-zinc-200"
           // biome-ignore lint/suspicious/noArrayIndexKey: static content
           key={index}
         />
@@ -89,7 +89,7 @@ const carousels = [
 export function NetflixCarousel() {
   return (
     <ExampleContainer className="w-full bg-gray-900" mockBrowser>
-      <ScrollContainer axis="y" className="no-scrollbar max-h-[550px] w-full">
+      <ScrollContainer axis="y" className="no-scrollbar max-h-137.5 w-full">
         <div className="flex flex-col gap-8 py-10">
           {carousels.map((carousel) => (
             <div className="flex flex-col gap-4" key={carousel.id}>
@@ -101,7 +101,7 @@ export function NetflixCarousel() {
                 <div className="flex gap-6 px-6">
                   {carousel.images.map((image) => (
                     <div
-                      className="relative aspect-video w-[296px] overflow-hidden rounded bg-zinc-200"
+                      className="relative aspect-video w-74 overflow-hidden rounded bg-zinc-200"
                       key={image.id}
                     >
                       <Image
