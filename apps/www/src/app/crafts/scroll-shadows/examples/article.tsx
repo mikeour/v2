@@ -88,7 +88,7 @@ export function ArticleProgress() {
         <p className="my-0 flex items-center justify-center gap-2 text-center text-base/none tabular-nums">
           <code>
             scrollYProgress:
-            <span className="!text-white"> {progress}</span>
+            <span className="text-white!"> {progress}</span>
           </code>
         </p>
       }
@@ -153,14 +153,14 @@ export function BrokenArticleProgress({
             <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
               <code>
                 startingShadowVisibility:
-                <span className="!text-white"> {starting}</span>
+                <span className="text-white!"> {starting}</span>
               </code>
             </p>
 
             <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
               <code>
                 endingShadowVisibility:
-                <span className="!text-white"> {ending}</span>
+                <span className="text-white!"> {ending}</span>
               </code>
             </p>
           </div>
@@ -174,7 +174,7 @@ export function BrokenArticleProgress({
       >
         {!!showingShadows && (
           <motion.div
-            className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+            className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: start }}
           >
             <code className="text-sm">opacity: {starting}</code>
@@ -185,7 +185,7 @@ export function BrokenArticleProgress({
 
         {!!showingShadows && (
           <motion.div
-            className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+            className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: end }}
           >
             <code className="text-sm">opacity: {ending}</code>
@@ -226,13 +226,13 @@ export function ArticleMarkupExample() {
         ref={articleRef}
         style={{ "--size": `${size}px` } as React.CSSProperties}
       >
-        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${size}px, marginBottom: -${size}px }`}</code>
         </div>
 
         <Article />
 
-        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${size}px, marginTop: -${size}px }`}</code>
         </div>
       </div>
@@ -324,7 +324,7 @@ function Credits() {
 function ImageBlock() {
   return (
     <div className="my-4 flex w-8/12 flex-col gap-2">
-      <div className="aspect-[7/3] w-full rounded bg-zinc-200" />
+      <div className="aspect-7/3 w-full rounded bg-zinc-200" />
       <p className="h-4 w-2/6 self-end rounded bg-zinc-200" />
     </div>
   );

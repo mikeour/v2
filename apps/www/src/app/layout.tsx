@@ -27,7 +27,7 @@ export default function RootLayout({
       />
 
       <body
-        className={`flex min-h-[100dvh] w-full overscroll-none bg-zinc-900 px-[--gutter] ${karla.className} ${fira.variable}`}
+        className={`flex min-h-dvh w-full overscroll-none bg-zinc-900 px-(--gutter) ${karla.className} ${fira.variable}`}
       >
         {children}
 

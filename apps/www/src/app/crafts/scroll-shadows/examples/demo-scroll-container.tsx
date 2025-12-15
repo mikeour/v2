@@ -36,10 +36,10 @@ export function DemoScrollContainer({
         <motion.div
           className={cn(
             "pointer-events-none sticky shrink-0 origin-top",
-            "group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-[--size]",
-            "group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:top-0 group-data-[axis=y]:h-[--size]",
+            "group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-(--size)",
+            "group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:top-0 group-data-[axis=y]:h-(--size)",
             isRealistic
-              ? "bg-gradient-to-b from-slate-900/50 to-slate-50/0"
+              ? "bg-linear-to-b from-slate-900/50 to-slate-50/0"
               : "bg-blue-400/35"
           )}
           style={{ opacity: start, scaleY: start }}
@@ -52,10 +52,10 @@ export function DemoScrollContainer({
         <motion.div
           className={cn(
             "pointer-events-none sticky shrink-0 origin-bottom",
-            "group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-[--size]",
-            "group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-[--size]",
+            "group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-(--size)",
+            "group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-(--size)",
             isRealistic
-              ? "bg-gradient-to-t from-slate-900/50 to-slate-50/0"
+              ? "bg-linear-to-t from-slate-900/50 to-slate-50/0"
               : "bg-blue-400/35"
           )}
           style={{ opacity: end, scaleY: end }}

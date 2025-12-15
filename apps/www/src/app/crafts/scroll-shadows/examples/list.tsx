@@ -24,13 +24,13 @@ export function BasicListExample() {
           "relative flex max-h-[400px] flex-col overflow-y-auto [--size:48px]"
         )}
       >
-        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ top: 0 }"}</code>
         </div>
 
         <List />
 
-        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ bottom: 0 }"}</code>
         </div>
       </div>
@@ -73,7 +73,7 @@ export function PlainList() {
         ref={ref}
       >
         <div
-          className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+          className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: start }}
         >
           <code>{`{ start: ${start.toFixed(1)} }`}</code>
@@ -82,7 +82,7 @@ export function PlainList() {
         <List />
 
         <div
-          className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+          className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: end }}
         >
           <code>{`{ end: ${end.toFixed(1)} }`}</code>

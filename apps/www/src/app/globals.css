@@ -1,14 +1,75 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Add source for UI package */
+@source "../../../../packages/ui/src/**/*.tsx";
+
+@theme {
+  /* Custom colors using CSS variables */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* Border radius */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  /* Font families */
+  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-fira), ui-monospace, monospace;
+
+  /* Animations */
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-up-and-down: up-and-down 1.3s ease infinite alternate;
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@keyframes up-and-down {
+  10% { height: 30%; }
+  30% { height: 100%; }
+  60% { height: 50%; }
+  80% { height: 75%; }
+  100% { height: 60%; }
+}
 
 @layer base {
   :root {
     --gutter: 16px;
-  }
 
-  @screen lg {
-    :root {
+    @media (width >= 1024px) {
       --gutter: 48px;
     }
   }
@@ -92,13 +153,13 @@
   }
 
   code {
-    @apply !font-medium;
+    @apply font-medium;
   }
 }
 
 /* codeblocks from code-hike */
 .ch-codeblock {
-  @apply !my-8 bg-slate-800;
+  @apply my-8 bg-slate-800;
 }
 
 /* interactive components */
@@ -112,7 +173,7 @@
 }
 
 .text-block .ch-codeblock {
-  @apply !my-6;
+  @apply my-6;
 }
 
 .ch-codeblock .ch-code-button {

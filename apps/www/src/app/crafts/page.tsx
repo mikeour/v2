@@ -16,7 +16,7 @@ export default function Page() {
           className="group flex flex-col gap-3 no-underline"
           href="/crafts/scroll-shadows"
         >
-          <div className="aspect-[4/3] w-full overflow-hidden rounded bg-gray-600">
+          <div className="aspect-4/3 w-full overflow-hidden rounded bg-gray-600">
             <Image alt="" className="h-full w-full object-cover" src={img} />
           </div>
 

@@ -2,7 +2,7 @@
 export function Important({ children }: React.PropsWithChildren) {
   return (
     <div className="relative rounded-lg bg-indigo-900 px-5 text-block">
-      <div className="-translate-x-1/2 -translate-y-1/2 -rotate-[6deg] absolute top-0 left-10 sm:left-8">
+      <div className="-translate-x-1/2 -translate-y-1/2 -rotate-6 absolute top-0 left-10 sm:left-8">
         <span className="not-prose rounded bg-indigo-600 px-2 py-1 font-semibold text-indigo-50 text-sm/none uppercase tracking-wider">
           Important
         </span>

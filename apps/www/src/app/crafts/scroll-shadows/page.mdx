@@ -274,10 +274,10 @@ Taking inspiration from this [article](https://www.qovery.com/blog/adding-elegan
   )}
 >
   // focus
-  <div className="pointer-events-none sticky top-0 -mb-[--size] h-[--size] shrink-0 bg-blue-400/30" />
+  <div className="pointer-events-none sticky top-0 -mb-(--size) h-(--size) shrink-0 bg-blue-400/30" />
   {children}
   // focus
-  <div className="pointer-events-none sticky bottom-0 -mt-[--size] h-[--size] shrink-0 bg-blue-400/30" />
+  <div className="pointer-events-none sticky bottom-0 -mt-(--size) h-(--size) shrink-0 bg-blue-400/30" />
 </div>
 ```
 
@@ -314,14 +314,14 @@ function ScrollShadows({
     >
       <motion.div
         style={{ opacity: startingShadowVisibility }}
-        className="pointer-events-none sticky top-0 -mb-[--size] h-[--size] shrink-0 bg-blue-400/30"
+        className="pointer-events-none sticky top-0 -mb-(--size) h-(--size) shrink-0 bg-blue-400/30"
       />
 
       {children}
 
       <motion.div
         style={{ opacity: endingShadowVisibility }}
-        className="pointer-events-none sticky bottom-0 -mt-[--size] h-[--size] shrink-0 bg-blue-400/30"
+        className="pointer-events-none sticky bottom-0 -mt-(--size) h-(--size) shrink-0 bg-blue-400/30"
       />
     </div>
   );
@@ -493,14 +493,14 @@ function ScrollShadows({
     >
       <motion.div
         style={{ opacity: startingShadowVisibility }}
-        className="pointer-events-none sticky top-0 -mb-[--size] h-[--size] shrink-0 bg-blue-400/30"
+        className="pointer-events-none sticky top-0 -mb-(--size) h-(--size) shrink-0 bg-blue-400/30"
       />
 
       {children}
 
       <motion.div
         style={{ opacity: endingShadowVisibility }}
-        className="pointer-events-none sticky bottom-0 -mt-[--size] h-[--size] shrink-0 bg-blue-400/30"
+        className="pointer-events-none sticky bottom-0 -mt-(--size) h-(--size) shrink-0 bg-blue-400/30"
       />
     </div>
   );
@@ -546,9 +546,9 @@ function ScrollShadows({
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
           // focus
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:w-[--size]", // horizontal styles
+          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:w-(--size)", // horizontal styles
           // focus
-          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:h-[--size]" // vertical styles
+          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:h-(--size)" // vertical styles
         )}
       />
 
@@ -559,9 +559,9 @@ function ScrollShadows({
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
           // focus
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:w-[--size]", // horizontal styles
+          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:w-(--size)", // horizontal styles
           // focus
-          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:h-[--size]" // vertical styles
+          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:h-(--size)" // vertical styles
         )}
       />
     </div>
@@ -605,8 +605,8 @@ function ScrollShadows({
         style={{ opacity: startingShadowVisibility }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:w-(--size)",
+          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:h-(--size)"
         )}
       />
 
@@ -616,8 +616,8 @@ function ScrollShadows({
         style={{ opacity: endingShadowVisibility }}
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-[--size] group-data-[axis=x]:w-[--size]",
-          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-[--size] group-data-[axis=y]:h-[--size]"
+          "group-data-[axis=x]:bottom-0 group-data-[axis=x]:right-0 group-data-[axis=x]:top-0 group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:w-(--size)",
+          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:h-(--size)"
         )}
       />
     </div>
@@ -697,7 +697,7 @@ And, as promised:
   .scroll-shadow-end {
     pointer-events: none;
     position: sticky;
-    flex-shrink: 0;
+    shrink: 0;
   }
 
   &[data-axis="x"] {
