@@ -15,6 +15,7 @@
     "@mdx-js/react": "^3.0.1",
     "@mikeour/ui": "workspace:*",
     "@next/mdx": "16.0.10",
+    "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-table": "^8.16.0",
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.2.2",
