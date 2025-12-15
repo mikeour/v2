@@ -1,0 +1,16 @@
+{
+  "name": "@mikeour/tailwind-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf node_modules .turbo"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.12",
+    "mini-svg-data-uri": "^1.4.4",
+    "tailwindcss": "3.4.3",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-radix": "^3.0.3"
+  }
+}
