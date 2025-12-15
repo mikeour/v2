@@ -158,6 +158,11 @@
   }
 }
 
+/* Override prose link styles - need to match typography plugin specificity */
+.prose :where(a):not(:where([class~=not-prose],[class~=not-prose] *)) {
+  @apply text-blue-400 underline underline-offset-2 transition-colors hover:text-blue-300;
+}
+
 /* codeblocks from code-hike */
 .ch-codeblock {
   @apply my-8 bg-slate-800;
