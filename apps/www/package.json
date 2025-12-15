@@ -24,6 +24,7 @@
     "globby": "^14.0.1",
     "javascript-time-ago": "^2.5.9",
     "letterboxd": "^3.1.1",
+    "lucide-react": "^0.511.0",
     "next": "16.0.10",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -40,6 +41,7 @@
     "@types/react-dom": "19.2.3",
     "@types/spotify-api": "^0.0.25",
     "@types/uuid": "^9.0.8",
+    "code-inspector-plugin": "^1.3.3",
     "tailwindcss": "^4.1.18",
     "typescript": "5.9.3"
   }

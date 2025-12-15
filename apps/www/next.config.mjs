@@ -3,11 +3,13 @@ import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
 
+import theme from "./src/themes/one-monokai.mjs";
+
 /** @type {import('codehike/mdx').CodeHikeConfig} */
 const chConfig = {
   components: { code: "Code" },
   syntaxHighlighting: {
-    theme: "github-dark",
+    theme,
   },
 };
 
