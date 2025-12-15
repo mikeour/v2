@@ -9,12 +9,15 @@
     "check": "ultracite check",
     "fix": "ultracite fix",
     "typecheck": "turbo check",
+    "lint:versions": "syncpack list-mismatches",
     "clean": "turbo clean && rm -rf node_modules pnpm-lock.yaml",
-    "prepare": "lefthook install"
+    "prepare": "lefthook install",
+    "postinstall": "syncpack list-mismatches"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.8",
     "lefthook": "^2.0.9",
+    "syncpack": "^13.0.4",
     "turbo": "^2.3.3",
     "ultracite": "^6.4.0"
   },
