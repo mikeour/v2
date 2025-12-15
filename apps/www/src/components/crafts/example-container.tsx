@@ -22,10 +22,10 @@ export function ExampleContainer({
       <div
         className={cn(
           "not-prose component-bg relative flex flex-col items-center justify-center",
-          !!isolated && "px-[--gutter] py-8 sm:py-12"
+          !!isolated && "px-(--gutter) py-8 sm:py-12"
         )}
       >
-        {/* <div className="pointer-events-none absolute inset-0 z-0 bg-slate-800 [mask-image:radial-gradient(ellipse,rgba(27,30,40,0)_0%,rgba(27,30,40,1)_100%)]" /> */}
+        {/* <div className="pointer-events-none absolute inset-0 z-0 bg-slate-800 mask-[radial-gradient(ellipse,rgba(27,30,40,0)_0%,rgba(27,30,40,1)_100%)]" /> */}
 
         <div
           className={cn(
@@ -41,7 +41,7 @@ export function ExampleContainer({
       </div>
 
       {!!controls && (
-        <div className="relative w-full bg-slate-700 px-[--gutter] py-4">
+        <div className="relative w-full bg-slate-700 px-(--gutter)">
           {controls}
         </div>
       )}

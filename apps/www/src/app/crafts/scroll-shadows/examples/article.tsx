@@ -22,7 +22,7 @@ export function InteractiveArticleExample() {
     <ExampleContainer
       className="w-full"
       controls={
-        <div className="relative flex select-none flex-col items-center gap-3 text-white md:flex-row md:justify-evenly">
+        <div className="relative flex select-none flex-col items-center gap-3 py-4 text-white md:flex-row md:justify-evenly">
           <div className="flex items-center gap-3">
             <Switch
               checked={isEnabled}
@@ -62,7 +62,7 @@ export function InteractiveArticleExample() {
       mockBrowser
     >
       <DemoScrollContainer
-        className="max-h-[400px] [--size:24px] md:[--size:36px]"
+        className="max-h-100 [--size:24px] md:[--size:36px]"
         isEnabled={isEnabled}
         isRealistic={isRealistic}
       >
@@ -83,12 +83,12 @@ export function ArticleProgress() {
 
   return (
     <ExampleContainer
-      className="max-h-[300px] w-full"
+      className="max-h-75 w-full"
       controls={
         <p className="my-0 flex items-center justify-center gap-2 text-center text-base/none tabular-nums">
           <code>
             scrollYProgress:
-            <span className="!text-white"> {progress}</span>
+            <span className="text-white!"> {progress}</span>
           </code>
         </p>
       }
@@ -129,9 +129,9 @@ export function BrokenArticleProgress({
 
   return (
     <ExampleContainer
-      className="h-[300px] w-full items-stretch"
+      className="h-75 w-full items-stretch"
       controls={
-        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
+        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 py-4 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
           <div className="flex items-center gap-3">
             <Switch
               checked={showingShadows}
@@ -153,14 +153,14 @@ export function BrokenArticleProgress({
             <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
               <code>
                 startingShadowVisibility:
-                <span className="!text-white"> {starting}</span>
+                <span className="text-white!"> {starting}</span>
               </code>
             </p>
 
             <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
               <code>
                 endingShadowVisibility:
-                <span className="!text-white"> {ending}</span>
+                <span className="text-white!"> {ending}</span>
               </code>
             </p>
           </div>
@@ -174,7 +174,7 @@ export function BrokenArticleProgress({
       >
         {!!showingShadows && (
           <motion.div
-            className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+            className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: start }}
           >
             <code className="text-sm">opacity: {starting}</code>
@@ -185,7 +185,7 @@ export function BrokenArticleProgress({
 
         {!!showingShadows && (
           <motion.div
-            className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+            className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
             style={{ opacity: end }}
           >
             <code className="text-sm">opacity: {ending}</code>
@@ -202,7 +202,7 @@ export function ArticleMarkupExample() {
 
   return (
     <ExampleContainer
-      className="max-h-[300px] w-full"
+      className="max-h-75 w-full"
       controls={
         <p className="my-0 flex items-center justify-center gap-4 text-center text-base/none tabular-nums">
           <code>size:</code>
@@ -226,13 +226,13 @@ export function ArticleMarkupExample() {
         ref={articleRef}
         style={{ "--size": `${size}px` } as React.CSSProperties}
       >
-        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${size}px, marginBottom: -${size}px }`}</code>
         </div>
 
         <Article />
 
-        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${size}px, marginTop: -${size}px }`}</code>
         </div>
       </div>
@@ -243,7 +243,7 @@ export function ArticleMarkupExample() {
 export function ArticleExample() {
   return (
     <ExampleContainer className="w-full" isolated mockBrowser>
-      <ScrollContainer className="max-h-[400px] [--size:25px]">
+      <ScrollContainer className="max-h-100 [--size:25px]">
         <Article />
       </ScrollContainer>
     </ExampleContainer>
@@ -324,7 +324,7 @@ function Credits() {
 function ImageBlock() {
   return (
     <div className="my-4 flex w-8/12 flex-col gap-2">
-      <div className="aspect-[7/3] w-full rounded bg-zinc-200" />
+      <div className="aspect-7/3 w-full rounded bg-zinc-200" />
       <p className="h-4 w-2/6 self-end rounded bg-zinc-200" />
     </div>
   );

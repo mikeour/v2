@@ -9,7 +9,6 @@ apps/
   www/                 # Next.js website (@mikeour/www)
 packages/
   ui/                  # Shared UI components (@mikeour/ui)
-  tailwind-config/     # Shared Tailwind preset (@mikeour/tailwind-config)
   typescript-config/   # Shared TypeScript configs (@mikeour/typescript-config)
 ```
 

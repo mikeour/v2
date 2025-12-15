@@ -15,7 +15,7 @@ export const columns: ColumnDef<Film>[] = [
 
       return (
         <div className="relative flex items-center gap-5">
-          <div className="relative aspect-[2/3] w-20 shrink-0 overflow-hidden rounded bg-blue-400/25">
+          <div className="relative aspect-2/3 w-20 shrink-0 overflow-hidden rounded bg-blue-400/25">
             <Image
               alt={`${film.title} movie poster`}
               fill

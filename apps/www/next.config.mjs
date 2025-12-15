@@ -1,13 +1,16 @@
 import createMDX from "@next/mdx";
+import { codeInspectorPlugin } from "code-inspector-plugin";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
+
+import theme from "./src/themes/one-monokai.mjs";
 
 /** @type {import('codehike/mdx').CodeHikeConfig} */
 const chConfig = {
   components: { code: "Code" },
   syntaxHighlighting: {
-    theme: "github-dark",
+    theme,
   },
 };
 
@@ -44,6 +47,10 @@ const nextConfig = {
         destination: "/movies/page/1",
       },
     ];
+  },
+  webpack: (config) => {
+    config.plugins.push(codeInspectorPlugin({ bundler: "webpack" }));
+    return config;
   },
 };
 

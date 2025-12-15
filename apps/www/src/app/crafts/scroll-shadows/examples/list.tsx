@@ -8,8 +8,8 @@ import { ScrollContainer } from "./scroll-container";
 
 export function ListExample() {
   return (
-    <ExampleContainer className="w-full sm:max-w-[420px]" isolated mockBrowser>
-      <ScrollContainer className="max-h-[400px] bg-white [--size:25px]">
+    <ExampleContainer className="w-full sm:max-w-105" isolated mockBrowser>
+      <ScrollContainer className="max-h-100 bg-white [--size:25px]">
         <List />
       </ScrollContainer>
     </ExampleContainer>
@@ -18,19 +18,19 @@ export function ListExample() {
 
 export function BasicListExample() {
   return (
-    <ExampleContainer className="w-full sm:max-w-[420px]" isolated mockBrowser>
+    <ExampleContainer className="w-full sm:max-w-105" isolated mockBrowser>
       <div
         className={cn(
-          "relative flex max-h-[400px] flex-col overflow-y-auto [--size:48px]"
+          "relative flex max-h-100 flex-col overflow-y-auto [--size:48px]"
         )}
       >
-        <div className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ top: 0 }"}</code>
         </div>
 
         <List />
 
-        <div className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ bottom: 0 }"}</code>
         </div>
       </div>
@@ -68,12 +68,12 @@ export function PlainList() {
     <ExampleContainer className="w-full" isolated mockBrowser>
       <div
         className={cn(
-          "relative flex max-h-[400px] flex-col overflow-y-auto [--size:48px]"
+          "relative flex max-h-100 flex-col overflow-y-auto [--size:48px]"
         )}
         ref={ref}
       >
         <div
-          className="-mb-[--size] pointer-events-none sticky top-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+          className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: start }}
         >
           <code>{`{ start: ${start.toFixed(1)} }`}</code>
@@ -82,7 +82,7 @@ export function PlainList() {
         <List />
 
         <div
-          className="-mt-[--size] pointer-events-none sticky bottom-0 flex h-[--size] shrink-0 items-center justify-center bg-blue-400/30"
+          className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: end }}
         >
           <code>{`{ end: ${end.toFixed(1)} }`}</code>

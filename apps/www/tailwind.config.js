@@ -1,10 +1,31 @@
-const sharedConfig = require("@mikeour/tailwind-config");
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  ...sharedConfig,
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-    "../../packages/ui/src/**/*.{js,ts,jsx,tsx}",
-  ],
+  theme: {
+    extend: {
+      typography: {
+        DEFAULT: {
+          css: {
+            // Disable typography plugin's default styles to use base layer styles
+            color: null,
+            a: {
+              color: null,
+              textDecoration: null,
+              fontWeight: null,
+            },
+            strong: {
+              color: null,
+            },
+            img: {
+              marginTop: null,
+              marginBottom: null,
+            },
+            picture: {
+              marginTop: null,
+              marginBottom: null,
+            },
+          },
+        },
+      },
+    },
+  },
 };

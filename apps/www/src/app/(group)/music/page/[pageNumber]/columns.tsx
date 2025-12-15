@@ -25,7 +25,7 @@ export const columns: ColumnDef<TrackData>[] = [
             />
           </div>
 
-          <div className="flex flex-col gap-[2px]">
+          <div className="flex flex-col gap-0.5">
             <span className="text-base/[16px] text-gray-100">
               {track.title}
             </span>
@@ -86,7 +86,7 @@ export const columns: ColumnDef<TrackData>[] = [
 
 function NowPlayingIcon() {
   return (
-    <div className="ml-auto grid h-4 w-4 grid-cols-3 items-end gap-[1px]">
+    <div className="ml-auto grid h-4 w-4 grid-cols-3 items-end gap-px">
       <div className="h-[60%] w-full animate-up-and-down bg-green-400" />
       <div className="h-[30%] w-full animate-up-and-down bg-green-400 delay-200" />
       <div className="h-[75%] w-full animate-up-and-down bg-green-400 delay-300" />

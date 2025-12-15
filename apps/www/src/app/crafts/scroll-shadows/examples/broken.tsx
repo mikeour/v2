@@ -21,14 +21,14 @@ export function ScrollContainer({
       ref={ref}
     >
       <motion.div
-        className="-mb-[--size] pointer-events-none sticky top-0 h-[--size] shrink-0 bg-blue-400/30"
+        className="-mb-(--size) pointer-events-none sticky top-0 h-(--size) shrink-0 bg-blue-400/30"
         style={{ opacity: start }}
       />
 
       {children}
 
       <motion.div
-        className="-mt-[--size] pointer-events-none sticky bottom-0 h-[--size] shrink-0 bg-blue-400/30"
+        className="-mt-(--size) pointer-events-none sticky bottom-0 h-(--size) shrink-0 bg-blue-400/30"
         style={{ opacity: end }}
       />
     </div>

@@ -27,10 +27,10 @@ const externalLinks = [
 
 export default function Home() {
   return (
-    <main className="prose mx-auto prose-p:my-[0.8em] min-h-full w-full max-w-[952px] self-center py-16">
+    <main className="prose mx-auto prose-p:my-[0.8em] min-h-full w-full max-w-238 self-center py-16">
       <h1 className="mb-0 font-extrabold text-4xl text-blue-100 tracking-tighter lg:text-8xl">
         Hey, I&apos;m <br />
-        <span className="bg-gradient-to-r from-blue-600 via-blue-400 to-blue-600 bg-clip-text text-transparent">
+        <span className="bg-linear-to-r from-blue-600 via-blue-400 to-blue-600 bg-clip-text text-transparent">
           Michael Roeslein
         </span>
       </h1>
@@ -51,7 +51,7 @@ export default function Home() {
           className="group flex flex-col gap-4 no-underline"
           href="/crafts/scroll-shadows"
         >
-          <div className="relative aspect-[16/9] w-full overflow-hidden rounded-lg sm:aspect-[5/3]">
+          <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
             <Image
               alt=""
               className="my-0 h-full w-full object-cover"
