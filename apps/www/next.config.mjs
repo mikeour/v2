@@ -1,4 +1,5 @@
 import createMDX from "@next/mdx";
+import { codeInspectorPlugin } from "code-inspector-plugin";
 import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
@@ -46,6 +47,10 @@ const nextConfig = {
         destination: "/movies/page/1",
       },
     ];
+  },
+  webpack: (config) => {
+    config.plugins.push(codeInspectorPlugin({ bundler: "webpack" }));
+    return config;
   },
 };
 

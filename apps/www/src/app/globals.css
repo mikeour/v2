@@ -161,7 +161,7 @@
 
 /* codeblocks from code-hike */
 .ch-codeblock {
-  @apply my-8 bg-slate-800;
+  @apply !my-8 bg-slate-800;
 }
 
 /* interactive components */
