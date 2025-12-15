@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, forwardRef, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Slider } from "@mikeour/ui/slider";
 import { Switch } from "@mikeour/ui/switch";
 import { cn } from "@mikeour/ui/utils";
@@ -262,17 +262,15 @@ export function ArticleIframe() {
   );
 }
 
-export const Article = forwardRef<
-  HTMLDivElement,
-  { count?: number; className?: string }
->(function ArticleInner(props, ref) {
-  const { count = 3, className } = props;
-
+export function Article({
+  count = 3,
+  className,
+}: {
+  count?: number;
+  className?: string;
+}) {
   return (
-    <article
-      className={cn("bg-white p-6 sm:px-10 sm:py-12", className)}
-      ref={ref}
-    >
+    <article className={cn("bg-white p-6 sm:px-10 sm:py-12", className)}>
       <Header />
 
       <Credits />
@@ -305,7 +303,7 @@ export const Article = forwardRef<
       </div>
     </article>
   );
-});
+}
 
 function Header() {
   return <p className="h-20 w-full rounded bg-zinc-200" />;

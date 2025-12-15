@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, forwardRef, useContext, useRef } from "react";
+import type { ComponentProps } from "react";
+import { createContext, useContext, useRef } from "react";
 import { cn, mergeRefs } from "@mikeour/ui/utils";
 import type { MotionValue } from "framer-motion";
 import { motion } from "framer-motion";
@@ -22,14 +23,12 @@ function useScrollContext() {
   return context;
 }
 
-export const ScrollShadowRoot = forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<"div"> & {
-    axis: "x" | "y";
-  }
->(function ScrollShadowRootInner(props, forwardedRef) {
-  const { axis, className, ...rest } = props;
-
+export function ScrollShadowRoot({
+  axis,
+  className,
+  ref: forwardedRef,
+  ...rest
+}: ComponentProps<"div"> & { axis: "x" | "y" }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [startingShadowVisibility, endingShadowVisibility] = useScrollShadows({
     ref: scrollRef,
@@ -48,38 +47,36 @@ export const ScrollShadowRoot = forwardRef<
       />
     </ScrollContext.Provider>
   );
-});
+}
 
-export const ScrollShadowStart = forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<typeof motion.div>
->(function ScrollShadowStartInner(props, ref) {
-  const { className, style = {}, ...rest } = props;
+export function ScrollShadowStart({
+  className,
+  style = {},
+  ...rest
+}: ComponentProps<typeof motion.div>) {
   const { startingShadowVisibility } = useScrollContext();
 
   return (
     <motion.div
       className={cn("scroll-shadow-start", className)}
-      ref={ref}
       style={{ ...style, opacity: startingShadowVisibility }}
       {...rest}
     />
   );
-});
+}
 
-export const ScrollShadowEnd = forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<typeof motion.div>
->(function ScrollShadowEndInner(props, ref) {
-  const { className, style = {}, ...rest } = props;
+export function ScrollShadowEnd({
+  className,
+  style = {},
+  ...rest
+}: ComponentProps<typeof motion.div>) {
   const { endingShadowVisibility } = useScrollContext();
 
   return (
     <motion.div
       className={cn("scroll-shadow-end", className)}
-      ref={ref}
       style={{ ...style, opacity: endingShadowVisibility }}
       {...rest}
     />
   );
-});
+}

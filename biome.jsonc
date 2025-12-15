@@ -36,9 +36,6 @@
   ],
   "linter": {
     "rules": {
-      "nursery": {
-        "noReactForwardRef": "off"
-      },
       "style": {
         "noNestedTernary": "warn"
       },
