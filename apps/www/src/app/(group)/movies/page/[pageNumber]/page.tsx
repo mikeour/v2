@@ -10,11 +10,10 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { pageNumber: string };
+export default async function Page(props: {
+  params: Promise<{ pageNumber: string }>;
 }) {
+  const params = await props.params;
   const films = await getFilms();
 
   return (

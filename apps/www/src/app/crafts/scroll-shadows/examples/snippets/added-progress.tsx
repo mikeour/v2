@@ -1,7 +1,7 @@
 import { useScroll, useTransform } from "framer-motion";
 
 type OptionsType = {
-  ref: React.RefObject<HTMLElement>;
+  ref: React.RefObject<HTMLElement | null>;
 };
 
 function _useScrollShadows({ ref }: OptionsType) {

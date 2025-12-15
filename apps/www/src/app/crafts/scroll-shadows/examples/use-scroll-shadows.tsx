@@ -2,7 +2,7 @@ import { useScroll, useTransform } from "framer-motion";
 
 type AxisType = "x" | "y";
 type OptionsType = {
-  ref: React.RefObject<HTMLElement>;
+  ref: React.RefObject<HTMLElement | null>;
   axis: AxisType;
 };
 
@@ -52,7 +52,7 @@ function useScrollProgress({ ref, axis }: OptionsType) {
 }
 
 type UseBrokenScrollShadowsType<T> = {
-  ref: React.RefObject<T>;
+  ref: React.RefObject<T | null>;
 };
 
 export function useBrokenScrollShadows<T extends HTMLElement>(

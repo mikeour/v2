@@ -92,7 +92,11 @@ export function PlainList() {
   );
 }
 
-function useScrollProgress({ ref }: { ref: React.RefObject<HTMLElement> }) {
+function useScrollProgress({
+  ref,
+}: {
+  ref: React.RefObject<HTMLElement | null>;
+}) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isOverflowing, setIsOverflowing] = useState(true);
 

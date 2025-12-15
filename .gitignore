@@ -38,4 +38,4 @@ pnpm-debug.log*
 next-env.d.ts
 
 # Kiro
-.kiro/
+.kiro
