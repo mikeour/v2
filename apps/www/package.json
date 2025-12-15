@@ -19,7 +19,7 @@
     "@types/mdx": "^2.0.13",
     "@vercel/analytics": "^1.2.2",
     "codehike": "^1.0.7",
-    "framer-motion": "^11.0.28",
+    "framer-motion": "^11.18.2",
     "globby": "^14.0.1",
     "javascript-time-ago": "^2.5.9",
     "letterboxd": "^3.1.1",
@@ -42,6 +42,6 @@
     "autoprefixer": "10.4.19",
     "postcss": "8.4.38",
     "tailwindcss": "3.4.3",
-    "typescript": "5.4.5"
+    "typescript": "5.9.3"
   }
 }
