@@ -4,7 +4,6 @@ import { ScreenSize } from "~/components/utility/screen-size";
 import { fira, karla } from "~/lib/fonts";
 
 import "./globals.css";
-import "@code-hike/mdx/styles";
 
 export const metadata = {
   title: "mikeour.io",

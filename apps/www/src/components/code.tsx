@@ -1,0 +1,11 @@
+import { type HighlightedCode, Pre } from "codehike/code";
+
+export function Code({ codeblock }: { codeblock: HighlightedCode }) {
+  return (
+    <Pre
+      className="rounded-lg p-4 text-sm"
+      code={codeblock}
+      style={codeblock.style}
+    />
+  );
+}

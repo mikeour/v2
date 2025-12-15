@@ -1,25 +1,22 @@
-import { remarkCodeHike } from "@code-hike/mdx";
 import createMDX from "@next/mdx";
+import { recmaCodeHike, remarkCodeHike } from "codehike/mdx";
 import rehypeSlug from "rehype-slug";
 import remarkToc from "remark-toc";
 
-import theme from "./src/themes/one-monokai.mjs";
+/** @type {import('codehike/mdx').CodeHikeConfig} */
+const chConfig = {
+  components: { code: "Code" },
+  syntaxHighlighting: {
+    theme: "github-dark",
+  },
+};
 
 /** @type {import('@next/mdx').NextMDXOptions} */
 const mdxConfig = {
   options: {
     rehypePlugins: [rehypeSlug],
-    remarkPlugins: [
-      [
-        remarkCodeHike,
-        {
-          lineNumbers: false,
-          showCopyButton: true,
-          theme,
-        },
-      ],
-      remarkToc,
-    ],
+    remarkPlugins: [[remarkCodeHike, chConfig], remarkToc],
+    recmaPlugins: [[recmaCodeHike, chConfig]],
   },
 };
 
