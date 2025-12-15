@@ -25,7 +25,7 @@ export function CodeTabs({ tabs }: { tabs: HighlightedCode[] }) {
         ))}
       </div>
       <Pre
-        className="p-4 text-sm"
+        className="my-0! bg-slate-800! p-4 text-sm"
         code={tabs[active]}
         style={tabs[active].style}
       />
