@@ -1,23 +1,125 @@
 "use client";
 
-import { useState } from "react";
-import { Switch } from "@mikeour/ui/switch";
 import { cn } from "@mikeour/ui/utils";
 
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { ScrollAreaWithShadows } from "./scroll-area";
 
-const ARTICLE_CONTENT = `
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+const NOTIFICATIONS = [
+  {
+    id: 1,
+    type: "message",
+    title: "New message from Alex",
+    time: "2m ago",
+    read: false,
+  },
+  {
+    id: 2,
+    type: "like",
+    title: "Sarah liked your post",
+    time: "5m ago",
+    read: false,
+  },
+  {
+    id: 3,
+    type: "comment",
+    title: "New comment on your photo",
+    time: "12m ago",
+    read: false,
+  },
+  {
+    id: 4,
+    type: "follow",
+    title: "Jordan started following you",
+    time: "1h ago",
+    read: true,
+  },
+  {
+    id: 5,
+    type: "message",
+    title: "New message from Taylor",
+    time: "2h ago",
+    read: true,
+  },
+  {
+    id: 6,
+    type: "like",
+    title: "3 people liked your comment",
+    time: "3h ago",
+    read: true,
+  },
+  {
+    id: 7,
+    type: "comment",
+    title: "Reply to your thread",
+    time: "5h ago",
+    read: true,
+  },
+  {
+    id: 8,
+    type: "follow",
+    title: "Casey started following you",
+    time: "6h ago",
+    read: true,
+  },
+  {
+    id: 9,
+    type: "message",
+    title: "New message from Morgan",
+    time: "8h ago",
+    read: true,
+  },
+  {
+    id: 10,
+    type: "like",
+    title: "Your post is trending",
+    time: "12h ago",
+    read: true,
+  },
+];
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+const ICON_COLORS: Record<string, string> = {
+  message: "bg-blue-500",
+  like: "bg-pink-500",
+  comment: "bg-green-500",
+  follow: "bg-purple-500",
+};
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis.
-
-Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
-
-Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-`.trim();
+function NotificationItem({
+  notification,
+}: {
+  notification: (typeof NOTIFICATIONS)[0];
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-3 border-slate-200 border-b px-4 py-3",
+        !notification.read && "bg-blue-50"
+      )}
+    >
+      <div
+        className={cn(
+          "size-8 shrink-0 rounded-full",
+          ICON_COLORS[notification.type]
+        )}
+      />
+      <div className="min-w-0 flex-1">
+        <p
+          className={cn(
+            "truncate text-sm",
+            notification.read ? "text-slate-500" : "text-slate-800"
+          )}
+        >
+          {notification.title}
+        </p>
+        <p className="text-slate-400 text-xs">{notification.time}</p>
+      </div>
+      {!notification.read && (
+        <div className="size-2 shrink-0 rounded-full bg-blue-500" />
+      )}
+    </div>
+  );
+}
 
 const CAROUSEL_ITEMS = Array.from({ length: 8 }, (_, i) => ({
   id: i + 1,
@@ -33,165 +135,154 @@ const CAROUSEL_ITEMS = Array.from({ length: 8 }, (_, i) => ({
   ][i],
 }));
 
-export function InteractiveVerticalDemo() {
-  const [shadowsEnabled, setShadowsEnabled] = useState(true);
-
+export function InteractiveVerticalDemo({ caption }: { caption?: string }) {
   return (
     <ExampleContainer
-      className="w-full"
-      controls={
-        <div className="flex items-center justify-center gap-3 py-4 text-white">
-          <Switch
-            checked={shadowsEnabled}
-            onCheckedChange={setShadowsEnabled}
-          />
-          <span className="text-sm">
-            Shadows {shadowsEnabled ? "On" : "Off"}
-          </span>
-        </div>
-      }
+      caption={caption}
+      className="mx-auto w-full max-w-sm"
+      controls={[
+        {
+          type: "switch",
+          name: "shadows",
+          label: "Shadows",
+          defaultValue: true,
+        },
+      ]}
+      isolated
     >
-      <ScrollAreaWithShadows
-        className="h-64 rounded-lg bg-slate-800"
-        scrollShadow={shadowsEnabled ? "vertical" : "none"}
-      >
-        <div className="prose prose-invert prose-sm max-w-none p-4">
-          <h3 className="mt-0 text-white">The CSS-Driven Approach</h3>
-          {ARTICLE_CONTENT.split("\n\n").map((paragraph, i) => (
-            <p className="text-slate-300" key={i}>
-              {paragraph}
-            </p>
-          ))}
-        </div>
-      </ScrollAreaWithShadows>
-    </ExampleContainer>
-  );
-}
-
-export function InteractiveHorizontalDemo() {
-  const [shadowsEnabled, setShadowsEnabled] = useState(true);
-
-  return (
-    <ExampleContainer
-      className="w-full"
-      controls={
-        <div className="flex items-center justify-center gap-3 py-4 text-white">
-          <Switch
-            checked={shadowsEnabled}
-            onCheckedChange={setShadowsEnabled}
-          />
-          <span className="text-sm">
-            Shadows {shadowsEnabled ? "On" : "Off"}
-          </span>
-        </div>
-      }
-    >
-      <ScrollAreaWithShadows
-        className="w-full rounded-lg bg-slate-800"
-        orientation="horizontal"
-        scrollShadow={shadowsEnabled ? "horizontal" : "none"}
-      >
-        <div className="flex gap-4 p-4">
-          {CAROUSEL_ITEMS.map((item) => (
-            <div
-              className={cn(
-                "flex h-32 w-40 shrink-0 items-center justify-center rounded-lg font-bold text-2xl text-white",
-                item.color
-              )}
-              key={item.id}
-            >
-              {item.id}
-            </div>
-          ))}
-        </div>
-      </ScrollAreaWithShadows>
-    </ExampleContainer>
-  );
-}
-
-export function CSSVariablesDemo() {
-  const [scrollY, setScrollY] = useState({ start: 0, end: 200 });
-
-  return (
-    <ExampleContainer
-      className="w-full"
-      controls={
-        <div className="flex flex-col items-center gap-2 py-4 text-white sm:flex-row sm:justify-evenly">
-          <div className="font-mono text-sm">
-            <span className="text-slate-400">--overflow-y-start:</span>{" "}
-            <span className="text-emerald-400">{scrollY.start}px</span>
+      {({ values }) => (
+        <ScrollAreaWithShadows
+          className="h-72 rounded-lg bg-white"
+          scrollShadow={values.shadows ? "vertical" : "none"}
+        >
+          <div className="py-1">
+            {NOTIFICATIONS.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
           </div>
-          <div className="font-mono text-sm">
-            <span className="text-slate-400">--overflow-y-end:</span>{" "}
-            <span className="text-emerald-400">{scrollY.end}px</span>
-          </div>
-        </div>
-      }
-    >
-      <div
-        className="h-64 overflow-y-auto rounded-lg bg-slate-800 p-4"
-        onScroll={(e) => {
-          const target = e.currentTarget;
-          const start = Math.round(target.scrollTop);
-          const end = Math.round(
-            target.scrollHeight - target.clientHeight - target.scrollTop
-          );
-          setScrollY({ start, end });
-        }}
-      >
-        <div className="prose prose-invert prose-sm max-w-none">
-          <h3 className="mt-0 text-white">Scroll to see values update</h3>
-          {ARTICLE_CONTENT.split("\n\n").map((paragraph, i) => (
-            <p className="text-slate-300" key={i}>
-              {paragraph}
-            </p>
-          ))}
-          {ARTICLE_CONTENT.split("\n\n").map((paragraph, i) => (
-            <p className="text-slate-300" key={`extra-${i}`}>
-              {paragraph}
-            </p>
-          ))}
-        </div>
-      </div>
+        </ScrollAreaWithShadows>
+      )}
     </ExampleContainer>
   );
 }
 
-export function ComparisonDemo() {
+export function InteractiveHorizontalDemo({ caption }: { caption?: string }) {
   return (
-    <ExampleContainer className="w-full">
-      <div className="grid gap-4 p-4 sm:grid-cols-2">
+    <ExampleContainer
+      caption={caption}
+      className="w-full"
+      controls={[
+        {
+          type: "switch",
+          name: "shadows",
+          label: "Shadows",
+          defaultValue: true,
+        },
+      ]}
+      isolated
+    >
+      {({ values }) => (
+        <ScrollAreaWithShadows
+          className="w-full rounded-lg bg-white"
+          orientation="horizontal"
+          scrollShadow={values.shadows ? "horizontal" : "none"}
+        >
+          <div className="flex gap-4 p-4 after:w-px after:shrink-0 after:content-['']">
+            {CAROUSEL_ITEMS.map((item) => (
+              <div
+                className={cn(
+                  "flex h-32 w-40 shrink-0 items-center justify-center rounded-lg font-bold text-2xl text-white",
+                  item.color
+                )}
+                key={item.id}
+              >
+                {item.id}
+              </div>
+            ))}
+          </div>
+        </ScrollAreaWithShadows>
+      )}
+    </ExampleContainer>
+  );
+}
+
+export function CSSVariablesDemo({ caption }: { caption?: string }) {
+  return (
+    <ExampleContainer
+      caption={caption}
+      className="mx-auto w-full max-w-sm"
+      inspector={[
+        { name: "start", label: "--overflow-y-start", defaultValue: "0px" },
+        { name: "end", label: "--overflow-y-end", defaultValue: "—" },
+      ]}
+      isolated
+    >
+      {({ setInspector }) => (
+        <div
+          className="h-72 overflow-y-auto rounded-lg bg-white"
+          onScroll={(e) => {
+            const target = e.currentTarget;
+            const start = Math.round(target.scrollTop);
+            const end = Math.round(
+              target.scrollHeight - target.clientHeight - target.scrollTop
+            );
+            setInspector("start", `${start}px`);
+            setInspector("end", `${end}px`);
+          }}
+        >
+          <div className="py-1">
+            {NOTIFICATIONS.map((notification) => (
+              <NotificationItem
+                key={notification.id}
+                notification={notification}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </ExampleContainer>
+  );
+}
+
+export function ComparisonDemo({ caption }: { caption?: string }) {
+  return (
+    <ExampleContainer caption={caption} className="w-full">
+      <div className="grid gap-8 p-8 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <span className="text-center text-slate-400 text-sm">
-            Part 1: Framer Motion (opacity)
+            Part 1: Opacity-based
           </span>
-          <div className="relative h-48 overflow-y-auto rounded-lg bg-slate-800">
-            {/* Simulated opacity-based shadows */}
-            <div className="-mb-8 pointer-events-none sticky top-0 h-8 bg-gradient-to-b from-blue-400/30 to-transparent" />
-            <div className="px-4 py-2">
-              {ARTICLE_CONTENT.split("\n\n").map((p, i) => (
-                <p className="mb-2 text-slate-300 text-sm" key={i}>
-                  {p}
-                </p>
+          <div className="relative h-72 overflow-y-auto rounded-lg bg-white">
+            <div className="pointer-events-none sticky top-0 -mb-8 h-8 bg-linear-to-b from-white to-transparent opacity-80" />
+            <div className="py-1">
+              {NOTIFICATIONS.slice(0, 6).map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                />
               ))}
             </div>
-            <div className="-mt-8 pointer-events-none sticky bottom-0 h-8 bg-gradient-to-t from-blue-400/30 to-transparent" />
+            <div className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-linear-to-t from-white to-transparent opacity-80" />
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
           <span className="text-center text-slate-400 text-sm">
-            Part 2: Base UI (data attributes)
+            Part 2: Height-based
           </span>
           <ScrollAreaWithShadows
-            className="h-48 rounded-lg bg-slate-800"
+            className="h-72 rounded-lg bg-white"
             scrollShadow="vertical"
           >
-            <div className="px-4 py-2">
-              {ARTICLE_CONTENT.split("\n\n").map((p, i) => (
-                <p className="mb-2 text-slate-300 text-sm" key={i}>
-                  {p}
-                </p>
+            <div className="py-1">
+              {NOTIFICATIONS.slice(0, 6).map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  notification={notification}
+                />
               ))}
             </div>
           </ScrollAreaWithShadows>

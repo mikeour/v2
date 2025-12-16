@@ -8,7 +8,7 @@ import { ScrollContainer } from "./scroll-container";
 
 export function ListExample() {
   return (
-    <ExampleContainer className="w-full sm:max-w-105" isolated mockBrowser>
+    <ExampleContainer className="w-full sm:max-w-105" isolated>
       <ScrollContainer className="max-h-100 bg-white [--size:25px]">
         <List />
       </ScrollContainer>
@@ -18,19 +18,19 @@ export function ListExample() {
 
 export function BasicListExample() {
   return (
-    <ExampleContainer className="w-full sm:max-w-105" isolated mockBrowser>
+    <ExampleContainer className="w-full sm:max-w-105" isolated>
       <div
         className={cn(
           "relative flex max-h-100 flex-col overflow-y-auto [--size:48px]"
         )}
       >
-        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ top: 0 }"}</code>
         </div>
 
         <List />
 
-        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+        <div className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
           <code className="text-sm/none">{"{ bottom: 0 }"}</code>
         </div>
       </div>
@@ -42,7 +42,6 @@ export function List() {
   return (
     <ul className="divide-y divide-zinc-200 bg-white">
       {Array.from({ length: 30 }).map((_, index) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: static content
         <li className="flex gap-4 p-5" key={index}>
           <span className="size-4 rounded bg-zinc-200" />
           <p
@@ -65,7 +64,7 @@ export function PlainList() {
   const [start, end] = useScrollProgress({ ref });
 
   return (
-    <ExampleContainer className="w-full" isolated mockBrowser>
+    <ExampleContainer className="w-full" isolated>
       <div
         className={cn(
           "relative flex max-h-100 flex-col overflow-y-auto [--size:48px]"
@@ -73,7 +72,7 @@ export function PlainList() {
         ref={ref}
       >
         <div
-          className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+          className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: start }}
         >
           <code>{`{ start: ${start.toFixed(1)} }`}</code>
@@ -82,7 +81,7 @@ export function PlainList() {
         <List />
 
         <div
-          className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+          className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
           style={{ opacity: end }}
         >
           <code>{`{ end: ${end.toFixed(1)} }`}</code>

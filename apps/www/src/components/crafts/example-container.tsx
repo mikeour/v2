@@ -1,60 +1,229 @@
+"use client";
+
+import { useId, useState } from "react";
+import { Slider } from "@mikeour/ui/slider";
+import { Switch } from "@mikeour/ui/switch";
 import { cn } from "@mikeour/ui/utils";
 
+type SwitchControl = {
+  type: "switch";
+  name: string;
+  label: string;
+  defaultValue?: boolean;
+};
+
+type SliderControl = {
+  type: "slider";
+  name: string;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  defaultValue?: number;
+};
+
+type Control = SwitchControl | SliderControl;
+
+type InspectorItem = {
+  name: string;
+  label: string;
+  defaultValue?: string;
+};
+
+type ControlValues = Record<string, boolean | number>;
+type InspectorValues = Record<string, string>;
+
+type RenderProps = {
+  values: ControlValues;
+  inspector: InspectorValues;
+  setInspector: (name: string, value: string) => void;
+};
+
+type ExampleContainerProps = {
+  isolated?: boolean;
+  className?: string;
+  controls?: Control[];
+  inspector?: InspectorItem[];
+  caption?: string;
+  children: React.ReactNode | ((props: RenderProps) => React.ReactNode);
+};
+
 export function ExampleContainer({
-  mockBrowser = false,
   isolated = false,
   className,
   controls,
+  inspector,
+  caption,
   children,
-}: React.PropsWithChildren<{
-  mockBrowser?: boolean;
-  isolated?: boolean;
-  controls?: React.ReactNode;
-  className?: string;
-}>) {
+}: ExampleContainerProps) {
+  const id = useId();
+
+  const [controlValues, setControlValues] = useState<ControlValues>(() => {
+    const initial: ControlValues = {};
+    for (const control of controls ?? []) {
+      if (control.type === "switch") {
+        initial[control.name] = control.defaultValue ?? false;
+      } else if (control.type === "slider") {
+        initial[control.name] = control.defaultValue ?? control.min;
+      }
+    }
+    return initial;
+  });
+
+  const [inspectorValues, setInspectorValues] = useState<InspectorValues>(
+    () => {
+      const initial: InspectorValues = {};
+      for (const item of inspector ?? []) {
+        initial[item.name] = item.defaultValue ?? "—";
+      }
+      return initial;
+    }
+  );
+
+  const setInspector = (name: string, value: string) => {
+    setInspectorValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const renderProps: RenderProps = {
+    values: controlValues,
+    inspector: inspectorValues,
+    setInspector,
+  };
+
+  const hasControls = controls && controls.length > 0;
+  const hasInspector = inspector && inspector.length > 0;
+  const hasToolbar = hasControls || hasInspector;
+
   return (
-    <div
+    <figure
       className={cn(
         "code-example flex flex-col overflow-hidden rounded-xl bg-slate-800",
         "lg:mx-[calc(var(--gutter)*-1.75)]"
       )}
     >
+      {/* Toolbar - controls left, inspector right */}
+      {hasToolbar && (
+        <div className="flex flex-wrap items-center justify-center gap-4 border-slate-700 border-b bg-slate-900/50 px-4 py-3">
+          {/* Controls */}
+          {hasControls ? (
+            <div className="flex flex-wrap items-center gap-5">
+              {controls.map((control) => (
+                <ControlRenderer
+                  control={control}
+                  id={`${id}-${control.name}`}
+                  key={control.name}
+                  onChange={(value) =>
+                    setControlValues((prev) => ({
+                      ...prev,
+                      [control.name]: value,
+                    }))
+                  }
+                  value={controlValues[control.name]}
+                />
+              ))}
+            </div>
+          ) : (
+            <div />
+          )}
+
+          {/* Inspector - visual cards */}
+          {hasInspector && (
+            <div className="flex flex-wrap items-center gap-3">
+              {inspector.map((item) => (
+                <div
+                  className="flex items-center gap-2 rounded-md bg-slate-800 px-3 py-1.5"
+                  key={item.name}
+                >
+                  <span className="text-base text-slate-300">{item.label}</span>
+                  <span className="min-w-8 rounded bg-slate-700 px-2 py-0.5 text-center font-mono text-blue-400 text-sm tabular-nums">
+                    {inspectorValues[item.name]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Demo content */}
       <div
         className={cn(
           "not-prose component-bg relative flex flex-col items-center justify-center",
-          !!isolated && "px-(--gutter) py-8 sm:py-12"
+          isolated && "px-(--gutter) py-8 sm:py-12"
         )}
       >
-        {/* <div className="pointer-events-none absolute inset-0 z-0 bg-slate-800 mask-[radial-gradient(ellipse,rgba(27,30,40,0)_0%,rgba(27,30,40,1)_100%)]" /> */}
-
         <div
           className={cn(
             "relative flex flex-col overflow-hidden",
-            !!isolated && "rounded-lg",
+            isolated && "rounded-lg",
             className
           )}
         >
-          {!!mockBrowser && <MockBrowser />}
-
-          {children}
+          {typeof children === "function" ? children(renderProps) : children}
         </div>
       </div>
 
-      {!!controls && (
-        <div className="relative w-full bg-slate-700 px-(--gutter)">
-          {controls}
-        </div>
+      {/* Caption */}
+      {caption && (
+        <figcaption className="border-slate-700 border-t bg-slate-900/30 px-4 py-2.5 text-center text-slate-400 text-sm">
+          {caption}
+        </figcaption>
       )}
-    </div>
+    </figure>
   );
 }
 
-function MockBrowser() {
-  return (
-    <div className="flex h-8 w-full shrink-0 items-center justify-start gap-2 bg-slate-700 px-4 md:px-5">
-      <div className="size-3 shrink-0 rounded-full bg-red-400" />
-      <div className="size-3 shrink-0 rounded-full bg-yellow-400" />
-      <div className="size-3 shrink-0 rounded-full bg-green-400" />
-    </div>
-  );
+function ControlRenderer({
+  control,
+  value,
+  onChange,
+  id,
+}: {
+  control: Control;
+  value: boolean | number;
+  onChange: (value: boolean | number) => void;
+  id: string;
+}) {
+  if (control.type === "switch") {
+    return (
+      <div className="flex items-center gap-2.5">
+        <Switch
+          checked={value as boolean}
+          id={id}
+          onCheckedChange={(checked) => {
+            if (typeof checked === "boolean") {
+              onChange(checked);
+            }
+          }}
+        />
+        <label className="cursor-pointer text-slate-300 text-sm" htmlFor={id}>
+          {control.label}
+        </label>
+      </div>
+    );
+  }
+
+  if (control.type === "slider") {
+    return (
+      <div className="flex items-center gap-2.5">
+        <label className="text-slate-400 text-sm" htmlFor={id}>
+          {control.label}
+        </label>
+        <Slider
+          className="w-20"
+          id={id}
+          max={control.max}
+          min={control.min}
+          onValueChange={([v]) => onChange(v)}
+          step={control.step ?? 1}
+          value={[value as number]}
+        />
+        <span className="min-w-10 font-mono text-slate-300 text-sm tabular-nums">
+          {value}px
+        </span>
+      </div>
+    );
+  }
+
+  return null;
 }

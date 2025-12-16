@@ -1,7 +1,7 @@
 function Button() {
   return (
     <button
-      className="active:-translate-y-[2px] rounded-full bg-sky-500 px-4 py-2 text-[14px]/[14px] text-white transition-all hover:bg-sky-600"
+      className="rounded-full bg-sky-500 px-4 py-2 text-[14px]/[14px] text-white transition-all hover:bg-sky-600 active:-translate-y-0.5"
       type="button"
     >
       Subscribe

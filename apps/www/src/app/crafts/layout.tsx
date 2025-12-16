@@ -28,7 +28,7 @@ export default function Layout({ children }: React.PropsWithChildren) {
         Go Back
       </Link>
 
-      <article className="prose mt-10 w-full max-w-full prose-headings:scroll-m-8 prose-code:text-blue-400 prose-headings:text-white prose-strong:text-gray-200 prose-code:before:hidden prose-code:after:hidden">
+      <article className="prose mt-10 prose-figcaption:mt-0 prose-pre:mt-4 prose-pre:mb-16 w-full max-w-full prose-headings:scroll-m-8 prose-code:text-blue-400 prose-headings:text-white prose-strong:text-gray-200 prose-code:before:hidden prose-code:after:hidden">
         {children}
       </article>
     </div>

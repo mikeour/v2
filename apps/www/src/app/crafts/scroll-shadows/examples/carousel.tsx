@@ -8,7 +8,7 @@ import { BrokenScrollContainer, ScrollContainer } from "./scroll-container";
 
 export function CarouselExample({ count }: { count?: number }) {
   return (
-    <ExampleContainer className="w-full" isolated mockBrowser>
+    <ExampleContainer className="w-full" isolated>
       <ScrollContainer
         axis="x"
         className="max-h-100 w-full bg-white [--size:25px]"
@@ -21,7 +21,7 @@ export function CarouselExample({ count }: { count?: number }) {
 
 export function BrokenCarouselExample({ count }: { count: number }) {
   return (
-    <ExampleContainer className="w-full" mockBrowser>
+    <ExampleContainer className="w-full">
       <BrokenScrollContainer
         axis="x"
         className="max-h-100 w-full bg-white [--size:25px]"
@@ -41,7 +41,6 @@ export function Carousel({
       {Array.from({ length: count }).map((_, index) => (
         <div
           className="aspect-square size-44 rounded-xl bg-zinc-200"
-          // biome-ignore lint/suspicious/noArrayIndexKey: static content
           key={index}
         />
       ))}
@@ -88,7 +87,7 @@ const carousels = [
 
 export function NetflixCarousel() {
   return (
-    <ExampleContainer className="w-full bg-gray-900" mockBrowser>
+    <ExampleContainer className="w-full bg-gray-900">
       <ScrollContainer axis="y" className="no-scrollbar max-h-137.5 w-full">
         <div className="flex flex-col gap-8 py-10">
           {carousels.map((carousel) => (
