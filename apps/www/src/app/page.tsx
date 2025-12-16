@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import img from "./crafts/scroll-shadows/scroll-shadows.jpg";
-import img2 from "./crafts/scroll-shadows/scroll-shadows.jpg";
+import img2 from "./crafts/scroll-shadows-pt-2/scroll-shadows-2.jpg";
 
 const externalLinks = [
   {
@@ -42,14 +42,13 @@ export default function Home() {
         I&apos;m excited to have this little corner of the internet to talk
         about all the things I love — whether it&apos;s sharing what music{" "}
         <Link href="/music"> I&apos;m listening</Link> to, what movies{" "}
-        <Link href="/movies">I&apos;m watching</Link> lately, my favorite photos{" "}
-        <Link href="/photos">I&apos;ve taken</Link>, or what I&apos;m writing
-        about UI/UX:
+        <Link href="/movies">I&apos;m watching</Link> lately, or what I&apos;m
+        writing about UI/UX:
       </p>
 
-      <div className="my-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="my-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-4 sm:mb-12 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
         <Link
-          className="group flex flex-col gap-4 no-underline"
+          className="group flex flex-col gap-6 no-underline"
           href="/crafts/scroll-shadows-pt-2"
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
@@ -64,7 +63,7 @@ export default function Home() {
           </div>
 
           <div className="not-prose flex flex-col gap-0">
-            <span>December 10, 2025</span>
+            <span className="leading-none">December 10, 2025</span>
             <p className="transition-colors group-hover:text-gray-200">
               Scroll Shadows (Pt. 2)
             </p>
@@ -72,7 +71,7 @@ export default function Home() {
         </Link>
 
         <Link
-          className="group flex flex-col gap-4 no-underline"
+          className="group flex flex-col gap-6 no-underline"
           href="/crafts/scroll-shadows"
         >
           <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
@@ -87,7 +86,7 @@ export default function Home() {
           </div>
 
           <div className="not-prose flex flex-col gap-0">
-            <span>April 22, 2024</span>
+            <span className="leading-none">April 22, 2024</span>
             <p className="transition-colors group-hover:text-gray-200">
               Scroll Shadows
             </p>
