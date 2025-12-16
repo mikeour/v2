@@ -36,7 +36,7 @@ function ScrollArea({
               "before:transition-[height] before:duration-100 before:ease-out after:transition-[height] after:duration-100 after:ease-out",
               "before:[--scroll-area-overflow-y-start:inherit]",
               "after:[--scroll-area-overflow-y-end:inherit]",
-              "[--bg:var(--color-slate-800)] before:top-0 before:h-[min(40px,var(--scroll-area-overflow-y-start))] before:bg-[linear-gradient(to_bottom,var(--bg),transparent)] after:bottom-0 after:h-[min(40px,var(--scroll-area-overflow-y-end,40px))] after:bg-[linear-gradient(to_top,var(--bg),transparent)]",
+              "[--bg:white] before:top-0 before:h-[min(40px,var(--scroll-area-overflow-y-start))] before:bg-[linear-gradient(to_bottom,var(--bg),transparent)] after:bottom-0 after:h-[min(40px,var(--scroll-area-overflow-y-end,40px))] after:bg-[linear-gradient(to_top,var(--bg),transparent)]",
             ]
           )}
           data-slot="scroll-area-vertical-shadow"
@@ -59,7 +59,7 @@ function ScrollArea({
               "before:transition-[width] before:duration-100 before:ease-out after:transition-[width] after:duration-100 after:ease-out",
               "before:[--scroll-area-overflow-x-start:inherit]",
               "after:[--scroll-area-overflow-x-end:inherit]",
-              "[--bg:var(--color-slate-800)] before:left-0 before:w-[min(40px,var(--scroll-area-overflow-x-start))] before:bg-[linear-gradient(to_right,var(--bg),transparent)] after:right-0 after:w-[min(40px,var(--scroll-area-overflow-x-end,40px))] after:bg-[linear-gradient(to_left,var(--bg),transparent)]",
+              "[--bg:white] before:left-0 before:w-[min(40px,var(--scroll-area-overflow-x-start))] before:bg-[linear-gradient(to_right,var(--bg),transparent)] after:right-0 after:w-[min(40px,var(--scroll-area-overflow-x-end,40px))] after:bg-[linear-gradient(to_left,var(--bg),transparent)]",
             ]
           )}
           data-slot="scroll-area-horizontal-shadow"
@@ -95,7 +95,7 @@ function ScrollBar({
   return (
     <ScrollAreaPrimitive.Scrollbar
       className={cn(
-        "m-1.5 flex rounded-full bg-slate-600 opacity-0 transition-opacity delay-200 data-[orientation=horizontal]:h-1.5 data-[orientation=vertical]:w-1.5 data-[orientation=horizontal]:flex-col data-hovering:opacity-100 data-scrolling:opacity-100 data-hovering:delay-0 data-scrolling:delay-0 data-hovering:duration-100 data-scrolling:duration-100",
+        "m-1.5 flex rounded-full bg-slate-200 opacity-0 transition-opacity delay-200 data-[orientation=horizontal]:h-1.5 data-[orientation=vertical]:w-1.5 data-[orientation=horizontal]:flex-col data-hovering:opacity-100 data-scrolling:opacity-100 data-hovering:delay-0 data-scrolling:delay-0 data-hovering:duration-100 data-scrolling:duration-100",
         className
       )}
       data-slot="scroll-area-scrollbar"

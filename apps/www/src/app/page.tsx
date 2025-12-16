@@ -64,7 +64,7 @@ export default function Home() {
           </div>
 
           <div className="not-prose flex flex-col gap-0">
-            <span>December 14, 2024</span>
+            <span>December 10, 2025</span>
             <p className="transition-colors group-hover:text-gray-200">
               Scroll Shadows (Pt. 2)
             </p>

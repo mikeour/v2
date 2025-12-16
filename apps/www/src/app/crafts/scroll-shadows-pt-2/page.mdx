@@ -1,6 +1,6 @@
 import { Note } from "~/components/crafts/alerts/note";
 import { Tip } from "~/components/crafts/alerts/tip";
-import { Important } from "~/components/crafts/alerts/important";
+import { ComparisonTable } from "~/components/crafts/comparison-table";
 import {
   InteractiveVerticalDemo,
   InteractiveHorizontalDemo,
@@ -12,267 +12,191 @@ import {
 
 <time className="-mt-6 mb-8 block text-gray-400">December 10, 2025</time>
 
-In [Part 1](/crafts/scroll-shadows), we built scroll shadows from scratch using Framer Motion's `useScroll` hook and some clever CSS positioning. It was a fun exercise that gave us full control over the animation behavior.
+In [Part 1](/crafts/scroll-shadows), we built scroll shadows using Framer Motion's `useScroll` hook. It worked great, but required JavaScript to animate the shadow opacity on every scroll event.
 
-But what if I told you there's a way to achieve the same effect with _zero JavaScript_ for the shadow animation itself?
+What if we could move that animation logic to CSS?
 
-Here's an interactive example — try scrolling and toggling the shadows:
+<InteractiveVerticalDemo caption="Scroll the content and toggle shadows to see the effect." />
 
-<InteractiveVerticalDemo />
+In this follow-up, we'll use [Base UI's ScrollArea](https://base-ui.com/react/components/scroll-area) component, which exposes CSS custom properties that track scroll position. We'll use these to create shadows that animate entirely in CSS.
 
-In this follow-up, we'll explore an alternative approach using [Base UI's ScrollArea](https://base-ui.com/react/components/scroll-area) component — which exposes CSS custom properties that track scroll overflow in real-time. We'll leverage these properties to create scroll shadows that are entirely CSS-driven.
+## The Trade-offs
 
-<Important>
-Before we dive in, let's be clear about what we're trading:
+Before diving in, let's be clear about what we're trading:
 
-- ✅ No JavaScript animation logic _in our code_
-- ✅ Built-in scrollbar components
-- ✅ Cleaner DOM (shadows are pseudo-elements)
-- ⚠️ We're swapping one dependency (Framer Motion) for another (Base UI)
-- ⚠️ Less granular control over fade behavior
+<ComparisonTable
+  headers={["Part 1 (Framer Motion)", "Part 2 (Base UI)"]}
+  rows={[
+    ["~30kb dependency", "~15kb dependency"],
+    ["Opacity-based fade (smooth)", "Height-based visibility"],
+    ["Manual overflow detection", "Built-in"],
+    ["MotionValue (outside React)", "CSS custom properties"],
+  ]}
+/>
 
-We haven't eliminated the JavaScript that tracks scroll position — we've just delegated it to Base UI instead of Framer Motion.
+We haven't eliminated JavaScript — Base UI still tracks scroll position. We've just moved the _animation_ from JS to CSS.
 
-</Important>
+## How Base UI Tracks Scroll
 
-## The Secret Sauce
+Base UI's `ScrollArea.Viewport` exposes four CSS custom properties that update as you scroll:
 
-Base UI's `ScrollArea` component exposes several CSS custom properties on its viewport element that update as you scroll:
+- `--scroll-area-overflow-y-start` — pixels scrolled from top
+- `--scroll-area-overflow-y-end` — pixels remaining to bottom
+- `--scroll-area-overflow-x-start` — pixels scrolled from left
+- `--scroll-area-overflow-x-end` — pixels remaining to right
 
-- `--scroll-area-overflow-y-start` — pixels scrolled from the top
-- `--scroll-area-overflow-y-end` — pixels remaining to scroll at the bottom
-- `--scroll-area-overflow-x-start` — pixels scrolled from the left
-- `--scroll-area-overflow-x-end` — pixels remaining to scroll at the right
+<CSSVariablesDemo caption="Scroll to see the CSS variable values update in real-time." />
 
-These values update automatically as the user scrolls — no JavaScript event listeners _in our code_. Scroll the container below and watch the values change in real-time:
-
-<CSSVariablesDemo />
-
-We can use these values directly in CSS to control our shadow visibility!
-
-## Under the Hood: How Base UI Tracks Scroll
-
-Let's peek behind the curtain. In Part 1, we used Framer Motion's `useScroll` hook which returns a `MotionValue` that updates outside React's render cycle. Base UI takes a different approach.
-
-Their `ScrollAreaViewport` component attaches an `onScroll` handler and computes the overflow values on every scroll event:
+Under the hood, Base UI attaches an `onScroll` handler that computes these values:
 
 ```tsx
-// Simplified from Base UI's ScrollAreaViewport
+// Simplified from Base UI's source
 const scrollTop = viewportEl.scrollTop;
-const scrollableContentHeight = viewportEl.scrollHeight;
-const viewportHeight = viewportEl.clientHeight;
-const maxScrollTop = scrollableContentHeight - viewportHeight;
+const maxScrollTop = viewportEl.scrollHeight - viewportEl.clientHeight;
 
-// How far we've scrolled from the top
-const scrollTopFromStart = clamp(scrollTop, 0, maxScrollTop);
-// How far we can still scroll to the bottom
-const scrollTopFromEnd = maxScrollTop - scrollTopFromStart;
-
-// Set as CSS custom properties on the viewport element
 viewportEl.style.setProperty(
   "--scroll-area-overflow-y-start",
-  `${scrollTopFromStart}px`
+  `${scrollTop}px`
 );
 viewportEl.style.setProperty(
   "--scroll-area-overflow-y-end",
-  `${scrollTopFromEnd}px`
+  `${maxScrollTop - scrollTop}px`
 );
 ```
 
-Compare this to our Framer Motion approach from Part 1:
+Compare this to our Part 1 approach:
 
 ```tsx
-// Our Part 1 approach
+// Part 1: Framer Motion
 const { scrollYProgress } = useScroll({ container: ref });
-
-// scrollYProgress is a MotionValue between 0 and 1
-// We transformed it to control opacity
-const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
-  if (!isOverflowing) return 0;
-  return latest; // 0 at top, 1 at bottom
-});
+// Returns 0 at top, 1 at bottom — we used this to control opacity
 ```
 
-The key differences:
+The key difference: Framer Motion gives us a normalized value (0→1), while Base UI gives us pixels (0→maxScroll). This changes how we control the shadows.
 
-| Aspect                 | Framer Motion (Part 1)                 | Base UI (Part 2)         |
-| ---------------------- | -------------------------------------- | ------------------------ |
-| **Value type**         | Normalized (0 to 1)                    | Pixels (0 to maxScroll)  |
-| **Update mechanism**   | MotionValue (outside React)            | CSS custom properties    |
-| **Shadow control**     | Opacity (smooth fade)                  | Height via `min()`       |
-| **Overflow detection** | Manual (`scrollHeight > clientHeight`) | Built-in (`hiddenState`) |
+## The CSS Trick
+
+In Part 1, we animated shadow _opacity_ based on scroll progress. Here, we'll animate shadow _height_ using CSS `min()`:
+
+```css
+height: min(40px, var(--scroll-area-overflow-y-start, 0px));
+```
+
+This means:
+
+- When `--scroll-area-overflow-y-start` is `0px` (at top), height is `0px` — shadow invisible
+- As you scroll, height grows with the scroll offset
+- Height caps at `40px` (our max shadow size)
+
+The shadow literally grows from nothing as you scroll away from the edge.
 
 <Note>
-Base UI also includes a clever performance optimization: they use `CSS.registerProperty()` to set `inherits: false` on these custom properties. This prevents the browser from recalculating styles for the entire subtree on every scroll — only elements that explicitly use `inherit` will update.
+Base UI uses `CSS.registerProperty()` to set `inherits: false` on these custom properties. This is a performance optimization — it prevents the browser from recalculating styles for the entire subtree on every scroll.
 
-This is why we need to add `style={{ "--scroll-area-overflow-y-start": "inherit" }}` to our shadow elements.
+The catch: child elements won't see these values unless we explicitly set them to `inherit`.
 
 </Note>
 
-## Getting Started
+## Building the Component
 
-First, install Base UI:
+Install Base UI:
 
 ```zsh
 npm install @base-ui/react
 ```
 
-## Building the Component
-
-Let's start with the basic structure. We'll wrap Base UI's ScrollArea primitives and add our shadow overlays:
+Here's the component structure. The shadows are sibling elements to the viewport, using `::before` and `::after` pseudo-elements:
 
 ```tsx
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 
-interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
-  orientation?: "horizontal" | "vertical" | "both";
-  scrollShadow?: "vertical" | "horizontal" | "both" | "none";
-}
-
-function ScrollArea({
-  className,
-  orientation = "vertical",
-  scrollShadow = "none",
-  children,
-  ...props
-}: ScrollAreaProps) {
+function ScrollArea({ scrollShadow = "none", children, ...props }) {
   return (
-    <ScrollAreaPrimitive.Root className="relative min-h-0" {...props}>
-      <ScrollAreaPrimitive.Viewport className={className}>
-        {children}
-      </ScrollAreaPrimitive.Viewport>
-      {/* Shadow overlays go here, outside the viewport */}
-      <ScrollBar orientation={orientation} />
+    <ScrollAreaPrimitive.Root {...props}>
+      <ScrollAreaPrimitive.Viewport>{children}</ScrollAreaPrimitive.Viewport>
+
+      {/* Shadow overlay — positioned absolutely within Root */}
+      <div
+        className={cn(
+          scrollShadow === "vertical" ? "block" : "hidden",
+          "absolute inset-0 pointer-events-none",
+          // Top shadow
+          "before:absolute before:top-0 before:inset-x-0",
+          "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
+          "before:bg-linear-to-b before:from-black/20 before:to-transparent",
+          // Bottom shadow
+          "after:absolute after:bottom-0 after:inset-x-0",
+          "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
+          "after:bg-linear-to-t after:from-black/20 after:to-transparent"
+        )}
+        style={{
+          "--scroll-area-overflow-y-start": "inherit",
+          "--scroll-area-overflow-y-end": "inherit",
+        }}
+      />
+
+      <ScrollAreaPrimitive.Scrollbar>
+        <ScrollAreaPrimitive.Thumb />
+      </ScrollAreaPrimitive.Scrollbar>
     </ScrollAreaPrimitive.Root>
   );
 }
 ```
 
-The key insight is that our shadows will be _sibling divs_ to the Viewport, positioned absolutely within the Root container. They use `::before` and `::after` pseudo-elements for the actual gradient effects.
-
-## The CSS Magic
-
-Here's where it gets interesting. We'll create shadow overlays that inherit the CSS custom properties from the viewport:
-
-```tsx
-// focus(1:2)
-{
-  /* Shadow overlay - sibling to Viewport, child of Root */
-}
-<div
-  className={cn(
-    scrollShadow === "vertical" || scrollShadow === "both" ? "block" : "hidden",
-    "absolute inset-0 pointer-events-none z-10",
-    // Top shadow pseudo-element
-    "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0",
-    // focus
-    "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
-    "before:bg-gradient-to-b before:from-slate-800 before:to-transparent",
-    // Bottom shadow pseudo-element
-    "after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0",
-    // focus
-    "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
-    "after:bg-gradient-to-t after:from-slate-800 after:to-transparent"
-  )}
-  // focus(1:4)
-  style={
-    {
-      "--scroll-area-overflow-y-start": "inherit",
-      "--scroll-area-overflow-y-end": "inherit",
-    } as React.CSSProperties
-  }
-/>;
-```
-
-Let's break down the key parts:
-
-### Dynamic Height with `min()`
-
-```css
-before: h-[min(40px, var(--scroll-area-overflow-y-start, 0px))];
-```
-
-This is the clever bit. The `min()` function ensures the shadow height is:
-
-- The scroll offset in pixels (when less than 40px)
-- Capped at 40px (our max shadow size)
-
-When `--scroll-area-overflow-y-start` is `0px` (not scrolled), the shadow has zero height and is invisible. As you scroll, it grows up to 40px.
-
-### The `inherit` Trick
-
-```tsx
-style={{
-  "--scroll-area-overflow-y-start": "inherit",
-  "--scroll-area-overflow-y-end": "inherit",
-}}
-```
-
-Remember that performance optimization? Base UI registers these CSS properties with `inherits: false`. This means child elements won't automatically see the values — we have to explicitly opt-in by setting the value to `inherit`.
-
-<Tip>
-The `--scroll-area-overflow-y-end` property starts at the full scrollable height when at the top, so we provide a fallback of `0px` to ensure the shadow sizing works correctly:
-
-```css
-after: h-[min(40px, var(--scroll-area-overflow-y-end, 0px))];
-```
-
-</Tip>
+The `inherit` values are crucial — without them, the pseudo-elements won't see the CSS variables.
 
 ## Horizontal Shadows
 
-The same pattern works for horizontal scrolling — just swap the axes:
+The same pattern works for horizontal scrolling:
 
-<InteractiveHorizontalDemo />
+<InteractiveHorizontalDemo caption="Horizontal scroll shadows using the same technique." />
+
+Just swap the axes:
 
 ```tsx
-<div
-  className={cn(
-    scrollShadow === "horizontal" || scrollShadow === "both"
-      ? "block"
-      : "hidden",
-    "absolute inset-0 pointer-events-none z-10",
-    // Left shadow
-    "before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-0",
-    // focus
-    "before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]",
-    "before:bg-gradient-to-r before:from-slate-800 before:to-transparent",
-    // Right shadow
-    "after:content-[''] after:absolute after:top-0 after:bottom-0 after:right-0",
-    // focus
-    "after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]",
-    "after:bg-gradient-to-l after:from-slate-800 after:to-transparent"
-  )}
-  style={
-    {
-      "--scroll-area-overflow-x-start": "inherit",
-      "--scroll-area-overflow-x-end": "inherit",
-    } as React.CSSProperties
-  }
-/>
+// Width instead of height
+"before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]";
+"after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]";
+
+// Left/right instead of top/bottom
+"before:left-0 before:inset-y-0";
+"after:right-0 after:inset-y-0";
+
+// Gradient direction
+"before:bg-gradient-to-r";
+"after:bg-gradient-to-l";
 ```
 
-## Comparing Approaches
+## Comparing the Approaches
 
-Here's a side-by-side comparison of the two approaches. Notice how Part 1 uses opacity-based fading while Part 2 uses height-based visibility:
+<ComparisonDemo caption="Part 1 uses opacity fading, Part 2 uses height-based visibility." />
 
-<ComparisonDemo />
+The visual difference is subtle but noticeable:
 
-| Aspect                 | Part 1 (Framer Motion)    | Part 2 (Base UI)       |
-| ---------------------- | ------------------------- | ---------------------- |
-| **Dependency**         | framer-motion (~30kb)     | @base-ui/react         |
-| **Scroll tracking**    | `useScroll` → MotionValue | `onScroll` → CSS vars  |
-| **Value type**         | Normalized (0→1)          | Pixels (0→maxScroll)   |
-| **Shadow control**     | Opacity animation         | Height via CSS `min()` |
-| **Animation engine**   | Framer Motion             | Pure CSS transitions   |
-| **Overflow detection** | Manual check              | Built-in               |
+- **Part 1 (opacity)**: Shadow fades smoothly from 0% to 100% opacity as you scroll
+- **Part 2 (height)**: Shadow grows from 0px to 40px, then stays at full opacity
 
-Both approaches delegate scroll tracking to a third-party library. The difference is _where_ the animation happens:
+Part 1 feels slightly more polished because the fade is proportional to scroll progress. Part 2 is simpler — the shadow is either growing or at full size.
 
-- **Part 1**: JavaScript (Framer Motion) animates opacity
-- **Part 2**: CSS animates height based on custom properties
+<Tip>
+  You could add `transition: height 100ms` to smooth out the height changes, but
+  it won't match the proportional fade of the Framer Motion approach.
+</Tip>
 
-If you need buttery-smooth opacity transitions that respond proportionally to scroll position, the Framer Motion approach from Part 1 is the way to go. But if you want something simpler where the animation logic lives entirely in CSS, this approach is a solid choice — just know you're still pulling in a dependency to do the scroll math.
+## When to Use Each Approach
+
+**Use Part 1 (Framer Motion) when:**
+
+- You want smooth, proportional opacity fading
+- You're already using Framer Motion in your project
+- You need fine-grained control over the animation curve
+
+**Use Part 2 (Base UI) when:**
+
+- You want simpler code with animation logic in CSS
+- You're already using Base UI or Radix
+- You need built-in scrollbar components
+- Bundle size is a concern (~15kb vs ~30kb)
 
 ## Final Code
 
@@ -281,96 +205,83 @@ import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
 import { cn } from "@/lib/utils";
 
 interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
-  orientation?: "horizontal" | "vertical" | "both";
   scrollShadow?: "vertical" | "horizontal" | "both" | "none";
 }
 
-function ScrollArea({
+export function ScrollArea({
   className,
-  orientation = "vertical",
   scrollShadow = "none",
   children,
   ...props
 }: ScrollAreaProps) {
+  const showVertical = scrollShadow === "vertical" || scrollShadow === "both";
+  const showHorizontal =
+    scrollShadow === "horizontal" || scrollShadow === "both";
+
   return (
-    <ScrollAreaPrimitive.Root
-      className={cn("relative min-h-0", className)}
-      {...props}
-    >
-      <ScrollAreaPrimitive.Viewport className="size-full overscroll-contain rounded-[inherit]">
+    <ScrollAreaPrimitive.Root className={cn("relative", className)} {...props}>
+      <ScrollAreaPrimitive.Viewport className="size-full overscroll-contain">
         {children}
       </ScrollAreaPrimitive.Viewport>
 
       {/* Vertical shadows */}
-      <div
-        className={cn(
-          scrollShadow === "vertical" || scrollShadow === "both"
-            ? "block"
-            : "hidden",
-          "absolute inset-0 pointer-events-none z-10 rounded-[inherit]",
-          "before:content-[''] before:absolute before:top-0 before:left-0 before:right-0",
-          "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
-          "before:bg-gradient-to-b before:from-slate-800 before:to-transparent",
-          "after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0",
-          "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
-          "after:bg-gradient-to-t after:from-slate-800 after:to-transparent"
-        )}
-        style={
-          {
-            "--scroll-area-overflow-y-start": "inherit",
-            "--scroll-area-overflow-y-end": "inherit",
-          } as React.CSSProperties
-        }
-      />
+      {showVertical && (
+        <div
+          className={cn(
+            "absolute inset-0 pointer-events-none",
+            "before:absolute before:top-0 before:inset-x-0",
+            "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
+            "before:bg-linear-to-b before:from-black/20 before:to-transparent",
+            "after:absolute after:bottom-0 after:inset-x-0",
+            "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
+            "after:bg-linear-to-t after:from-black/20 after:to-transparent"
+          )}
+          style={
+            {
+              "--scroll-area-overflow-y-start": "inherit",
+              "--scroll-area-overflow-y-end": "inherit",
+            } as React.CSSProperties
+          }
+        />
+      )}
 
       {/* Horizontal shadows */}
-      <div
-        className={cn(
-          scrollShadow === "horizontal" || scrollShadow === "both"
-            ? "block"
-            : "hidden",
-          "absolute inset-0 pointer-events-none z-10 rounded-[inherit]",
-          "before:content-[''] before:absolute before:top-0 before:bottom-0 before:left-0",
-          "before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]",
-          "before:bg-gradient-to-r before:from-slate-800 before:to-transparent",
-          "after:content-[''] after:absolute after:top-0 after:bottom-0 after:right-0",
-          "after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]",
-          "after:bg-gradient-to-l after:from-slate-800 after:to-transparent"
-        )}
-        style={
-          {
-            "--scroll-area-overflow-x-start": "inherit",
-            "--scroll-area-overflow-x-end": "inherit",
-          } as React.CSSProperties
-        }
-      />
-
-      {orientation === "both" ? (
-        <>
-          <ScrollBar orientation="vertical" />
-          <ScrollBar orientation="horizontal" />
-        </>
-      ) : (
-        <ScrollBar orientation={orientation} />
+      {showHorizontal && (
+        <div
+          className={cn(
+            "absolute inset-0 pointer-events-none",
+            "before:absolute before:left-0 before:inset-y-0",
+            "before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]",
+            "before:bg-linear-to-r before:from-black/20 before:to-transparent",
+            "after:absolute after:right-0 after:inset-y-0",
+            "after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]",
+            "after:bg-linear-to-l after:from-black/20 after:to-transparent"
+          )}
+          style={
+            {
+              "--scroll-area-overflow-x-start": "inherit",
+              "--scroll-area-overflow-x-end": "inherit",
+            } as React.CSSProperties
+          }
+        />
       )}
+
+      <ScrollAreaPrimitive.Scrollbar orientation="vertical">
+        <ScrollAreaPrimitive.Thumb />
+      </ScrollAreaPrimitive.Scrollbar>
     </ScrollAreaPrimitive.Root>
   );
 }
 ```
 
-## Usage
+## Conclusion
 
-```tsx
-<ScrollArea scrollShadow="vertical" className="h-64">
-  <div className="p-4">
-    <p>Your scrollable content here...</p>
-  </div>
-</ScrollArea>
-```
+We've built scroll shadows using Base UI's CSS custom properties instead of Framer Motion's JavaScript animations. The approach is simpler — shadow visibility is controlled entirely by CSS `min()` — but trades away the smooth proportional fading of Part 1.
+
+Both approaches have their place. If you're already using one of these libraries, stick with it. If you're starting fresh and want the most polished result, Part 1's opacity-based approach edges ahead. But for simpler use cases where "shadow appears when scrollable" is enough, this CSS-driven approach is a clean solution.
 
 ## Resources
 
-- [Base UI ScrollArea Documentation](https://base-ui.com/react/components/scroll-area)
-- [CSS min() function](https://developer.mozilla.org/en-US/docs/Web/CSS/min)
-- [Web Animation Performance Tier List](https://motion.dev/blog/web-animation-performance-tier-list) — The article Base UI references for their CSS variable optimization
-- [Part 1: Scroll Shadows](/crafts/scroll-shadows)
+- [Base UI ScrollArea](https://base-ui.com/react/components/scroll-area) — Official documentation
+- [CSS min() function](https://developer.mozilla.org/en-US/docs/Web/CSS/min) — MDN reference
+- [Part 1: Scroll Shadows](/crafts/scroll-shadows) — The Framer Motion approach

@@ -1,8 +1,6 @@
 "use client";
 
-import { Fragment, useRef, useState } from "react";
-import { Slider } from "@mikeour/ui/slider";
-import { Switch } from "@mikeour/ui/switch";
+import { Fragment, useRef } from "react";
 import { cn } from "@mikeour/ui/utils";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
@@ -14,89 +12,55 @@ import {
   useFixedScrollShadows,
 } from "./use-scroll-shadows";
 
-export function InteractiveArticleExample() {
-  const [isEnabled, setIsEnabled] = useState(true);
-  const [isRealistic, _setIsRealistic] = useState(false);
-
+export function InteractiveArticleExample({ caption }: { caption?: string }) {
   return (
     <ExampleContainer
+      caption={caption}
       className="w-full"
-      controls={
-        <div className="relative flex select-none flex-col items-center gap-3 py-4 text-white md:flex-row md:justify-evenly">
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={isEnabled}
-              className=""
-              id="enabled"
-              onCheckedChange={(val) => {
-                if (typeof val === "boolean") {
-                  setIsEnabled(val);
-                }
-              }}
-            />
-
-            <label className="text-base/none text-white" htmlFor="enabled">
-              Toggle Shadows
-            </label>
-          </div>
-
-          {/* <div className="flex items-center gap-3">
-            <Switch
-              id="realistic"
-              checked={isRealistic}
-              onCheckedChange={(val) => {
-                if (typeof val === "boolean") {
-                  setIsRealistic(val);
-                }
-              }}
-            />
-            <label
-              htmlFor="realistic"
-              className="text-base/none text-white"
-            >
-              Realistic Shadows
-            </label>
-          </div> */}
-        </div>
-      }
-      mockBrowser
+      controls={[
+        {
+          type: "switch",
+          name: "enabled",
+          label: "Shadows",
+          defaultValue: true,
+        },
+      ]}
     >
-      <DemoScrollContainer
-        className="max-h-100 [--size:24px] md:[--size:36px]"
-        isEnabled={isEnabled}
-        isRealistic={isRealistic}
-      >
-        <Article />
-      </DemoScrollContainer>
+      {({ values }) => (
+        <DemoScrollContainer
+          className="max-h-100 [--size:24px] md:[--size:36px]"
+          isEnabled={values.enabled as boolean}
+          isRealistic={false}
+        >
+          <Article />
+        </DemoScrollContainer>
+      )}
     </ExampleContainer>
   );
 }
 
-export function ArticleProgress() {
-  const [progress, setProgress] = useState("0.0");
+export function ArticleProgress({ caption }: { caption?: string }) {
   const articleRef = useRef(null);
   const { scrollYProgress } = useScroll({ container: articleRef });
 
-  scrollYProgress.on("change", (latest) => {
-    setProgress(formatDecimal(latest));
-  });
-
   return (
     <ExampleContainer
+      caption={caption}
       className="max-h-75 w-full"
-      controls={
-        <p className="my-0 flex items-center justify-center gap-2 text-center text-base/none tabular-nums">
-          <code>
-            scrollYProgress:
-            <span className="text-white!"> {progress}</span>
-          </code>
-        </p>
-      }
-      mockBrowser
+      inspector={[
+        { name: "progress", label: "scrollYProgress", defaultValue: "0.0" },
+      ]}
     >
-      <div className="overflow-y-auto" ref={articleRef}>
-        <Article />
-      </div>
+      {({ setInspector }) => {
+        scrollYProgress.on("change", (latest) => {
+          setInspector("progress", formatDecimal(latest));
+        });
+        return (
+          <div className="overflow-y-auto" ref={articleRef}>
+            <Article />
+          </div>
+        );
+      }}
     </ExampleContainer>
   );
 }
@@ -104,145 +68,118 @@ export function ArticleProgress() {
 export function BrokenArticleProgress({
   count,
   working = true,
+  caption,
 }: {
   count?: number;
   working?: boolean;
+  caption?: string;
 }) {
-  const [showingShadows, setIsEnabled] = useState(false);
-
   const useShadows = working ? useFixedScrollShadows : useBrokenScrollShadows;
-
   const articleRef = useRef(null);
   const [start, end] = useShadows({ ref: articleRef });
 
-  const [starting, setStarting] = useState(formatDecimal(start.get()));
-  const [ending, setEnding] = useState(formatDecimal(end.get()));
-
-  useMotionValueEvent(start, "change", (latest) =>
-    setStarting(formatDecimal(latest))
-  );
-  useMotionValueEvent(end, "change", (latest) =>
-    setEnding(formatDecimal(latest))
-  );
-
-  const shadowsId = `broken-enabled-shadows-${count}-${working ? 1 : 0}`;
-
   return (
     <ExampleContainer
+      caption={caption}
       className="h-75 w-full items-stretch"
-      controls={
-        <div className="prose-p:my-0 flex flex-col items-center justify-center gap-6 py-4 prose-strong:text-white md:flex-row md:justify-between md:gap-4">
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={showingShadows}
-              className=""
-              id={shadowsId}
-              onCheckedChange={(val) => {
-                if (typeof val === "boolean") {
-                  setIsEnabled(val);
-                }
-              }}
-            />
-
-            <label className="text-base/none text-white" htmlFor={shadowsId}>
-              Toggle Shadows
-            </label>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-6">
-            <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
-              <code>
-                startingShadowVisibility:
-                <span className="text-white!"> {starting}</span>
-              </code>
-            </p>
-
-            <p className="flex items-center gap-2 text-center text-base/none tabular-nums">
-              <code>
-                endingShadowVisibility:
-                <span className="text-white!"> {ending}</span>
-              </code>
-            </p>
-          </div>
-        </div>
-      }
-      mockBrowser
+      controls={[
+        {
+          type: "switch",
+          name: "showShadows",
+          label: "Shadows",
+          defaultValue: true,
+        },
+      ]}
+      inspector={[
+        { name: "start", label: "start", defaultValue: "0.0" },
+        { name: "end", label: "end", defaultValue: "0.0" },
+      ]}
     >
-      <div
-        className="group flex grow flex-col overflow-y-auto [--size:36px]"
-        ref={articleRef}
-      >
-        {!!showingShadows && (
-          <motion.div
-            className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
-            style={{ opacity: start }}
-          >
-            <code className="text-sm">opacity: {starting}</code>
-          </motion.div>
-        )}
+      {({ values, setInspector }) => {
+        // biome-ignore lint/correctness/useHookAtTopLevel: render prop pattern
+        useMotionValueEvent(start, "change", (latest) =>
+          setInspector("start", formatDecimal(latest))
+        );
+        // biome-ignore lint/correctness/useHookAtTopLevel: render prop pattern
+        useMotionValueEvent(end, "change", (latest) =>
+          setInspector("end", formatDecimal(latest))
+        );
 
-        <Article className="grow" count={count} />
-
-        {!!showingShadows && (
-          <motion.div
-            className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
-            style={{ opacity: end }}
+        return (
+          <div
+            className="group flex grow flex-col overflow-y-auto [--size:36px]"
+            ref={articleRef}
           >
-            <code className="text-sm">opacity: {ending}</code>
-          </motion.div>
-        )}
-      </div>
+            {values.showShadows && (
+              <motion.div
+                className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+                style={{ opacity: start }}
+              >
+                <code className="text-sm">
+                  opacity: {formatDecimal(start.get())}
+                </code>
+              </motion.div>
+            )}
+
+            <Article className="grow" count={count} />
+
+            {values.showShadows && (
+              <motion.div
+                className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+                style={{ opacity: end }}
+              >
+                <code className="text-sm">
+                  opacity: {formatDecimal(end.get())}
+                </code>
+              </motion.div>
+            )}
+          </div>
+        );
+      }}
     </ExampleContainer>
   );
 }
 
-export function ArticleMarkupExample() {
-  const [size, setSize] = useState([48]);
-  const articleRef = useRef(null);
-
+export function ArticleMarkupExample({ caption }: { caption?: string }) {
   return (
     <ExampleContainer
+      caption={caption}
       className="max-h-75 w-full"
-      controls={
-        <p className="my-0 flex items-center justify-center gap-4 text-center text-base/none tabular-nums">
-          <code>size:</code>
-
-          <Slider
-            className="w-40"
-            max={64}
-            min={16}
-            onValueChange={setSize}
-            step={16}
-            value={size}
-          />
-
-          <code>{size}px</code>
-        </p>
-      }
-      mockBrowser
+      controls={[
+        {
+          type: "slider",
+          name: "size",
+          label: "Size",
+          min: 16,
+          max: 64,
+          step: 16,
+          defaultValue: 48,
+        },
+      ]}
     >
-      <div
-        className="overflow-y-auto"
-        ref={articleRef}
-        style={{ "--size": `${size}px` } as React.CSSProperties}
-      >
-        <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
-          <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${size}px, marginBottom: -${size}px }`}</code>
-        </div>
+      {({ values }) => (
+        <div
+          className="overflow-y-auto"
+          style={{ "--size": `${values.size}px` } as React.CSSProperties}
+        >
+          <div className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+            <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${values.size}px, marginBottom: -${values.size}px }`}</code>
+          </div>
 
-        <Article />
+          <Article />
 
-        <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
-          <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${size}px, marginTop: -${size}px }`}</code>
+          <div className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+            <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${values.size}px, marginTop: -${values.size}px }`}</code>
+          </div>
         </div>
-      </div>
+      )}
     </ExampleContainer>
   );
 }
 
 export function ArticleExample() {
   return (
-    <ExampleContainer className="w-full" isolated mockBrowser>
+    <ExampleContainer className="w-full" isolated>
       <ScrollContainer className="max-h-100 [--size:25px]">
         <Article />
       </ScrollContainer>
@@ -252,7 +189,7 @@ export function ArticleExample() {
 
 export function ArticleIframe() {
   return (
-    <ExampleContainer className="w-full" mockBrowser>
+    <ExampleContainer className="w-full">
       <iframe
         className="h-full w-full"
         src="/examples/article"
@@ -272,12 +209,9 @@ export function Article({
   return (
     <article className={cn("bg-white p-6 sm:px-10 sm:py-12", className)}>
       <Header />
-
       <Credits />
-
       <div className="mt-6 flex flex-col items-center gap-6">
         {Array.from({ length: count }).map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: static content
           <Fragment key={`block-a-${index}`}>
             <TextBlockA />
             <TextBlockB />
@@ -287,7 +221,6 @@ export function Article({
         {count > 2 && <ImageBlock />}
 
         {Array.from({ length: count }).map((_, index) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: static content
           <Fragment key={`block-b-${index}`}>
             <TextBlockA />
             <TextBlockB />

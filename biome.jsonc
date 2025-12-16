@@ -40,7 +40,11 @@
         "noNestedTernary": "warn"
       },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "off"
+      },
+      "nursery": {
+        "noLeakedRender": "off"
       }
     }
   }
