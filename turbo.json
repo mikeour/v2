@@ -10,8 +10,10 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.stories.{tsx,jsx,ts,js}"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "build:storybook": {},
     "dev": {
       "cache": false,
       "persistent": true

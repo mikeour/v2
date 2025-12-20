@@ -39,3 +39,6 @@ next-env.d.ts
 
 # Kiro
 .kiro
+
+# storybook
+storybook-static

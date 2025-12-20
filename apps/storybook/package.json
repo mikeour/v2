@@ -1,0 +1,27 @@
+{
+  "name": "@mikeour/storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "storybook dev -p 6006",
+    "build:storybook": "storybook build",
+    "clean": "rm -rf node_modules .turbo storybook-static"
+  },
+  "devDependencies": {
+    "@mikeour/typescript-config": "workspace:*",
+    "@mikeour/ui": "workspace:*",
+    "@storybook/addon-a11y": "^10.1.10",
+    "@storybook/addon-docs": "^10.1.10",
+    "@storybook/react": "^10.1.10",
+    "@storybook/react-vite": "^10.1.10",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "storybook": "^10.1.10",
+    "typescript": "5.9.3",
+    "vite": "^7.2.4"
+  }
+}

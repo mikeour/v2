@@ -30,6 +30,7 @@
   },
   "devDependencies": {
     "@mikeour/typescript-config": "workspace:*",
+    "@storybook/react": "^10.1.10",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "react": "19.2.3",
