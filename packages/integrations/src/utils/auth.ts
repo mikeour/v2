@@ -1,27 +1,3 @@
-type LetterboxdAuthType = {
-  apiKey: string;
-  apiSecret: string;
-  accessToken: string;
-};
-
-export function getLetterboxdAuth(): LetterboxdAuthType {
-  if (!process.env.LETTERBOXD_API_KEY) {
-    throw new Error("Missing LETTERBOXD_API_KEY");
-  }
-  if (!process.env.LETTERBOXD_API_SECRET) {
-    throw new Error("Missing LETTERBOXD_API_SECRET");
-  }
-  if (!process.env.LETTERBOXD_ACCESS_TOKEN) {
-    throw new Error("Missing LETTERBOXD_ACCESS_TOKEN");
-  }
-
-  return {
-    apiKey: process.env.LETTERBOXD_API_KEY,
-    apiSecret: process.env.LETTERBOXD_API_SECRET,
-    accessToken: process.env.LETTERBOXD_ACCESS_TOKEN,
-  };
-}
-
 type SpotifyAuthType = {
   clientId: string;
   clientSecret: string;
