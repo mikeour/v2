@@ -19,34 +19,34 @@ type Story = StoryObj<typeof meta>;
 export const Note: Story = {
   args: {
     variant: "note",
-    children: "Useful information that users should know, even when skimming content.",
+    children: <p>Useful information that users should know, even when skimming content.</p>,
   },
 };
 
 export const Warning: Story = {
   args: {
     variant: "warning",
-    children: "Urgent info that needs immediate user attention to avoid problems.",
+    children: <p>Urgent info that needs immediate user attention to avoid problems.</p>,
   },
 };
 
 export const Caution: Story = {
   args: {
     variant: "caution",
-    children: "Advises about risks or negative outcomes of certain actions.",
+    children: <p>Advises about risks or negative outcomes of certain actions.</p>,
   },
 };
 
 export const Important: Story = {
   args: {
     variant: "important",
-    children: "Key information users need to know to achieve their goal.",
+    children: <p>Key information users need to know to achieve their goal.</p>,
   },
 };
 
 export const Tip: Story = {
   args: {
     variant: "tip",
-    children: "Helpful advice for doing things better or more easily.",
+    children: <p>Helpful advice for doing things better or more easily.</p>,
   },
 };
