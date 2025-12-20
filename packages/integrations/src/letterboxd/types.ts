@@ -1,3 +1,10 @@
+export type APIResponse = {
+  status: number;
+  data?: unknown;
+};
+
+export type Params = Record<string, string | number>;
+
 export type LetterboxdFilm = {
   type: string;
   date: {

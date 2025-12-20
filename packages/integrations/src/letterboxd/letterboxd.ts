@@ -2,41 +2,12 @@ import { createHmac } from "node:crypto";
 import letterboxd from "letterboxd";
 import { v4 as uuidv4 } from "uuid";
 
-import { getFormattedDate } from "~/utils";
-import type { Film, LetterboxdFilm } from "~/types";
+import { getFormattedDate, getLetterboxdAuth } from "~/utils";
+import type { APIResponse, Film, LetterboxdFilm, Params } from "./types";
 
 export const BASE_URL = "https://api.letterboxd.com/api/v0";
 
-export type Auth = {
-  apiKey: string;
-  apiSecret: string;
-  accessToken: string;
-};
-
-function getAuth(): Auth {
-  if (!process.env.LETTERBOXD_API_KEY) {
-    throw new Error("Missing LETTERBOXD_API_KEY");
-  }
-  if (!process.env.LETTERBOXD_API_SECRET) {
-    throw new Error("Missing LETTERBOXD_API_SECRET");
-  }
-  if (!process.env.LETTERBOXD_ACCESS_TOKEN) {
-    throw new Error("Missing LETTERBOXD_ACCESS_TOKEN");
-  }
-
-  return {
-    apiKey: process.env.LETTERBOXD_API_KEY,
-    apiSecret: process.env.LETTERBOXD_API_SECRET,
-    accessToken: process.env.LETTERBOXD_ACCESS_TOKEN,
-  };
-}
-
-export type APIResponse = {
-  status: number;
-  data?: unknown;
-};
-
-type Params = Record<string, string | number>;
+const { accessToken, apiKey, apiSecret } = getLetterboxdAuth();
 
 function buildUrl(url: string, params?: Params) {
   const urlObj = new URL(`${BASE_URL}${url}`);
@@ -58,9 +29,8 @@ function buildParams(
   body?: Params | URLSearchParams,
   params: Params = {}
 ) {
-  const auth = getAuth();
   const fullParams = params;
-  fullParams.apikey = auth.apiKey;
+  fullParams.apikey = apiKey;
   fullParams.nonce = uuidv4();
   fullParams.timestamp = Math.floor(Date.now() / 1000);
 
@@ -76,7 +46,7 @@ function buildParams(
     bodyString,
   ].join("\u0000");
 
-  fullParams.signature = createHmac("sha256", auth.apiSecret)
+  fullParams.signature = createHmac("sha256", apiSecret)
     .update(sigBase)
     .digest("hex")
     .toLowerCase();
@@ -105,7 +75,6 @@ export function request<T extends APIResponse>(opts: {
     }
   }
 
-  const auth = getAuth();
   const params = buildParams(
     opts.method,
     opts.path,
@@ -119,9 +88,7 @@ export function request<T extends APIResponse>(opts: {
     body: formBody || (opts.body ? JSON.stringify(opts.body) : undefined),
     headers: {
       ...opts.headers,
-      ...(auth.accessToken
-        ? { Authorization: `Bearer ${auth.accessToken}` }
-        : {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   }).then(async (res) => {
     // This mess allows us to easily handle `res.json()`, and falling back to `res.text()` if our
