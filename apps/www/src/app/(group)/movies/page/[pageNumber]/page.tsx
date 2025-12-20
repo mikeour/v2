@@ -1,4 +1,5 @@
-import { getFilms } from "~/lib/letterboxd";
+import { getFilms } from "@mikeour/integrations/letterboxd";
+
 import { columns } from "./columns";
 import { MovieTable } from "./movie-table";
 

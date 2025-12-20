@@ -1,6 +1,4 @@
-import { Important } from "~/components/crafts/alerts/important";
-import { Note } from "~/components/crafts/alerts/note";
-import { Tip } from "~/components/crafts/alerts/tip";
+import { Alert } from "~/components/crafts/alert";
 import {
   ArticleExample,
   ArticleMarkupExample,
@@ -50,11 +48,11 @@ We'll use [Framer Motion](https://www.framer.com/motion/) for two reasons:
 npm install framer-motion
 ```
 
-<Note>
+<Alert variant="note">
   Using an animation library adds bundle size. If that's a concern, check out
   this [pure CSS solution](https://css-scroll-shadows.vercel.app/) first — it's
   limited but lightweight.
-</Note>
+</Alert>
 
 The core idea: we need two values to control shadow opacity:
 
@@ -87,12 +85,12 @@ const endingShadowVisibility = useTransform(
 );
 ```
 
-<Note>
+<Alert variant="note">
   Why `useTransform` instead of just `1 - scrollYProgress`? Because
   `scrollYProgress` is a MotionValue (a reactive container), not a plain number.
   `useTransform` creates a new MotionValue that automatically updates when the
   source changes.
-</Note>
+</Alert>
 
 Here's our initial hook:
 
@@ -167,12 +165,12 @@ Here's why it works:
 
 <ArticleMarkupExample caption="Drag the slider to see how shadow size affects the layout." />
 
-<Tip>
+<Alert variant="tip">
   I'm using Tailwind with a `cn` helper from
   [shadcn/ui](https://ui.shadcn.com/docs/installation) for conditional classes.
   See the [Vanilla CSS](#vanilla-css) section at the end for a plain CSS
   version.
-</Tip>
+</Alert>
 
 ## Polishing the Effect
 
@@ -420,12 +418,12 @@ We built a reusable scroll shadow component that:
 
 Scroll shadows are a small detail, but they're the kind of polish that makes interfaces feel thoughtful. They guide users without demanding attention — exactly what good UI should do.
 
-<Note>
+<Alert variant="note">
   **Accessibility note:** Scroll shadows are a visual enhancement, not a
   replacement for proper scrollable region semantics. Screen reader users won't
   perceive them, so ensure your scrollable areas are properly labeled with
   `role` and `aria-label` attributes when appropriate.
-</Note>
+</Alert>
 
 ## Resources
 

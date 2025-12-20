@@ -9,3 +9,5 @@ export function getFormattedDate(date: number | string): string {
 
   return formattedDate;
 }
+
+export { getLastFMAuth, getSpotifyAuth } from "./auth";

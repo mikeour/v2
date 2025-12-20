@@ -1,12 +1,10 @@
-import type { TrackData } from "~/types";
+import type { TrackData } from "@mikeour/integrations/spotify";
 
-const {
-  SPOTIFY_CLIENT_ID: client_id,
-  SPOTIFY_CLIENT_SECRET: client_secret,
-  SPOTIFY_REFRESH_TOKEN: refresh_token,
-} = process.env;
+import { getSpotifyAuth } from "~/utils";
 
-const basic = Buffer.from(`${client_id}:${client_secret}`).toString("base64");
+const { clientId, clientSecret, refreshToken } = getSpotifyAuth();
+
+const basic = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 const NOW_PLAYING_ENDPOINT =
   "https://api.spotify.com/v1/me/player/currently-playing";
 const TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks";
@@ -14,16 +12,10 @@ const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const RECENTLY_PLAYED_ENDPOINT =
   "https://api.spotify.com/v1/me/player/recently-played?limit=50";
 
-if (!refresh_token) {
-  throw new Error("Missing SPOTIFY_REFRESH_TOKEN");
-}
-
-const REFRESH_TOKEN = refresh_token;
-
-async function getAccessToken() {
+async function getAccessToken(): Promise<{ access_token: string }> {
   const body = new URLSearchParams({
     grant_type: "refresh_token",
-    refresh_token: REFRESH_TOKEN,
+    refresh_token: refreshToken,
   });
 
   const response = await fetch(TOKEN_ENDPOINT, {
@@ -35,7 +27,7 @@ async function getAccessToken() {
     body: body.toString(),
   });
 
-  return response.json();
+  return response.json() as Promise<{ access_token: string }>;
 }
 
 export async function getNowPlaying() {
@@ -55,7 +47,7 @@ export async function getCurrentlyPlayingTrack() {
     return null;
   }
 
-  const data: SpotifyApi.CurrentlyPlayingObject = await response.json();
+  const data = (await response.json()) as SpotifyApi.CurrentlyPlayingObject;
 
   if (data.item === null) {
     return null;
@@ -70,7 +62,7 @@ export async function getCurrentlyPlayingTrack() {
       album: item.album.name,
       songUrl: item.preview_url,
       title: item.name,
-      albumImageUrl: item.album.images[0].url,
+      albumImageUrl: item.album.images[0]?.url ?? "",
       playedAt: timestamp,
       isPlaying: is_playing,
       duration: millisToMinutesAndSeconds(item.duration_ms),
@@ -104,8 +96,8 @@ export async function getRecentlyPlayed() {
 
 export async function getRecentlyPlayedTracks() {
   const response = await getRecentlyPlayed();
-  const data: SpotifyApi.UsersRecentlyPlayedTracksResponse =
-    await response.json();
+  const data =
+    (await response.json()) as SpotifyApi.UsersRecentlyPlayedTracksResponse;
 
   const items = data.items ?? [];
   const tracks = items.map((item) => {
@@ -117,7 +109,7 @@ export async function getRecentlyPlayedTracks() {
       album: track.album.name,
       songUrl: track.preview_url,
       title: track.name,
-      albumImageUrl: track.album.images[0].url,
+      albumImageUrl: track.album.images[0]?.url ?? "",
       playedAt: played_at,
       isPlaying: false,
       duration: millisToMinutesAndSeconds(track.duration_ms),

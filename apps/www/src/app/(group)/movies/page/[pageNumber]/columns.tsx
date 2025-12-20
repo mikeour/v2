@@ -1,10 +1,9 @@
 "use client";
 
+import type { Film } from "@mikeour/integrations/letterboxd";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Check } from "lucide-react";
 import Image from "next/image";
-
-import type { Film } from "~/types";
 
 export const columns: ColumnDef<Film>[] = [
   {

@@ -1,11 +1,11 @@
 "use client";
 
+import type { TrackData } from "@mikeour/integrations/spotify";
 import { TimePlayed } from "@mikeour/ui/icons";
 import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 
 import { time } from "~/lib/timeago";
-import type { TrackData } from "~/types";
 
 export const columns: ColumnDef<TrackData>[] = [
   {
