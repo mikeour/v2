@@ -1,5 +1,4 @@
-import { Note } from "~/components/crafts/alerts/note";
-import { Tip } from "~/components/crafts/alerts/tip";
+import { Alert } from "~/components/crafts/alert";
 import { ComparisonTable } from "~/components/crafts/comparison-table";
 import {
   InteractiveVerticalDemo,
@@ -90,12 +89,12 @@ This means:
 
 The shadow literally grows from nothing as you scroll away from the edge.
 
-<Note>
+<Alert variant="note">
 Base UI uses `CSS.registerProperty()` to set `inherits: false` on these custom properties. This is a performance optimization — it prevents the browser from recalculating styles for the entire subtree on every scroll.
 
 The catch: child elements won't see these values unless we explicitly set them to `inherit`.
 
-</Note>
+</Alert>
 
 ## Building the Component
 
@@ -178,10 +177,10 @@ The visual difference is subtle but noticeable:
 
 Part 1 feels slightly more polished because the fade is proportional to scroll progress. Part 2 is simpler — the shadow is either growing or at full size.
 
-<Tip>
+<Alert variant="tip">
   You could add `transition: height 100ms` to smooth out the height changes, but
   it won't match the proportional fade of the Framer Motion approach.
-</Tip>
+</Alert>
 
 ## When to Use Each Approach
 
