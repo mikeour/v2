@@ -1,8 +1,9 @@
 {
   "extends": "@mikeour/typescript-config/nextjs.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*", "../../packages/integrations/src/*"]
     }
   },
   "include": [
@@ -10,7 +11,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.mdx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/integrations/types.d.ts"
   ],
   "exclude": ["node_modules"]
 }

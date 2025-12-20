@@ -95,7 +95,7 @@ function useScrollProgress({
   ref,
 }: {
   ref: React.RefObject<HTMLElement | null>;
-}) {
+}): [number, number] {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isOverflowing, setIsOverflowing] = useState(true);
 
