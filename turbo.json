@@ -6,7 +6,9 @@
     "SPOTIFY_REFRESH_TOKEN",
     "LETTERBOXD_API_KEY",
     "LETTERBOXD_API_SECRET",
-    "LETTERBOXD_ACCESS_TOKEN"
+    "LETTERBOXD_ACCESS_TOKEN",
+    "LASTFM_API_KEY",
+    "LASTFM_USERNAME"
   ],
   "tasks": {
     "build": {
@@ -20,6 +22,7 @@
     "check": {
       "dependsOn": ["^build"]
     },
+    "typecheck": {},
     "fix": {},
     "clean": {
       "cache": false

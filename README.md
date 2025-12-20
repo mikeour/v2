@@ -9,6 +9,7 @@ apps/
   www/                 # Next.js website (@mikeour/www)
 packages/
   ui/                  # Shared UI components (@mikeour/ui)
+  integrations/        # Shared third-party integrations (Spotify, Letterboxd, etc)
   typescript-config/   # Shared TypeScript configs (@mikeour/typescript-config)
 ```
 
@@ -23,15 +24,15 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 
 ## Scripts
 
-| Command             | Description                                    |
-| ------------------- | ---------------------------------------------- |
-| `pnpm dev`          | Start development server                       |
-| `pnpm build`        | Build all packages and apps                    |
-| `pnpm typecheck`    | Run TypeScript checks across all packages      |
-| `pnpm check`        | Run Biome linting                              |
-| `pnpm fix`          | Run Biome linting and auto-fix                 |
-| `pnpm lint:versions`| Check for dependency version mismatches        |
-| `pnpm clean`        | Remove all build artifacts and node_modules    |
+| Command              | Description                                 |
+| -------------------- | ------------------------------------------- |
+| `pnpm dev`           | Start development server                    |
+| `pnpm build`         | Build all packages and apps                 |
+| `pnpm typecheck`     | Run TypeScript checks across all packages   |
+| `pnpm check`         | Run Biome linting                           |
+| `pnpm fix`           | Run Biome linting and auto-fix              |
+| `pnpm lint:versions` | Check for dependency version mismatches     |
+| `pnpm clean`         | Remove all build artifacts and node_modules |
 
 ## Tooling
 

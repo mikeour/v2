@@ -1,19 +1,7 @@
 pre-commit:
   parallel: true
-  jobs:
-    - name: lint
-      run: npx ultracite fix
-      glob:
-        - "*.js"
-        - "*.jsx"
-        - "*.ts"
-        - "*.tsx"
-        - "*.json"
-        - "*.jsonc"
-        - "*.css"
-      stage_fixed: true
-    - name: typecheck
-      run: pnpm typecheck
-      glob:
-        - "*.ts"
-        - "*.tsx"
+  commands:
+    lint:
+      run: turbo check
+    typecheck:
+      run: turbo typecheck

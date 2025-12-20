@@ -43,6 +43,7 @@
         "noExplicitAny": "warn",
         "noArrayIndexKey": "off"
       },
+      "performance": { "noBarrelFile": "off" },
       "nursery": {
         "noLeakedRender": "off"
       }
