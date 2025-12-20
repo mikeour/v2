@@ -6,9 +6,9 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "typecheck": "turbo typecheck",
     "check": "ultracite check",
     "fix": "ultracite fix",
-    "typecheck": "turbo check",
     "lint:versions": "syncpack list-mismatches",
     "clean": "turbo clean && rm -rf node_modules pnpm-lock.yaml",
     "prepare": "lefthook install",
@@ -20,10 +20,5 @@
     "syncpack": "^13.0.4",
     "turbo": "^2.3.3",
     "ultracite": "^6.4.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "cheerio": "1.0.0-rc.12"
-    }
   }
 }
