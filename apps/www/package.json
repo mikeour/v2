@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@mikeour/typescript-config": "workspace:*",
+    "@storybook/react": "^10.1.10",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^22.10.5",
     "@types/react": "19.2.7",

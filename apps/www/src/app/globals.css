@@ -2,7 +2,8 @@
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.js";
 
-/* Add source for UI package */
+/* Add sources for Tailwind to scan */
+@source "../**/*.tsx";
 @source "../../../../packages/ui/src/**/*.tsx";
 
 @theme {
