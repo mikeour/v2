@@ -1,5 +1,6 @@
 "use client";
 
+import type { Film } from "@mikeour/integrations/letterboxd";
 import {
   Table,
   TableBody,
@@ -23,8 +24,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-import type { Film } from "~/types";
 
 const moviesPerPage = 10;
 

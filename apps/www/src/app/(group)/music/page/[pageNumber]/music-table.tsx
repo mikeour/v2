@@ -24,7 +24,7 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import type { TrackData } from "~/types";
+import type { TrackData } from "@mikeour/integrations/spotify";
 
 type MusicTableProps = {
   data: TrackData[];
