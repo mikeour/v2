@@ -12,13 +12,12 @@ import {
   useEffect,
   useState,
 } from "react";
+import { cn, mergeRefs } from "@mikeour/ui/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import type { EmblaOptionsType } from "embla-carousel";
 import type { UseEmblaCarouselType } from "embla-carousel-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { WheelGesturesPlugin } from "embla-carousel-wheel-gestures";
-
-import { cn, mergeRefs } from "./utils";
 
 type CarouselContextType = {
   currentIndex: number;
@@ -40,7 +39,7 @@ function useCarouselContext() {
   return context;
 }
 
-interface CarouselRootProps extends HTMLAttributes<HTMLDivElement> {
+export interface CarouselRootProps extends HTMLAttributes<HTMLDivElement> {
   options?: EmblaOptionsType;
   attachHandlers?: boolean;
 }
