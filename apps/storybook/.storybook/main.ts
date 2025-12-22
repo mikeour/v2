@@ -1,5 +1,9 @@
-import type { StorybookConfig } from "@storybook/react-vite";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import type { StorybookConfig } from "@storybook/nextjs-vite";
 import tailwindcss from "@tailwindcss/vite";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: [
@@ -7,10 +11,24 @@ const config: StorybookConfig = {
     "../../www/src/**/*.stories.@(js|jsx|ts|tsx)",
   ],
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
-  framework: "@storybook/react-vite",
+  framework: {
+    name: "@storybook/nextjs-vite",
+    options: {
+      nextConfigPath: resolve(__dirname, "../../www/next.config.ts"),
+    },
+  },
+  features: {
+    experimentalRSC: true,
+  },
   viteFinal: (config) => {
     config.plugins = [...(config.plugins || []), tailwindcss()];
-    config.esbuild = { jsx: "automatic" };
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        "~": resolve(__dirname, "../../www/src"),
+      },
+    };
     return config;
   },
 };
