@@ -123,8 +123,8 @@ function ScrollContainer({
       <motion.div
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-(--size)",
-          "group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:top-0 group-data-[axis=y]:h-(--size)"
+          "group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:w-(--size)",
+          "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:h-(--size)"
         )}
         style={{ opacity: start }}
       />
@@ -132,8 +132,8 @@ function ScrollContainer({
       <motion.div
         className={cn(
           "pointer-events-none sticky shrink-0 bg-blue-400/30",
-          "group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-(--size)",
-          "group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-(--size)"
+          "group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:w-(--size)",
+          "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:h-(--size)"
         )}
         style={{ opacity: end }}
       />
@@ -171,8 +171,8 @@ function DemoScrollContainer({
         <motion.div
           className={cn(
             "pointer-events-none sticky shrink-0 origin-top",
-            "group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:w-(--size)",
-            "group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:top-0 group-data-[axis=y]:h-(--size)",
+            "group-data-[axis=x]:top-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:left-0 group-data-[axis=x]:-mr-(--size) group-data-[axis=x]:w-(--size)",
+            "group-data-[axis=y]:top-0 group-data-[axis=y]:-mb-(--size) group-data-[axis=y]:h-(--size)",
             isRealistic
               ? "bg-linear-to-b from-slate-900/50 to-slate-50/0"
               : "bg-blue-400/35"
@@ -187,8 +187,8 @@ function DemoScrollContainer({
         <motion.div
           className={cn(
             "pointer-events-none sticky shrink-0 origin-bottom",
-            "group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:w-(--size)",
-            "group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:bottom-0 group-data-[axis=y]:h-(--size)",
+            "group-data-[axis=x]:top-0 group-data-[axis=x]:right-0 group-data-[axis=x]:bottom-0 group-data-[axis=x]:-ml-(--size) group-data-[axis=x]:w-(--size)",
+            "group-data-[axis=y]:bottom-0 group-data-[axis=y]:-mt-(--size) group-data-[axis=y]:h-(--size)",
             isRealistic
               ? "bg-linear-to-t from-slate-900/50 to-slate-50/0"
               : "bg-blue-400/35"
@@ -403,7 +403,7 @@ export function BrokenArticleProgress({
           >
             {values.showShadows && (
               <motion.div
-                className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+                className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
                 style={{ opacity: start }}
               >
                 <code className="text-sm">
@@ -416,7 +416,7 @@ export function BrokenArticleProgress({
 
             {values.showShadows && (
               <motion.div
-                className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+                className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
                 style={{ opacity: end }}
               >
                 <code className="text-sm">
@@ -453,11 +453,11 @@ export function ArticleMarkupExample({ caption }: { caption?: string }) {
           className="overflow-y-auto"
           style={{ "--size": `${values.size}px` } as React.CSSProperties}
         >
-          <div className="-mb-(--size) pointer-events-none sticky top-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+          <div className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
             <code className="text-xs/none md:text-sm/none">{`{ top: 0, height: ${values.size}px, marginBottom: -${values.size}px }`}</code>
           </div>
           <Article />
-          <div className="-mt-(--size) pointer-events-none sticky bottom-0 flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
+          <div className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30">
             <code className="text-xs/none md:text-sm/none">{`{ bottom: 0, height: ${values.size}px, marginTop: -${values.size}px }`}</code>
           </div>
         </div>

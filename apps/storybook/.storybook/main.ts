@@ -1,4 +1,4 @@
-import { dirname, join, resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 import tailwindcss from "@tailwindcss/vite";

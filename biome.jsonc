@@ -38,6 +38,7 @@
     "rules": {
       "style": {
         "noNestedTernary": "warn",
+        "noUnusedTemplateLiteral": "off",
         "useConsistentTypeDefinitions": {
           "level": "error",
           "fix": "safe",
@@ -52,7 +53,8 @@
       },
       "performance": { "noBarrelFile": "off" },
       "nursery": {
-        "noLeakedRender": "off"
+        "noLeakedRender": "off",
+        "noShadow": "off"
       }
     }
   }

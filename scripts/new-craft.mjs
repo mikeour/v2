@@ -5,10 +5,10 @@
  * Usage: node scripts/new-craft.mjs
  */
 
-import { createInterface } from "node:readline/promises";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { stdin, stdout } from "node:process";
+import { createInterface } from "node:readline/promises";
 
 const args = process.argv.slice(2);
 const rl = createInterface({ input: stdin, output: stdout });
@@ -42,7 +42,11 @@ async function main() {
   let title = args[0];
   let slug = args[1];
 
-  if (!title) {
+  if (title) {
+    slug = slug || toSlug(title);
+    console.log(`Title: ${title}`);
+    console.log(`Slug: ${slug}`);
+  } else {
     title = await prompt("Title");
     if (!title) {
       console.error("Title is required");
@@ -50,10 +54,6 @@ async function main() {
     }
     const defaultSlug = toSlug(title);
     slug = await prompt("Slug", defaultSlug);
-  } else {
-    slug = slug || toSlug(title);
-    console.log(`Title: ${title}`);
-    console.log(`Slug: ${slug}`);
   }
 
   const postDir = join(craftsDir, slug);

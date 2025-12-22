@@ -21,7 +21,13 @@ export const Default: StoryObj<typeof CraftCard> = {
     title: "Scroll Shadows",
     image: placeholderImage,
   },
-  decorators: [(Story) => <div className="max-w-xs"><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div className="max-w-xs">
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export const Featured: StoryObj<typeof CraftCardFeatured> = {
@@ -31,5 +37,11 @@ export const Featured: StoryObj<typeof CraftCardFeatured> = {
     date: "April 22, 2024",
     image: placeholderImage,
   },
-  decorators: [(Story) => <div className="max-w-sm"><Story /></div>],
+  decorators: [
+    (Story) => (
+      <div className="max-w-sm">
+        <Story />
+      </div>
+    ),
+  ],
 };

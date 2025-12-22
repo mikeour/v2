@@ -1,6 +1,6 @@
+import { readdir, readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { chromium } from "playwright";
-import { join } from "path";
-import { readdir, readFile } from "fs/promises";
 import sharp from "sharp";
 
 const CRAFTS_DIR = join(import.meta.dirname, "../apps/www/src/app/crafts");
@@ -8,25 +8,25 @@ const BASE_URL = "http://localhost:3000";
 
 const OUTPUT_WIDTH = 600;
 const OUTPUT_HEIGHT = 400;
-const BG_COLOR = { r: 30, g: 41, b: 59, alpha: 1 }; // slate-800
-const STRIPE_COLOR = { r: 51, g: 65, b: 85, alpha: 1 }; // slate-700
 
 // Target component size range (will scale to fit within this)
 const MIN_COMPONENT_WIDTH = 350;
 const MAX_COMPONENT_WIDTH = 520;
 const MAX_COMPONENT_HEIGHT = 320;
 
+const IMAGE_REGEX = /image:\s*["']([^"']+)["']/;
+
 async function getImageName(slug) {
   const mdxPath = join(CRAFTS_DIR, slug, "page.mdx");
   const content = await readFile(mdxPath, "utf-8");
-  const match = content.match(/image:\s*["']([^"']+)["']/);
+  const match = content.match(IMAGE_REGEX);
   return match ? match[1] : `${slug}.jpg`;
 }
 
-async function createStripedBackground() {
+function createStripedBackground() {
   // Create a small tile with diagonal stripes, then tile it
   const tileSize = 12;
-  
+
   // Create SVG for diagonal stripe pattern
   const svg = `
     <svg width="${OUTPUT_WIDTH}" height="${OUTPUT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
@@ -39,7 +39,7 @@ async function createStripedBackground() {
       <rect width="100%" height="100%" fill="url(#stripes)"/>
     </svg>
   `;
-  
+
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
@@ -73,7 +73,7 @@ async function generateCraftImages() {
 
       // Screenshot just the component
       let componentBuffer = await inner.screenshot({ type: "png" });
-      let componentMeta = await sharp(componentBuffer).metadata();
+      const componentMeta = await sharp(componentBuffer).metadata();
 
       let compWidth = componentMeta.width || 0;
       let compHeight = componentMeta.height || 0;
@@ -82,7 +82,7 @@ async function generateCraftImages() {
       // Calculate scale factor
       // Scale up if too small, scale down if too large
       let scale = 1;
-      
+
       if (compWidth < MIN_COMPONENT_WIDTH) {
         scale = MIN_COMPONENT_WIDTH / compWidth;
       }
@@ -121,7 +121,9 @@ async function generateCraftImages() {
         .jpeg({ quality: 90 })
         .toFile(outputPath);
 
-      console.log(`   ✓ Saved ${imageName} (${originalSize} → ${compWidth}x${compHeight})`);
+      console.log(
+        `   ✓ Saved ${imageName} (${originalSize} → ${compWidth}x${compHeight})`
+      );
     } catch (err) {
       console.error(`   ✗ Failed: ${err.message}`);
     }

@@ -256,7 +256,7 @@ export function ComparisonDemo({ caption }: { caption?: string }) {
             Part 1: Opacity-based
           </span>
           <div className="relative h-72 overflow-y-auto rounded-lg bg-white">
-            <div className="-mb-8 pointer-events-none sticky top-0 h-8 bg-linear-to-b from-white to-transparent opacity-80" />
+            <div className="pointer-events-none sticky top-0 -mb-8 h-8 bg-linear-to-b from-white to-transparent opacity-80" />
             <div className="py-1">
               {NOTIFICATIONS.slice(0, 6).map((notification) => (
                 <NotificationItem
@@ -265,7 +265,7 @@ export function ComparisonDemo({ caption }: { caption?: string }) {
                 />
               ))}
             </div>
-            <div className="-mt-8 pointer-events-none sticky bottom-0 h-8 bg-linear-to-t from-white to-transparent opacity-80" />
+            <div className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-linear-to-t from-white to-transparent opacity-80" />
           </div>
         </div>
 

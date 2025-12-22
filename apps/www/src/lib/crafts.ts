@@ -9,6 +9,7 @@ export type Craft = {
 };
 
 const craftsDir = join(process.cwd(), "src/app/crafts");
+const METADATA_REGEX = /export\s+const\s+metadata\s*=\s*\{([^}]+)\}/;
 
 export async function getCrafts(): Promise<Craft[]> {
   const entries = await readdir(craftsDir, { withFileTypes: true });
@@ -48,11 +49,10 @@ export async function getCraftImage(slug: string, image: string) {
 }
 
 function parseMetadataExport(content: string): Record<string, string> {
-  // Match: export const metadata = { ... }
-  const match = content.match(
-    /export\s+const\s+metadata\s*=\s*\{([^}]+)\}/
-  );
-  if (!match) return {};
+  const match = content.match(METADATA_REGEX);
+  if (!match) {
+    return {};
+  }
 
   const meta: Record<string, string> = {};
   const body = match[1];
