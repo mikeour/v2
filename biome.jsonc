@@ -37,7 +37,14 @@
   "linter": {
     "rules": {
       "style": {
-        "noNestedTernary": "warn"
+        "noNestedTernary": "warn",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "style": "type"
+          }
+        }
       },
       "suspicious": {
         "noExplicitAny": "warn",
