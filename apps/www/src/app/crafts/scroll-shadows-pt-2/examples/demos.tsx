@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@mikeour/ui/utils";
+import { cn } from "@mikeour/ui/lib/utils";
 
 import { ExampleContainer } from "~/components/crafts/example-container";
 import { ScrollAreaWithShadows } from "./scroll-area";
@@ -152,7 +152,7 @@ export function InteractiveVerticalDemo({ caption }: { caption?: string }) {
     >
       {({ values }) => (
         <ScrollAreaWithShadows
-          className="h-72 rounded-lg bg-white"
+          className="h-72 w-full rounded-lg bg-white"
           scrollShadow={values.shadows ? "vertical" : "none"}
         >
           <div className="py-1">
@@ -250,13 +250,13 @@ export function CSSVariablesDemo({ caption }: { caption?: string }) {
 export function ComparisonDemo({ caption }: { caption?: string }) {
   return (
     <ExampleContainer caption={caption} className="w-full">
-      <div className="grid gap-8 p-8 sm:grid-cols-2">
+      <div className="grid gap-8 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <span className="text-center text-slate-400 text-sm">
             Part 1: Opacity-based
           </span>
           <div className="relative h-72 overflow-y-auto rounded-lg bg-white">
-            <div className="pointer-events-none sticky top-0 -mb-8 h-8 bg-linear-to-b from-white to-transparent opacity-80" />
+            <div className="-mb-8 pointer-events-none sticky top-0 h-8 bg-linear-to-b from-white to-transparent opacity-80" />
             <div className="py-1">
               {NOTIFICATIONS.slice(0, 6).map((notification) => (
                 <NotificationItem
@@ -265,7 +265,7 @@ export function ComparisonDemo({ caption }: { caption?: string }) {
                 />
               ))}
             </div>
-            <div className="pointer-events-none sticky bottom-0 -mt-8 h-8 bg-linear-to-t from-white to-transparent opacity-80" />
+            <div className="-mt-8 pointer-events-none sticky bottom-0 h-8 bg-linear-to-t from-white to-transparent opacity-80" />
           </div>
         </div>
 

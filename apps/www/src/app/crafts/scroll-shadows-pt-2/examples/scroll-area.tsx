@@ -1,7 +1,7 @@
 "use client";
 
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { cn } from "@mikeour/ui/utils";
+import { cn } from "@mikeour/ui/lib/utils";
 
 interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   orientation?: "horizontal" | "vertical" | "both";
