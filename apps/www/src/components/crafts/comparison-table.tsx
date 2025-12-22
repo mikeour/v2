@@ -1,4 +1,4 @@
-import { cn } from "@mikeour/ui/utils";
+import { cn } from "@mikeour/ui/lib/utils";
 
 type ComparisonTableProps = {
   headers: string[];

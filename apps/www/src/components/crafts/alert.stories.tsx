@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { Alert } from "./alert";
 
 const meta = {
@@ -19,21 +20,29 @@ type Story = StoryObj<typeof meta>;
 export const Note: Story = {
   args: {
     variant: "note",
-    children: <p>Useful information that users should know, even when skimming content.</p>,
+    children: (
+      <p>
+        Useful information that users should know, even when skimming content.
+      </p>
+    ),
   },
 };
 
 export const Warning: Story = {
   args: {
     variant: "warning",
-    children: <p>Urgent info that needs immediate user attention to avoid problems.</p>,
+    children: (
+      <p>Urgent info that needs immediate user attention to avoid problems.</p>
+    ),
   },
 };
 
 export const Caution: Story = {
   args: {
     variant: "caution",
-    children: <p>Advises about risks or negative outcomes of certain actions.</p>,
+    children: (
+      <p>Advises about risks or negative outcomes of certain actions.</p>
+    ),
   },
 };
 

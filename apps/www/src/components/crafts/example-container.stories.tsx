@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
+
 import { ExampleContainer } from "./example-container";
 
 const meta = {
@@ -14,7 +15,7 @@ export const Basic: Story = {
   args: {
     isolated: true,
     children: (
-      <div className="h-32 w-64 rounded bg-blue-500 flex items-center justify-center text-white">
+      <div className="flex h-32 w-64 items-center justify-center rounded bg-blue-500 text-white">
         Demo Content
       </div>
     ),
@@ -26,7 +27,7 @@ export const WithCaption: Story = {
     isolated: true,
     caption: "This is a caption describing the example.",
     children: (
-      <div className="h-32 w-64 rounded bg-blue-500 flex items-center justify-center text-white">
+      <div className="flex h-32 w-64 items-center justify-center rounded bg-blue-500 text-white">
         Demo Content
       </div>
     ),
@@ -38,11 +39,18 @@ export const WithControls: Story = {
     isolated: true,
     controls: [
       { type: "switch", name: "enabled", label: "Enabled", defaultValue: true },
-      { type: "slider", name: "size", label: "Size", min: 50, max: 200, defaultValue: 100 },
+      {
+        type: "slider",
+        name: "size",
+        label: "Size",
+        min: 50,
+        max: 200,
+        defaultValue: 100,
+      },
     ],
     children: ({ values }) => (
       <div
-        className="rounded bg-blue-500 flex items-center justify-center text-white"
+        className="flex items-center justify-center rounded bg-blue-500 text-white"
         style={{
           width: values.size as number,
           height: values.size as number,

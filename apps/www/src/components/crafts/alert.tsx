@@ -1,4 +1,4 @@
-import { cn } from "@mikeour/ui/utils";
+import { cn } from "@mikeour/ui/lib/utils";
 
 const variants = {
   note: {
@@ -49,7 +49,7 @@ export function Alert({ variant = "note", children }: AlertProps) {
     <div className={cn("relative rounded-lg px-5 text-block", config.bg)}>
       <div
         className={cn(
-          "-translate-x-1/2 -translate-y-1/2 absolute",
+          "absolute -translate-x-1/2 -translate-y-1/2",
           config.position
         )}
       >

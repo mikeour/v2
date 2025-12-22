@@ -1,9 +1,9 @@
 "use client";
 
 import { useId, useState } from "react";
-import { Slider } from "@mikeour/ui/slider";
-import { Switch } from "@mikeour/ui/switch";
-import { cn } from "@mikeour/ui/utils";
+import { Slider } from "@mikeour/ui/components/slider";
+import { Switch } from "@mikeour/ui/components/switch";
+import { cn } from "@mikeour/ui/lib/utils";
 
 type SwitchControl = {
   type: "switch";
@@ -20,6 +20,7 @@ type SliderControl = {
   max: number;
   step?: number;
   defaultValue?: number;
+  unit?: string;
 };
 
 type Control = SwitchControl | SliderControl;
@@ -49,7 +50,7 @@ type ExampleContainerProps = {
 };
 
 export function ExampleContainer({
-  isolated = false,
+  isolated = true,
   className,
   controls,
   inspector,
@@ -97,13 +98,20 @@ export function ExampleContainer({
   return (
     <figure
       className={cn(
-        "code-example flex flex-col overflow-hidden rounded-xl bg-slate-800",
+        "grid grid-cols-1 grid-rows-[auto]", // default fallback
+        "has-data-[slot=example-toolbar]:grid-rows-[1fr_auto]",
+        "has-data-[slot=example-caption]:grid-rows-[auto_1fr]",
+        "has-data-[slot=example-toolbar]:has-data-[slot=example-caption]:grid-rows-[1fr_auto_1fr]",
+        "code-example overflow-hidden rounded-xl bg-slate-800",
         "lg:mx-[calc(var(--gutter)*-1.75)]"
       )}
     >
       {/* Toolbar - controls left, inspector right */}
       {hasToolbar && (
-        <div className="flex flex-wrap items-center justify-center gap-4 border-slate-700 border-b bg-slate-900/50 px-4 py-3">
+        <div
+          className="flex flex-wrap items-center justify-center gap-4 border-slate-700 border-b bg-slate-900/50 px-4 py-3"
+          data-slot="example-toolbar"
+        >
           {/* Controls */}
           {hasControls ? (
             <div className="flex flex-wrap items-center gap-5">
@@ -148,16 +156,18 @@ export function ExampleContainer({
       {/* Demo content */}
       <div
         className={cn(
-          "not-prose component-bg relative flex flex-col items-center justify-center",
+          "not-prose component-bg relative flex items-center justify-center",
           isolated && "px-(--gutter) py-8 sm:py-12"
         )}
+        data-slot="example-content"
       >
         <div
           className={cn(
-            "relative flex flex-col overflow-hidden",
+            "relative overflow-hidden",
             isolated && "rounded-lg",
             className
           )}
+          data-slot="example-content-inner"
         >
           {typeof children === "function" ? children(renderProps) : children}
         </div>
@@ -165,7 +175,10 @@ export function ExampleContainer({
 
       {/* Caption */}
       {caption && (
-        <figcaption className="border-slate-700 border-t bg-slate-900/30 px-4 py-2.5 text-center text-slate-400 text-sm">
+        <figcaption
+          className="flex basis-full items-center justify-center border-slate-700 border-t bg-slate-900/30 px-4 py-2.5 text-center text-slate-400 text-sm"
+          data-slot="example-caption"
+        >
           {caption}
         </figcaption>
       )}
@@ -206,7 +219,7 @@ function ControlRenderer({
   if (control.type === "slider") {
     return (
       <div className="flex items-center gap-2.5">
-        <label className="text-slate-400 text-sm" htmlFor={id}>
+        <label className="shrink-0 text-slate-400 text-sm" htmlFor={id}>
           {control.label}
         </label>
         <Slider
@@ -214,12 +227,13 @@ function ControlRenderer({
           id={id}
           max={control.max}
           min={control.min}
-          onValueChange={([v]) => onChange(v)}
+          onValueChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
           step={control.step ?? 1}
           value={[value as number]}
         />
         <span className="min-w-10 font-mono text-slate-300 text-sm tabular-nums">
-          {value}px
+          {value}
+          {control.unit ?? "px"}
         </span>
       </div>
     );
