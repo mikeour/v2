@@ -1,9 +1,9 @@
 import {
   getCurrentlyPlayingTrack,
   getRecentlyPlayedTracks,
+  type TrackData,
 } from "@mikeour/integrations/spotify";
 
-import type { TrackData } from "@mikeour/integrations/spotify";
 import { columns } from "./columns";
 import { MusicTable } from "./music-table";
 
