@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { CraftCard } from "~/components/crafts/craft-card";
-import { getCraftImage, getCrafts } from "~/lib/crafts";
+import { getCrafts } from "~/lib/crafts";
 
 export default async function Page() {
   const crafts = await getCrafts();
@@ -14,22 +14,18 @@ export default async function Page() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {
-          await Promise.all(
-            crafts.map(async (craft) => {
-              const image = await getCraftImage(craft.slug, craft.image);
-              return (
-                <Link
-                  className="contents"
-                  href={`/crafts/${craft.slug}`}
-                  key={craft.slug}
-                >
-                  <CraftCard image={image} title={craft.title} />
-                </Link>
-              );
-            })
-          )
-        }
+        {crafts.map((craft) => (
+          <Link
+            className="contents"
+            href={`/crafts/${craft.slug}`}
+            key={craft.slug}
+          >
+            <CraftCard
+              image={`/images/crafts/${craft.slug}.jpg`}
+              title={craft.title}
+            />
+          </Link>
+        ))}
       </div>
     </div>
   );

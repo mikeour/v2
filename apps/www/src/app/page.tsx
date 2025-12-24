@@ -2,7 +2,7 @@ import { Github, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 
 import { CraftCardFeatured } from "~/components/crafts/craft-card";
-import { getCraftImage, getCrafts } from "~/lib/crafts";
+import { getCrafts } from "~/lib/crafts";
 
 const externalLinks = [
   {
@@ -47,27 +47,20 @@ export default async function Home() {
         writing about UI/UX:
       </p>
 
-      <div className="my-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-4 sm:mb-12 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-        {
-          await Promise.all(
-            crafts.map(async (craft) => {
-              const image = await getCraftImage(craft.slug, craft.image);
-              return (
-                <Link
-                  className="contents"
-                  href={`/crafts/${craft.slug}`}
-                  key={craft.slug}
-                >
-                  <CraftCardFeatured
-                    date={craft.date}
-                    image={image}
-                    title={craft.title}
-                  />
-                </Link>
-              );
-            })
-          )
-        }
+      <div className="my-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-6 sm:mb-12 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        {crafts.map((craft) => (
+          <Link
+            className="contents"
+            href={`/crafts/${craft.slug}`}
+            key={craft.slug}
+          >
+            <CraftCardFeatured
+              date={craft.date}
+              image={`/images/crafts/${craft.slug}.jpg`}
+              title={craft.title}
+            />
+          </Link>
+        ))}
       </div>
 
       <div className="mt-24 flex gap-4">

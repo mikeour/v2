@@ -5,7 +5,6 @@ export type Craft = {
   slug: string;
   title: string;
   date: string;
-  image: string;
 };
 
 const craftsDir = join(process.cwd(), "src/app/crafts");
@@ -24,12 +23,11 @@ export async function getCrafts(): Promise<Craft[]> {
     try {
       const content = await readFile(mdxPath, "utf-8");
       const meta = parseMetadataExport(content);
-      if (meta.title && meta.date && meta.image) {
+      if (meta.title && meta.date) {
         crafts.push({
           slug: dir.name,
           title: meta.title,
           date: meta.date,
-          image: meta.image,
         });
       }
     } catch {
@@ -41,11 +39,6 @@ export async function getCrafts(): Promise<Craft[]> {
   return crafts.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
-}
-
-export async function getCraftImage(slug: string, image: string) {
-  const img = await import(`~/app/crafts/${slug}/${image}`);
-  return img.default;
 }
 
 function parseMetadataExport(content: string): Record<string, string> {

@@ -3,14 +3,20 @@ import Image from "next/image";
 
 export type CraftCardProps = {
   title: string;
-  image: StaticImageData;
+  image: string | StaticImageData;
 };
 
 export function CraftCard({ title, image }: CraftCardProps) {
   return (
     <div className="group flex flex-col gap-3">
       <div className="aspect-4/3 w-full overflow-hidden rounded bg-gray-600">
-        <Image alt="" className="h-full w-full object-cover" src={image} />
+        <Image
+          alt=""
+          className="h-full w-full object-cover"
+          height={300}
+          src={image}
+          width={400}
+        />
       </div>
       <p className="transition-colors group-hover:text-gray-200">{title}</p>
     </div>
@@ -20,7 +26,7 @@ export function CraftCard({ title, image }: CraftCardProps) {
 export type CraftCardFeaturedProps = {
   title: string;
   date: string;
-  image: StaticImageData;
+  image: string | StaticImageData;
 };
 
 export function CraftCardFeatured({
