@@ -1,9 +1,8 @@
 import { Github, Linkedin, Twitter } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 
-import img from "./crafts/scroll-shadows/scroll-shadows.jpg";
-import img2 from "./crafts/scroll-shadows-pt-2/scroll-shadows-2.jpg";
+import { CraftCardFeatured } from "~/components/crafts/craft-card";
+import { getCrafts } from "~/lib/crafts";
 
 const externalLinks = [
   {
@@ -26,7 +25,9 @@ const externalLinks = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const crafts = await getCrafts();
+
   return (
     <main className="prose mx-auto prose-p:my-[0.8em] min-h-full w-full max-w-238 self-center py-16">
       <h1 className="mb-0 font-extrabold text-4xl text-blue-100 tracking-tighter lg:text-8xl">
@@ -46,52 +47,20 @@ export default function Home() {
         writing about UI/UX:
       </p>
 
-      <div className="my-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-4 sm:mb-12 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-        <Link
-          className="group flex flex-col gap-6 no-underline"
-          href="/crafts/scroll-shadows-pt-2"
-        >
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
-            <Image
-              alt=""
-              className="my-0 h-full w-full object-cover"
-              fill
-              src={img2}
+      <div className="my-10 grid grid-cols-1 gap-x-8 gap-y-10 sm:mt-6 sm:mb-12 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        {crafts.map((craft) => (
+          <Link
+            className="contents"
+            href={`/crafts/${craft.slug}`}
+            key={craft.slug}
+          >
+            <CraftCardFeatured
+              date={craft.date}
+              image={`/images/crafts/${craft.slug}.jpg`}
+              title={craft.title}
             />
-
-            <div className="absolute inset-0 bg-blue-400/0 transition-colors group-hover:bg-blue-400/20" />
-          </div>
-
-          <div className="not-prose flex flex-col gap-0">
-            <span className="leading-none">December 10, 2025</span>
-            <p className="transition-colors group-hover:text-gray-200">
-              Scroll Shadows (Pt. 2)
-            </p>
-          </div>
-        </Link>
-
-        <Link
-          className="group flex flex-col gap-6 no-underline"
-          href="/crafts/scroll-shadows"
-        >
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg sm:aspect-5/3">
-            <Image
-              alt=""
-              className="my-0 h-full w-full object-cover"
-              fill
-              src={img}
-            />
-
-            <div className="absolute inset-0 bg-blue-400/0 transition-colors group-hover:bg-blue-400/20" />
-          </div>
-
-          <div className="not-prose flex flex-col gap-0">
-            <span className="leading-none">April 22, 2024</span>
-            <p className="transition-colors group-hover:text-gray-200">
-              Scroll Shadows
-            </p>
-          </div>
-        </Link>
+          </Link>
+        ))}
       </div>
 
       <div className="mt-24 flex gap-4">

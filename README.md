@@ -99,3 +99,90 @@ pnpm add -D -w <package>
 ```
 
 After adding dependencies, syncpack will verify version consistency automatically.
+
+## Crafts (Blog Posts)
+
+Interactive technical blog posts live in `apps/www/src/app/crafts/`. Each craft has demos with live code examples.
+
+### Creating a New Craft
+
+```bash
+pnpm new:craft "Post Title"
+```
+
+This scaffolds the folder structure, MDX template, and demo files.
+
+### Generating Cover Images
+
+```bash
+pnpm generate:craft-images
+```
+
+Captures demo screenshots and composites them onto a consistent background. Images are saved to `public/images/crafts/{slug}.jpg`.
+
+### Craft Structure
+
+```
+crafts/{slug}/
+├── page.mdx           # Content with Demo components
+├── demos/             # Self-contained demo directories
+│   └── {demo-name}/
+│       ├── demo.tsx   # Rendered component (required)
+│       ├── data.ts    # Mock data (optional)
+│       └── *.tsx      # Implementation files for code tabs
+└── snippets/          # Code snippets referenced in content
+```
+
+### Demo Component
+
+```tsx
+import { Demo } from "~/components/crafts/demo";
+import * as MyDemo from "./demos/my-demo/demo";
+
+<Demo
+  demo={MyDemo}
+  path="app/crafts/{slug}/demos/my-demo"
+  caption="Description shown below"
+  controls={[
+    { type: "switch", name: "enabled", label: "Enable", defaultValue: true },
+    { type: "slider", name: "size", min: 0, max: 100, defaultValue: 50 },
+  ]}
+  inspector={[
+    { name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" },
+  ]}
+  files={["demo.tsx", "component.tsx"]}
+/>
+```
+
+See `apps/www/src/app/crafts/AGENTS.md` for complete conventions.
+
+## Component Organization
+
+```
+apps/www/src/components/
+├── crafts/            # Craft-specific components
+│   ├── demo/          # DemoRenderer system (compound components)
+│   ├── alert.tsx      # Callout boxes
+│   └── craft-card.tsx # Listing cards
+├── mdx/               # MDX rendering components
+│   ├── code.tsx       # Code blocks
+│   ├── code-tabs.tsx  # Tabbed code panels
+│   └── copy-button.tsx
+└── utility/           # Dev utilities (screen-size indicator)
+```
+
+## Path Aliases
+
+| Alias | Path |
+| ----- | ---- |
+| `~/`  | `apps/www/src/` |
+| `@mikeour/ui/*` | `packages/ui/src/*` |
+
+## RSC Considerations
+
+This project uses React Server Components. Key patterns:
+
+- Use `"use client"` directive for interactive components
+- Object property access (e.g., `Component.Sub`) doesn't work across RSC boundary - use named exports
+- Functions can't be passed as props across the boundary - use string identifiers (e.g., `format: "decimal"`)
+- `process.env.NODE_ENV` checks work in client components for dev-only features

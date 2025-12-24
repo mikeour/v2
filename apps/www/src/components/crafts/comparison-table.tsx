@@ -1,4 +1,4 @@
-import { cn } from "@mikeour/ui/utils";
+import { cn } from "@mikeour/ui/lib/utils";
 
 type ComparisonTableProps = {
   headers: string[];
@@ -12,14 +12,19 @@ export function ComparisonTable({
   className,
 }: ComparisonTableProps) {
   return (
-    <div className={cn("not-prose my-6 overflow-x-auto", className)}>
+    <div
+      className={cn(
+        "not-prose my-6 overflow-x-auto rounded bg-white px-8 py-4",
+        className
+      )}
+    >
       <table className="w-full text-sm">
         <thead>
           <tr className="border-slate-700 border-b">
             {headers.map((header, i) => (
               <th
                 className={cn(
-                  "py-2 text-left font-medium text-slate-300",
+                  "py-2 text-left font-semibold text-base text-slate-800",
                   i < headers.length - 1 && "pr-4"
                 )}
                 key={header}
@@ -29,11 +34,12 @@ export function ComparisonTable({
             ))}
           </tr>
         </thead>
-        <tbody className="text-slate-400">
+        <tbody className="">
           {rows.map((row, rowIndex) => (
             <tr
               className={cn(
-                rowIndex < rows.length - 1 && "border-slate-800 border-b"
+                rowIndex < rows.length - 1 &&
+                  "border-slate-500 border-b text-slate-700"
               )}
               key={rowIndex}
             >

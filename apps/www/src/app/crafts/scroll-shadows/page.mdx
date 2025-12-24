@@ -1,12 +1,17 @@
 import { Alert } from "~/components/crafts/alert";
-import {
-  ArticleExample,
-  ArticleMarkupExample,
-  ArticleProgress,
-  BrokenArticleProgress,
-  InteractiveArticleExample,
-} from "./examples/article";
-import { CarouselExample } from "./examples/carousel";
+import { Demo } from "~/components/crafts/demo";
+import * as InteractiveDemo from "./demos/interactive/demo";
+import * as ProgressDemo from "./demos/progress/demo";
+import * as BrokenProgressOverflowDemo from "./demos/broken-progress-overflow/demo";
+import * as BrokenProgressNoOverflowDemo from "./demos/broken-progress-no-overflow/demo";
+import * as FixedProgressNoOverflowDemo from "./demos/fixed-progress-no-overflow/demo";
+import * as MarkupDemo from "./demos/markup/demo";
+import * as CarouselDemo from "./demos/carousel/demo";
+
+export const metadata = {
+  title: "Scroll Shadows",
+  date: "April 22, 2024",
+};
 
 # Scroll Shadows
 
@@ -14,7 +19,13 @@ import { CarouselExample } from "./examples/carousel";
 
 Scroll shadows are a visual cue that indicates more content exists beyond the visible area. They fade in as you scroll away from an edge and fade out as you approach it.
 
-<InteractiveArticleExample caption="Scroll the article — notice how shadows appear and disappear at the edges." />
+<Demo
+  demo={InteractiveDemo}
+  caption="Scroll the article — notice how shadows appear and disappear at the edges."
+  controls={[{ type: "switch", name: "shadows", label: "Shadows", defaultValue: true }]}
+  path="app/crafts/scroll-shadows/demos/interactive"
+  mockBrowser
+/>
 
 By the end of this post, we'll build a reusable `<ScrollShadows />` component that adds this effect to any scrollable container. The goal is to make it as simple as:
 
@@ -72,7 +83,13 @@ const { scrollYProgress } = useScroll({ container: articleRef });
 </article>;
 ```
 
-<ArticleProgress caption="Scroll the article to see the value update in real-time." />
+<Demo
+  demo={ProgressDemo}
+  caption="Scroll the article to see the value update in real-time."
+  path="app/crafts/scroll-shadows/demos/progress"
+  inspector={[{ name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" }]}
+  mockBrowser
+/>
 
 This gives us our starting point. The `scrollYProgress` value already matches what we need for `startingShadowVisibility` — it's `0` at the top and increases as we scroll.
 
@@ -95,21 +112,36 @@ const endingShadowVisibility = useTransform(
 Here's our initial hook:
 
 ```tsx
-!from ./examples/snippets/added-progress.tsx
+!from ./snippets/added-progress.tsx
 ```
 
 Let's visualize both values. Toggle the shadows on to see them respond to scroll:
 
-<BrokenArticleProgress count={3} working={false} />
+<Demo
+  demo={BrokenProgressOverflowDemo}
+  path="app/crafts/scroll-shadows/demos/broken-progress-overflow"
+  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
+  inspector={[
+    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
+    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "1.00" }
+  ]}
+  mockBrowser
+/>
 
 Looking good! But there's a bug hiding. Let's see what happens when the content doesn't overflow:
 
 ## Handling Edge Cases
 
-<BrokenArticleProgress
-  count={0}
-  working={false}
+<Demo
+  demo={BrokenProgressNoOverflowDemo}
   caption="Toggle shadows ON — why is the top shadow visible?"
+  path="app/crafts/scroll-shadows/demos/broken-progress-no-overflow"
+  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
+  inspector={[
+    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "1.00" },
+    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
+  ]}
+  mockBrowser
 />
 
 When a container doesn't overflow, `useScroll` defaults `scrollYProgress` to `1` (not `0`). This means our starting shadow shows at full opacity even though there's nothing to scroll.
@@ -133,12 +165,21 @@ const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
 
 Now both shadows correctly hide when there's no overflow:
 
-<BrokenArticleProgress count={0} working />
+<Demo
+  demo={FixedProgressNoOverflowDemo}
+  path="app/crafts/scroll-shadows/demos/fixed-progress-no-overflow"
+  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
+  inspector={[
+    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
+    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
+  ]}
+  mockBrowser
+/>
 
 Here's the complete hook:
 
 ```tsx
-!from ./examples/snippets/added-modified-progress.tsx
+!from ./snippets/added-modified-progress.tsx
 ```
 
 ## Positioning the Shadows
@@ -163,7 +204,14 @@ Here's why it works:
 </div>
 ```
 
-<ArticleMarkupExample caption="Drag the slider to see how shadow size affects the layout." />
+<Demo
+  demo={MarkupDemo}
+  caption="Drag the slider to see how shadow size affects the layout."
+  path="app/crafts/scroll-shadows/demos/markup"
+  files={["demo.tsx"]}
+  controls={[{ type: "slider", name: "size", label: "Size", min: 16, max: 64, step: 16, defaultValue: 48 }]}
+  mockBrowser
+/>
 
 <Alert variant="tip">
   I'm using Tailwind with a `cn` helper from
@@ -246,53 +294,20 @@ Then update the component to position shadows on left/right for horizontal scrol
 
 Here's horizontal scrolling in action:
 
-<CarouselExample />
+<Demo
+  demo={CarouselDemo}
+  path="app/crafts/scroll-shadows/demos/carousel"
+/>
 
 ## Final Code
 
 Here's the complete implementation:
 
-```tsx
-// use-scroll-shadows.ts
-import { useScroll, useTransform } from "framer-motion";
-import type { RefObject } from "react";
+### Tailwind
 
-type AxisType = "x" | "y";
+<CodeWithTabs>
 
-export function useScrollShadows({
-  ref,
-  axis = "y",
-}: {
-  ref: RefObject<HTMLElement | null>;
-  axis?: AxisType;
-}) {
-  const { scrollXProgress, scrollYProgress } = useScroll({ container: ref });
-
-  const scrollProgress = axis === "x" ? scrollXProgress : scrollYProgress;
-
-  const isOverflowing = (element: HTMLElement) => {
-    return axis === "x"
-      ? element.scrollWidth > element.clientWidth
-      : element.scrollHeight > element.clientHeight;
-  };
-
-  const startingShadowVisibility = useTransform(scrollProgress, (latest) => {
-    const element = ref.current;
-    if (element === null) return latest;
-    return isOverflowing(element) ? latest : 0;
-  });
-
-  const endingShadowVisibility = useTransform(
-    scrollProgress,
-    (latest) => 1 - latest
-  );
-
-  return [startingShadowVisibility, endingShadowVisibility] as const;
-}
-```
-
-```tsx
-// scroll-shadows.tsx
+```tsx !!tabs scroll-shadows.tsx
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "./utils";
@@ -342,11 +357,116 @@ export function ScrollShadows({
 }
 ```
 
-## Vanilla CSS
+```tsx !!tabs use-scroll-shadows.ts
+import { useScroll, useTransform } from "framer-motion";
+import type { RefObject } from "react";
 
-For those not using Tailwind, here's the equivalent CSS:
+type AxisType = "x" | "y";
 
-```css
+export function useScrollShadows({
+  ref,
+  axis = "y",
+}: {
+  ref: RefObject<HTMLElement | null>;
+  axis?: AxisType;
+}) {
+  const { scrollXProgress, scrollYProgress } = useScroll({ container: ref });
+
+  const scrollProgress = axis === "x" ? scrollXProgress : scrollYProgress;
+
+  const isOverflowing = (element: HTMLElement) => {
+    return axis === "x"
+      ? element.scrollWidth > element.clientWidth
+      : element.scrollHeight > element.clientHeight;
+  };
+
+  const startingShadowVisibility = useTransform(scrollProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) return latest;
+    return isOverflowing(element) ? latest : 0;
+  });
+
+  const endingShadowVisibility = useTransform(
+    scrollProgress,
+    (latest) => 1 - latest
+  );
+
+  return [startingShadowVisibility, endingShadowVisibility] as const;
+}
+```
+
+</CodeWithTabs>
+
+### Vanilla CSS
+
+<CodeWithTabs>
+
+```tsx !!tabs scroll-shadows.tsx
+import { useRef } from "react";
+import { motion } from "framer-motion";
+import { useScrollShadows } from "./use-scroll-shadows";
+import "./styles.css";
+
+export function ScrollShadows({
+  axis = "y",
+  className,
+  children,
+}: React.PropsWithChildren<{
+  axis?: "x" | "y";
+  className?: string;
+}>) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [start, end] = useScrollShadows({ ref, axis });
+
+  return (
+    <div ref={ref} data-axis={axis} className={`scroll-shadows ${className}`}>
+      <motion.div style={{ opacity: start }} className="scroll-shadow scroll-shadow-start" />
+      {children}
+      <motion.div style={{ opacity: end }} className="scroll-shadow scroll-shadow-end" />
+    </div>
+  );
+}
+```
+
+```tsx !!tabs use-scroll-shadows.ts
+import { useScroll, useTransform } from "framer-motion";
+import type { RefObject } from "react";
+
+type AxisType = "x" | "y";
+
+export function useScrollShadows({
+  ref,
+  axis = "y",
+}: {
+  ref: RefObject<HTMLElement | null>;
+  axis?: AxisType;
+}) {
+  const { scrollXProgress, scrollYProgress } = useScroll({ container: ref });
+
+  const scrollProgress = axis === "x" ? scrollXProgress : scrollYProgress;
+
+  const isOverflowing = (element: HTMLElement) => {
+    return axis === "x"
+      ? element.scrollWidth > element.clientWidth
+      : element.scrollHeight > element.clientHeight;
+  };
+
+  const startingShadowVisibility = useTransform(scrollProgress, (latest) => {
+    const element = ref.current;
+    if (element === null) return latest;
+    return isOverflowing(element) ? latest : 0;
+  });
+
+  const endingShadowVisibility = useTransform(
+    scrollProgress,
+    (latest) => 1 - latest
+  );
+
+  return [startingShadowVisibility, endingShadowVisibility] as const;
+}
+```
+
+```css !!tabs styles.css
 .scroll-shadows {
   --size: 40px;
   position: relative;
@@ -404,7 +524,7 @@ For those not using Tailwind, here's the equivalent CSS:
 }
 ```
 
-Note: This CSS handles positioning only. You'll still need JavaScript to control the opacity based on scroll position — the `useScrollShadows` hook works the same way regardless of how you style the elements.
+</CodeWithTabs>
 
 ## Conclusion
 

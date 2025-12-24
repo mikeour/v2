@@ -1,29 +1,31 @@
-import Image from "next/image";
 import Link from "next/link";
 
-import img from "./scroll-shadows/scroll-shadows.jpg";
+import { CraftCard } from "~/components/crafts/craft-card";
+import { getCrafts } from "~/lib/crafts";
 
-export default function Page() {
+export default async function Page() {
+  const crafts = await getCrafts();
+
   return (
     <div className="not-prose flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <h1 className="font-bold text-3xl text-white">Crafts</h1>
-        <p className="">Exploring modern user interface components.</p>
+        <p>Exploring modern user interface components.</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Link
-          className="group flex flex-col gap-3 no-underline"
-          href="/crafts/scroll-shadows"
-        >
-          <div className="aspect-4/3 w-full overflow-hidden rounded bg-gray-600">
-            <Image alt="" className="h-full w-full object-cover" src={img} />
-          </div>
-
-          <p className="transition-colors group-hover:text-gray-200">
-            Scroll Shadows
-          </p>
-        </Link>
+        {crafts.map((craft) => (
+          <Link
+            className="contents"
+            href={`/crafts/${craft.slug}`}
+            key={craft.slug}
+          >
+            <CraftCard
+              image={`/images/crafts/${craft.slug}.jpg`}
+              title={craft.title}
+            />
+          </Link>
+        ))}
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 "use client";
 
+import type { TrackData } from "@mikeour/integrations/spotify";
 import {
   Table,
   TableBody,
@@ -7,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@mikeour/ui/table";
-import { cn } from "@mikeour/ui/utils";
+} from "@mikeour/ui/components/table";
+import { cn } from "@mikeour/ui/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,
@@ -23,8 +24,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-import type { TrackData } from "@mikeour/integrations/spotify";
 
 type MusicTableProps = {
   data: TrackData[];

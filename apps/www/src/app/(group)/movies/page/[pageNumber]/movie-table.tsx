@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@mikeour/ui/table";
-import { cn } from "@mikeour/ui/utils";
+} from "@mikeour/ui/components/table";
+import { cn } from "@mikeour/ui/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   flexRender,

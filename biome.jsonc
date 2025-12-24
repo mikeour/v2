@@ -4,6 +4,7 @@
   "assist": {
     "actions": {
       "source": {
+        "useSortedAttributes": "off",
         "organizeImports": {
           "level": "on",
           "options": {
@@ -37,7 +38,15 @@
   "linter": {
     "rules": {
       "style": {
-        "noNestedTernary": "warn"
+        "noNestedTernary": "warn",
+        "noUnusedTemplateLiteral": "off",
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "fix": "safe",
+          "options": {
+            "style": "type"
+          }
+        }
       },
       "suspicious": {
         "noExplicitAny": "warn",
@@ -45,7 +54,8 @@
       },
       "performance": { "noBarrelFile": "off" },
       "nursery": {
-        "noLeakedRender": "off"
+        "noLeakedRender": "off",
+        "noShadow": "off"
       }
     }
   }

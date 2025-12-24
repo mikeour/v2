@@ -2,7 +2,12 @@
   "extends": "@mikeour/typescript-config/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": []
+    "rootDir": "src",
+    "types": [],
+    "baseUrl": ".",
+    "paths": {
+      "@mikeour/ui/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

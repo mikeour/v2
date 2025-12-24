@@ -1,0 +1,189 @@
+import { Alert } from "~/components/crafts/alert";
+import { Demo } from "~/components/crafts/demo";
+import * as BasicDemo from "./demos/basic/demo";
+import * as InteractiveDemo from "./demos/interactive/demo";
+
+export const metadata = {
+  title: "Animated Tabs",
+  date: "December 21, 2025",
+};
+
+# Animated Tabs
+
+<time className="-mt-6 mb-8 block text-gray-400">December 21, 2025</time>
+
+Animated tabs use a sliding indicator to show which tab is active. The indicator smoothly transitions between tabs, creating a polished feel that makes the interface feel responsive.
+
+<Demo
+  demo={InteractiveDemo}
+  caption="Click the tabs to see the animated indicator."
+  path="app/crafts/animated-tabs/demos/interactive"
+  controls={[{ type: "slider", name: "duration", label: "Duration", min: 0, max: 1000, step: 50, defaultValue: 300, unit: "ms" }]}
+/>
+
+By the end of this post, we'll build animated tabs with a sliding indicator using only CSS transitions — no animation libraries required.
+
+## What We're Building
+
+Before diving in, let's define our acceptance criteria:
+
+- Smooth sliding indicator that follows the active tab
+- Handle dynamic tab widths
+- Work with any number of tabs
+- Zero animation library dependencies
+
+## The Approach
+
+The trick is to use a single indicator element positioned absolutely, then update its `left` and `width` via inline styles when the active tab changes. CSS `transition` handles the animation.
+
+We need to:
+1. Track which tab is active
+2. Measure the active tab's position and width
+3. Apply those values to the indicator
+
+## Measuring Tab Position
+
+We'll use refs to measure each tab button. When the active tab changes, we read its `offsetLeft` and `offsetWidth`:
+
+```tsx
+const [activeTab, setActiveTab] = useState(tabs[0].id);
+const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+useEffect(() => {
+  const activeElement = tabRefs.current.get(activeTab);
+  if (activeElement) {
+    setIndicatorStyle({
+      left: activeElement.offsetLeft,
+      width: activeElement.offsetWidth,
+    });
+  }
+}, [activeTab]);
+```
+
+<Demo
+  demo={BasicDemo}
+  caption="A minimal implementation with CSS transitions."
+  path="app/crafts/animated-tabs/demos/basic"
+/>
+
+<Alert variant="note">
+  We store refs in a Map so we can look up any tab by its ID. This is cleaner
+  than managing an array of refs when tabs can be dynamic.
+</Alert>
+
+## The Indicator Element
+
+The indicator is positioned absolutely within the tab container:
+
+```tsx
+<div className="relative flex gap-1 rounded-full bg-gray-100 p-1">
+  {/* Sliding indicator */}
+  <span
+    className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm transition-all duration-300"
+    style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
+  />
+
+  {/* Tab buttons */}
+  {tabs.map((tab) => (
+    <button
+      key={tab.id}
+      ref={(el) => el && tabRefs.current.set(tab.id, el)}
+      onClick={() => setActiveTab(tab.id)}
+      className="relative z-10 rounded-full px-3 py-1.5"
+    >
+      {tab.label}
+    </button>
+  ))}
+</div>
+```
+
+The `transition-all duration-300` class handles the animation. When `left` or `width` changes, CSS smoothly interpolates between values.
+
+## Handling Initial Render
+
+There's a catch: on first render, the refs haven't been measured yet, so the indicator has no position. We need to measure after mount:
+
+```tsx
+useLayoutEffect(() => {
+  const activeElement = tabRefs.current.get(activeTab);
+  if (activeElement) {
+    setIndicatorStyle({
+      left: activeElement.offsetLeft,
+      width: activeElement.offsetWidth,
+    });
+  }
+}, [activeTab]);
+```
+
+<Alert variant="tip">
+  Using `useLayoutEffect` instead of `useEffect` ensures the measurement happens
+  before the browser paints, avoiding a flash of the indicator at position 0.
+</Alert>
+
+## Final Code
+
+Here's the complete implementation:
+
+```tsx
+import { useLayoutEffect, useRef, useState } from "react";
+
+const tabs = [
+  { id: "account", label: "Account" },
+  { id: "password", label: "Password" },
+  { id: "settings", label: "Settings" },
+];
+
+export function AnimatedTabs() {
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+
+  useLayoutEffect(() => {
+    const activeElement = tabRefs.current.get(activeTab);
+    if (activeElement) {
+      setIndicatorStyle({
+        left: activeElement.offsetLeft,
+        width: activeElement.offsetWidth,
+      });
+    }
+  }, [activeTab]);
+
+  return (
+    <div className="relative flex gap-1 rounded-full bg-gray-100 p-1">
+      <span
+        className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm transition-all duration-300"
+        style={{ left: indicatorStyle.left, width: indicatorStyle.width }}
+      />
+      {tabs.map((tab) => (
+        <button
+          key={tab.id}
+          ref={(el) => {
+            if (el) tabRefs.current.set(tab.id, el);
+          }}
+          onClick={() => setActiveTab(tab.id)}
+          className="relative z-10 rounded-full px-3 py-1.5 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900"
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+## Conclusion
+
+We built animated tabs using only React state and CSS transitions:
+
+- Refs measure the active tab's position and width
+- Inline styles position the indicator
+- CSS `transition` animates between states
+- No animation libraries needed
+
+This pattern works anywhere you need a sliding indicator — navigation menus, segmented controls, filter bars. The key insight is that CSS transitions can animate any numeric style property, so we just need to provide the start and end values.
+
+## Resources
+
+- [CSS Transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_transitions/Using_CSS_transitions) — MDN reference
+- [useLayoutEffect](https://react.dev/reference/react/useLayoutEffect) — React docs on synchronous effects

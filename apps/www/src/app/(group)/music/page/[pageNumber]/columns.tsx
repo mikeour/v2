@@ -1,7 +1,7 @@
 "use client";
 
 import type { TrackData } from "@mikeour/integrations/spotify";
-import { TimePlayed } from "@mikeour/ui/icons";
+import { TimePlayed } from "@mikeour/ui/components/icons";
 import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 
