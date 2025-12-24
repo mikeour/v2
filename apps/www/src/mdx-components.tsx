@@ -1,7 +1,7 @@
 import type { MDXComponents } from "mdx/types";
 
-import { Code } from "~/components/code";
-import { CodeWithTabs } from "~/components/code-with-tabs";
+import { Code } from "~/components/mdx/code";
+import { CodeWithTabs } from "~/components/mdx/code-with-tabs";
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
