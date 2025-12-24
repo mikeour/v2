@@ -1,292 +1,436 @@
 import { Alert } from "~/components/crafts/alert";
 import { ComparisonTable } from "~/components/crafts/comparison-table";
-import {
-  InteractiveVerticalDemo,
-  InteractiveHorizontalDemo,
-  CSSVariablesDemo,
-  ComparisonDemo,
-} from "./examples/demos";
+import { Demo } from "~/components/crafts/demo";
+import * as ScrollShadowsDemo from "./demos/scroll-shadows/demo";
+import * as ProgressDemo from "./demos/progress/demo";
+import * as HorizontalDemo from "./demos/horizontal/demo";
+import * as ComparisonDemo from "./demos/comparison/demo";
 
 export const metadata = {
   title: "Scroll Shadows (Pt. 2)",
   date: "December 10, 2025",
-  image: "scroll-shadows-2.jpg",
 };
 
 # Scroll Shadows (Pt. 2)
 
 <time className="-mt-6 mb-8 block text-gray-400">December 10, 2025</time>
 
-In [Part 1](/crafts/scroll-shadows), we built scroll shadows using Framer Motion's `useScroll` hook. It worked great, but required JavaScript to animate the shadow opacity on every scroll event.
+In [Part 1](/crafts/scroll-shadows), we built scroll shadows using Framer Motion. The library gave us `useScroll` to track scroll position and `MotionValue` to animate opacity outside React's render cycle.
 
-What if we could move that animation logic to CSS?
+But Framer Motion adds ~30kb to your bundle. What if we could achieve the same effect with just a small hook and CSS?
 
-<InteractiveVerticalDemo caption="Scroll the content and toggle shadows to see the effect." />
-
-In this follow-up, we'll use [Base UI's ScrollArea](https://base-ui.com/react/components/scroll-area) component, which exposes CSS custom properties that track scroll position. We'll use these to create shadows that animate entirely in CSS.
-
-## The Trade-offs
-
-Before diving in, let's be clear about what we're trading:
-
-<ComparisonTable
-  headers={["Part 1 (Framer Motion)", "Part 2 (Base UI)"]}
-  rows={[
-    ["~30kb dependency", "~15kb dependency"],
-    ["Opacity-based fade (smooth)", "Height-based visibility"],
-    ["Manual overflow detection", "Built-in"],
-    ["MotionValue (outside React)", "CSS custom properties"],
+<Demo
+  demo={ScrollShadowsDemo}
+  caption="Scroll the content and toggle shadows to see the effect."
+  controls={[
+    { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
   ]}
+  path="app/crafts/scroll-shadows-pt-2/demos/scroll-shadows"
+  files={["demo.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
 />
 
-We haven't eliminated JavaScript — Base UI still tracks scroll position. We've just moved the _animation_ from JS to CSS.
+## The Goal
 
-## How Base UI Tracks Scroll
+We want to replicate Part 1's behavior exactly:
 
-Base UI's `ScrollArea.Viewport` exposes four CSS custom properties that update as you scroll:
+1. Track scroll position as a value from `0` (top) to `1` (bottom)
+2. Use that value to control shadow opacity
+3. Keep animations smooth (no React re-renders on scroll)
 
-- `--scroll-area-overflow-y-start` — pixels scrolled from top
-- `--scroll-area-overflow-y-end` — pixels remaining to bottom
-- `--scroll-area-overflow-x-start` — pixels scrolled from left
-- `--scroll-area-overflow-x-end` — pixels remaining to right
+The key insight: CSS custom properties update without triggering React renders. If we set `--scroll-progress` on every scroll event, CSS can use it directly for opacity — no animation library needed.
 
-<CSSVariablesDemo caption="Scroll to see the CSS variable values update in real-time." />
+## Tracking Scroll Progress
 
-Under the hood, Base UI attaches an `onScroll` handler that computes these values:
-
-```tsx
-// Simplified from Base UI's source
-const scrollTop = viewportEl.scrollTop;
-const maxScrollTop = viewportEl.scrollHeight - viewportEl.clientHeight;
-
-viewportEl.style.setProperty(
-  "--scroll-area-overflow-y-start",
-  `${scrollTop}px`
-);
-viewportEl.style.setProperty(
-  "--scroll-area-overflow-y-end",
-  `${maxScrollTop - scrollTop}px`
-);
-```
-
-Compare this to our Part 1 approach:
+In Part 1, Framer Motion's `useScroll` gave us `scrollYProgress` — a value from `0` to `1`. Let's compute that ourselves:
 
 ```tsx
-// Part 1: Framer Motion
-const { scrollYProgress } = useScroll({ container: ref });
-// Returns 0 at top, 1 at bottom — we used this to control opacity
+const progress =
+  element.scrollTop / (element.scrollHeight - element.clientHeight);
 ```
 
-The key difference: Framer Motion gives us a normalized value (0→1), while Base UI gives us pixels (0→maxScroll). This changes how we control the shadows.
+- `scrollTop` — how far we've scrolled from the top
+- `scrollHeight - clientHeight` — the maximum scrollable distance
 
-## The CSS Trick
+Dividing gives us a normalized `0` to `1` value, just like Framer Motion.
 
-In Part 1, we animated shadow _opacity_ based on scroll progress. Here, we'll animate shadow _height_ using CSS `min()`:
+<Demo
+  demo={ProgressDemo}
+  caption="Scroll to see the progress value update in real-time."
+  inspector={[
+    { name: "progress", label: "--scroll-progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" },
+  ]}
+  path="app/crafts/scroll-shadows-pt-2/demos/progress"
+/>
 
-```css
-height: min(40px, var(--scroll-area-overflow-y-start, 0px));
+## Building the Hook
+
+Here's a hook that tracks scroll progress and exposes it as a CSS custom property:
+
+```tsx
+import { useEffect, useRef } from "react";
+
+export function useScrollProgress<T extends HTMLElement = HTMLDivElement>() {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    function updateProgress() {
+      if (!element) return;
+      const maxScroll = element.scrollHeight - element.clientHeight;
+      const progress = maxScroll > 0 ? element.scrollTop / maxScroll : 0;
+      element.style.setProperty("--scroll-progress", String(progress));
+    }
+
+    updateProgress();
+    element.addEventListener("scroll", updateProgress, { passive: true });
+    return () => element.removeEventListener("scroll", updateProgress);
+  }, []);
+
+  return ref;
+}
 ```
 
-This means:
-
-- When `--scroll-area-overflow-y-start` is `0px` (at top), height is `0px` — shadow invisible
-- As you scroll, height grows with the scroll offset
-- Height caps at `40px` (our max shadow size)
-
-The shadow literally grows from nothing as you scroll away from the edge.
+The hook creates and returns a ref — just attach it to your scroll container. The `{ passive: true }` option tells the browser we won't call `preventDefault()`, allowing it to optimize scroll performance.
 
 <Alert variant="note">
-Base UI uses `CSS.registerProperty()` to set `inherits: false` on these custom properties. This is a performance optimization — it prevents the browser from recalculating styles for the entire subtree on every scroll.
-
-The catch: child elements won't see these values unless we explicitly set them to `inherit`.
-
+  We're setting the CSS variable on the scroll container itself. This means
+  child elements can access it via `var(--scroll-progress)` without any
+  inheritance issues.
 </Alert>
 
-## Building the Component
+## A Note on Performance
 
-Install Base UI:
+CSS custom properties inherit to all children by default. In complex scroll areas with deep DOM trees, this can trigger style recalculations across the entire subtree — what Matt Perry calls ["the inheritance bomb"](https://motion.dev/blog/web-animation-performance-tier-list).
 
-```zsh
-npm install @base-ui/react
+You can prevent this with `CSS.registerProperty({ inherits: false })`, which is what Base UI does. However, this means child elements can't access the variable unless you explicitly pass it down.
+
+For our simple use case (shadows are direct children), inheritance is actually what we want — the shadow elements need to read `--scroll-progress` from their parent. The performance impact is negligible since we're only affecting a few elements.
+
+<Alert variant="note">
+  We're animating `opacity`, which is one of the compositor-friendly properties
+  (along with `transform`, `filter`, and `clip-path`). These can be
+  hardware-accelerated and skip the browser's layout and paint steps entirely.
+</Alert>
+
+## Controlling Shadow Opacity
+
+Now we need to convert `--scroll-progress` into opacity values for each shadow:
+
+- **Start shadow** (top): opacity should equal progress — `0` at top, `1` when scrolled
+- **End shadow** (bottom): opacity should be inverse — `1` at top, `0` at bottom
+
+CSS `calc()` makes this easy:
+
+```css
+/* Start shadow: opacity = progress */
+opacity: var(--scroll-progress, 0);
+
+/* End shadow: opacity = 1 - progress */
+opacity: calc(1 - var(--scroll-progress, 1));
 ```
 
-Here's the component structure. The shadows are sibling elements to the viewport, using `::before` and `::after` pseudo-elements:
+The fallback values (`0` and `1`) handle the initial render before JavaScript runs.
+
+## The Component
+
+Putting it together:
 
 ```tsx
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
+"use client";
 
-function ScrollArea({ scrollShadow = "none", children, ...props }) {
+import { cn } from "./utils";
+import { useScrollProgress } from "./use-scroll-progress";
+
+export function ScrollShadows({
+  className,
+  children,
+}: React.PropsWithChildren<{ className?: string }>) {
+  const ref = useScrollProgress();
+
   return (
-    <ScrollAreaPrimitive.Root {...props}>
-      <ScrollAreaPrimitive.Viewport>{children}</ScrollAreaPrimitive.Viewport>
-
-      {/* Shadow overlay — positioned absolutely within Root */}
+    <div ref={ref} className={cn("relative overflow-y-auto", className)}>
+      {/* Start shadow */}
       <div
-        className={cn(
-          scrollShadow === "vertical" ? "block" : "hidden",
-          "absolute inset-0 pointer-events-none",
-          // Top shadow
-          "before:absolute before:top-0 before:inset-x-0",
-          "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
-          "before:bg-linear-to-b before:from-black/20 before:to-transparent",
-          // Bottom shadow
-          "after:absolute after:bottom-0 after:inset-x-0",
-          "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
-          "after:bg-linear-to-t after:from-black/20 after:to-transparent"
-        )}
-        style={{
-          "--scroll-area-overflow-y-start": "inherit",
-          "--scroll-area-overflow-y-end": "inherit",
-        }}
+        className="pointer-events-none sticky top-0 -mb-10 h-10 bg-linear-to-b from-black/15 to-transparent"
+        style={{ opacity: "var(--scroll-progress, 0)" }}
       />
 
-      <ScrollAreaPrimitive.Scrollbar>
-        <ScrollAreaPrimitive.Thumb />
-      </ScrollAreaPrimitive.Scrollbar>
-    </ScrollAreaPrimitive.Root>
+      {children}
+
+      {/* End shadow */}
+      <div
+        className="pointer-events-none sticky bottom-0 -mt-10 h-10 bg-linear-to-t from-black/15 to-transparent"
+        style={{ opacity: "calc(1 - var(--scroll-progress, 1))" }}
+      />
+    </div>
   );
 }
 ```
 
-The `inherit` values are crucial — without them, the pseudo-elements won't see the CSS variables.
+We're using the same sticky positioning trick from Part 1 — shadows stay fixed at the edges while content scrolls beneath them. The negative margins (`-mb-10`, `-mt-10`) prevent the shadows from taking up space in the document flow.
 
-## Horizontal Shadows
+## Handling Edge Cases
 
-The same pattern works for horizontal scrolling:
+What happens when content doesn't overflow? In Part 1, we had to detect this and hide shadows. Here, it's automatic:
 
-<InteractiveHorizontalDemo caption="Horizontal scroll shadows using the same technique." />
+- If `scrollHeight === clientHeight`, then `maxScroll` is `0`
+- We return `0` for progress, so start shadow has `opacity: 0`
+- End shadow has `opacity: calc(1 - 0) = 1`... wait, that's wrong!
 
-Just swap the axes:
+We need to handle non-overflowing containers:
 
 ```tsx
-// Width instead of height
-"before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]";
-"after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]";
+function updateProgress() {
+  if (!element) return;
+  const maxScroll = element.scrollHeight - element.clientHeight;
 
-// Left/right instead of top/bottom
-"before:left-0 before:inset-y-0";
-"after:right-0 after:inset-y-0";
+  if (maxScroll <= 0) {
+    // No overflow — hide both shadows
+    element.style.setProperty("--scroll-progress", "0");
+    element.style.setProperty("--has-overflow", "0");
+  } else {
+    const progress = element.scrollTop / maxScroll;
+    element.style.setProperty("--scroll-progress", String(progress));
+    element.style.setProperty("--has-overflow", "1");
+  }
+}
+```
 
-// Gradient direction
-"before:bg-gradient-to-r";
-"after:bg-gradient-to-l";
+Then in CSS, multiply by `--has-overflow`:
+
+```css
+/* End shadow: only visible when there's overflow */
+opacity: calc((1 - var(--scroll-progress, 1)) * var(--has-overflow, 0));
+```
+
+## Horizontal Scrolling
+
+The same pattern works for horizontal scrolling — just swap the axes:
+
+<Demo
+  demo={HorizontalDemo}
+  caption="Horizontal scroll shadows using the same technique."
+  controls={[
+    { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
+  ]}
+  path="app/crafts/scroll-shadows-pt-2/demos/horizontal"
+  files={["demo.tsx"]}
+/>
+
+```tsx
+export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
+  axis: "x" | "y" = "y"
+) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    function updateProgress() {
+      if (!element) return;
+
+      const [scrollPos, scrollSize, clientSize] =
+        axis === "y"
+          ? [element.scrollTop, element.scrollHeight, element.clientHeight]
+          : [element.scrollLeft, element.scrollWidth, element.clientWidth];
+
+      const maxScroll = scrollSize - clientSize;
+      const hasOverflow = maxScroll > 0;
+      const progress = hasOverflow ? scrollPos / maxScroll : 0;
+
+      element.style.setProperty("--scroll-progress", String(progress));
+      element.style.setProperty("--has-overflow", hasOverflow ? "1" : "0");
+    }
+
+    updateProgress();
+    element.addEventListener("scroll", updateProgress, { passive: true });
+    return () => element.removeEventListener("scroll", updateProgress);
+  }, [axis]);
+
+  return ref;
+}
 ```
 
 ## Comparing the Approaches
 
-<ComparisonDemo caption="Part 1 uses opacity fading, Part 2 uses height-based visibility." />
+<Demo
+  demo={ComparisonDemo}
+  caption="Both approaches animate opacity — the visual result is identical."
+  path="app/crafts/scroll-shadows-pt-2/demos/comparison"
+  files={["demo.tsx", "framer-motion.tsx", "css-variables.tsx"]}
+/>
 
-The visual difference is subtle but noticeable:
+<ComparisonTable
+  headers={["Part 1 (Framer Motion)", "Part 2 (CSS Variables)"]}
+  rows={[
+    ["~30kb dependency", "~0kb (just a hook)"],
+    ["MotionValue for opacity", "CSS variable for opacity"],
+    ["useTransform for derived values", "CSS calc() for derived values"],
+    ["Works outside React render", "Works outside React render"],
+  ]}
+/>
 
-- **Part 1 (opacity)**: Shadow fades smoothly from 0% to 100% opacity as you scroll
-- **Part 2 (height)**: Shadow grows from 0px to 40px, then stays at full opacity
+Both approaches animate the same property (`opacity`) using hardware-accelerated compositing. The visual result is identical — we've just swapped the mechanism for tracking and applying the value.
 
-Part 1 feels slightly more polished because the fade is proportional to scroll progress. Part 2 is simpler — the shadow is either growing or at full size.
+## Handling Resize
 
-<Alert variant="tip">
-  You could add `transition: height 100ms` to smooth out the height changes, but
-  it won't match the proportional fade of the Framer Motion approach.
-</Alert>
+One edge case: if the container resizes, our overflow detection might become stale. Let's add a ResizeObserver:
 
-## When to Use Each Approach
+```tsx
+useEffect(() => {
+  const element = ref.current;
+  if (!element) return;
 
-**Use Part 1 (Framer Motion) when:**
+  function updateProgress() {
+    /* ... */
+  }
 
-- You want smooth, proportional opacity fading
-- You're already using Framer Motion in your project
-- You need fine-grained control over the animation curve
+  updateProgress();
+  element.addEventListener("scroll", updateProgress, { passive: true });
 
-**Use Part 2 (Base UI) when:**
+  const resizeObserver = new ResizeObserver(updateProgress);
+  resizeObserver.observe(element);
 
-- You want simpler code with animation logic in CSS
-- You're already using Base UI or Radix
-- You need built-in scrollbar components
-- Bundle size is a concern (~15kb vs ~30kb)
+  return () => {
+    element.removeEventListener("scroll", updateProgress);
+    resizeObserver.disconnect();
+  };
+}, [ref, axis]);
+```
+
+## Going Further
+
+If you need more scroll area features — custom scrollbars, bidirectional scrolling, or better accessibility — check out [Base UI's ScrollArea](https://base-ui.com/react/components/scroll-area). It uses the same CSS variable approach internally and adds:
+
+- Cross-browser custom scrollbars
+- `data-*` attributes for overflow state
+- Corner handling for bidirectional scroll
+- Performance optimizations with `CSS.registerProperty()`
 
 ## Final Code
 
-```tsx
-import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { cn } from "@/lib/utils";
+<CodeWithTabs>
 
-interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
-  scrollShadow?: "vertical" | "horizontal" | "both" | "none";
-}
+```tsx !!tabs scroll-shadows.tsx
+"use client";
 
-export function ScrollArea({
+import { cn } from "./utils";
+import { useScrollProgress } from "./use-scroll-progress";
+
+type Axis = "x" | "y";
+
+export function ScrollShadows({
+  axis = "y",
   className,
-  scrollShadow = "none",
   children,
-  ...props
-}: ScrollAreaProps) {
-  const showVertical = scrollShadow === "vertical" || scrollShadow === "both";
-  const showHorizontal =
-    scrollShadow === "horizontal" || scrollShadow === "both";
+}: React.PropsWithChildren<{
+  axis?: Axis;
+  className?: string;
+}>) {
+  const ref = useScrollProgress(axis);
+  const isVertical = axis === "y";
 
   return (
-    <ScrollAreaPrimitive.Root className={cn("relative", className)} {...props}>
-      <ScrollAreaPrimitive.Viewport className="size-full overscroll-contain">
-        {children}
-      </ScrollAreaPrimitive.Viewport>
-
-      {/* Vertical shadows */}
-      {showVertical && (
-        <div
-          className={cn(
-            "absolute inset-0 pointer-events-none",
-            "before:absolute before:top-0 before:inset-x-0",
-            "before:h-[min(40px,var(--scroll-area-overflow-y-start,0px))]",
-            "before:bg-linear-to-b before:from-black/20 before:to-transparent",
-            "after:absolute after:bottom-0 after:inset-x-0",
-            "after:h-[min(40px,var(--scroll-area-overflow-y-end,0px))]",
-            "after:bg-linear-to-t after:from-black/20 after:to-transparent"
-          )}
-          style={
-            {
-              "--scroll-area-overflow-y-start": "inherit",
-              "--scroll-area-overflow-y-end": "inherit",
-            } as React.CSSProperties
-          }
-        />
+    <div
+      ref={ref}
+      className={cn(
+        "relative",
+        isVertical ? "overflow-y-auto" : "overflow-x-auto",
+        className
       )}
-
-      {/* Horizontal shadows */}
-      {showHorizontal && (
-        <div
-          className={cn(
-            "absolute inset-0 pointer-events-none",
-            "before:absolute before:left-0 before:inset-y-0",
-            "before:w-[min(40px,var(--scroll-area-overflow-x-start,0px))]",
-            "before:bg-linear-to-r before:from-black/20 before:to-transparent",
-            "after:absolute after:right-0 after:inset-y-0",
-            "after:w-[min(40px,var(--scroll-area-overflow-x-end,0px))]",
-            "after:bg-linear-to-l after:from-black/20 after:to-transparent"
-          )}
-          style={
-            {
-              "--scroll-area-overflow-x-start": "inherit",
-              "--scroll-area-overflow-x-end": "inherit",
-            } as React.CSSProperties
-          }
-        />
-      )}
-
-      <ScrollAreaPrimitive.Scrollbar orientation="vertical">
-        <ScrollAreaPrimitive.Thumb />
-      </ScrollAreaPrimitive.Scrollbar>
-    </ScrollAreaPrimitive.Root>
+    >
+      <div
+        className={cn(
+          "pointer-events-none sticky from-black/15 to-transparent",
+          isVertical
+            ? "top-0 -mb-10 h-10 bg-linear-to-b"
+            : "left-0 -mr-10 h-full w-10 bg-linear-to-r"
+        )}
+        style={{ opacity: "var(--scroll-progress, 0)" }}
+      />
+      {children}
+      <div
+        className={cn(
+          "pointer-events-none sticky from-black/15 to-transparent",
+          isVertical
+            ? "bottom-0 -mt-10 h-10 bg-linear-to-t"
+            : "right-0 -ml-10 h-full w-10 bg-linear-to-l"
+        )}
+        style={{
+          opacity:
+            "calc((1 - var(--scroll-progress, 1)) * var(--has-overflow, 0))",
+        }}
+      />
+    </div>
   );
 }
 ```
 
+```tsx !!tabs use-scroll-progress.ts
+"use client";
+
+import { useEffect, useRef } from "react";
+
+type Axis = "x" | "y";
+
+export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
+  axis: Axis = "y"
+) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    function updateProgress() {
+      if (!element) return;
+
+      const [scrollPos, scrollSize, clientSize] =
+        axis === "y"
+          ? [element.scrollTop, element.scrollHeight, element.clientHeight]
+          : [element.scrollLeft, element.scrollWidth, element.clientWidth];
+
+      const maxScroll = scrollSize - clientSize;
+      const hasOverflow = maxScroll > 0;
+      const progress = hasOverflow ? scrollPos / maxScroll : 0;
+
+      element.style.setProperty("--scroll-progress", String(progress));
+      element.style.setProperty("--has-overflow", hasOverflow ? "1" : "0");
+    }
+
+    updateProgress();
+    element.addEventListener("scroll", updateProgress, { passive: true });
+
+    const resizeObserver = new ResizeObserver(updateProgress);
+    resizeObserver.observe(element);
+
+    return () => {
+      element.removeEventListener("scroll", updateProgress);
+      resizeObserver.disconnect();
+    };
+  }, [axis]);
+
+  return ref;
+}
+```
+
+</CodeWithTabs>
+
 ## Conclusion
 
-We've built scroll shadows using Base UI's CSS custom properties instead of Framer Motion's JavaScript animations. The approach is simpler — shadow visibility is controlled entirely by CSS `min()` — but trades away the smooth proportional fading of Part 1.
+We've replicated Part 1's scroll shadows without Framer Motion:
 
-Both approaches have their place. If you're already using one of these libraries, stick with it. If you're starting fresh and want the most polished result, Part 1's opacity-based approach edges ahead. But for simpler use cases where "shadow appears when scrollable" is enough, this CSS-driven approach is a clean solution.
+1. Compute scroll progress (0→1) on each scroll event
+2. Expose it as a CSS custom property
+3. Use CSS `calc()` to derive shadow opacities
+
+The result is visually identical — both animate opacity using hardware acceleration. The difference is ~30kb less JavaScript and one fewer dependency.
 
 ## Resources
 
-- [Base UI ScrollArea](https://base-ui.com/react/components/scroll-area) — Official documentation
-- [CSS min() function](https://developer.mozilla.org/en-US/docs/Web/CSS/min) — MDN reference
+- [CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties) — MDN reference
+- [Base UI ScrollArea](https://base-ui.com/react/components/scroll-area) — Full-featured scroll area component
 - [Part 1: Scroll Shadows](/crafts/scroll-shadows) — The Framer Motion approach

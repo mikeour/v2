@@ -2,15 +2,13 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 
-import { ExampleContainer } from "~/components/crafts/example-container";
-
 const tabs = [
   { id: "account", label: "Account" },
   { id: "password", label: "Password" },
   { id: "settings", label: "Settings" },
 ];
 
-function AnimatedTabs({ duration = 300 }: { duration?: number }) {
+export default function Demo({ duration = 300 }: { duration?: number }) {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -48,37 +46,5 @@ function AnimatedTabs({ duration = 300 }: { duration?: number }) {
         </button>
       ))}
     </div>
-  );
-}
-
-export function BasicDemo({ caption }: { caption?: string }) {
-  return (
-    <ExampleContainer caption={caption} className="w-full" isolated>
-      <AnimatedTabs />
-    </ExampleContainer>
-  );
-}
-
-export function InteractiveDemo({ caption }: { caption?: string }) {
-  return (
-    <ExampleContainer
-      caption={caption}
-      className="w-full"
-      controls={[
-        {
-          type: "slider",
-          name: "duration",
-          label: "Duration",
-          defaultValue: 300,
-          min: 0,
-          max: 1000,
-          step: 50,
-          unit: "ms",
-        },
-      ]}
-      isolated
-    >
-      {({ values }) => <AnimatedTabs duration={values.duration as number} />}
-    </ExampleContainer>
   );
 }

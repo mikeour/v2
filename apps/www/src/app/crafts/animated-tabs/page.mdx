@@ -1,10 +1,11 @@
 import { Alert } from "~/components/crafts/alert";
-import { BasicDemo, InteractiveDemo } from "./examples/demos";
+import { Demo } from "~/components/crafts/demo";
+import * as BasicDemo from "./demos/basic/demo";
+import * as InteractiveDemo from "./demos/interactive/demo";
 
 export const metadata = {
   title: "Animated Tabs",
   date: "December 21, 2025",
-  image: "animated-tabs.jpg",
 };
 
 # Animated Tabs
@@ -13,7 +14,12 @@ export const metadata = {
 
 Animated tabs use a sliding indicator to show which tab is active. The indicator smoothly transitions between tabs, creating a polished feel that makes the interface feel responsive.
 
-<InteractiveDemo caption="Click the tabs to see the animated indicator." />
+<Demo
+  demo={InteractiveDemo}
+  caption="Click the tabs to see the animated indicator."
+  path="app/crafts/animated-tabs/demos/interactive"
+  controls={[{ type: "slider", name: "duration", label: "Duration", min: 0, max: 1000, step: 50, defaultValue: 300, unit: "ms" }]}
+/>
 
 By the end of this post, we'll build animated tabs with a sliding indicator using only CSS transitions — no animation libraries required.
 
@@ -55,7 +61,11 @@ useEffect(() => {
 }, [activeTab]);
 ```
 
-<BasicDemo caption="A minimal implementation with CSS transitions." />
+<Demo
+  demo={BasicDemo}
+  caption="A minimal implementation with CSS transitions."
+  path="app/crafts/animated-tabs/demos/basic"
+/>
 
 <Alert variant="note">
   We store refs in a Map so we can look up any tab by its ID. This is cleaner
