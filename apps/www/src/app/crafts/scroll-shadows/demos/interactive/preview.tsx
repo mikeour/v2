@@ -13,7 +13,8 @@ export default function Demo({ shadows = true }: { shadows?: boolean }) {
   return (
     <div
       ref={ref}
-      className="group relative flex max-h-100 w-full flex-col overflow-y-auto [--size:24px] md:[--size:36px]"
+      className="group relative flex max-h-100 w-full flex-col overflow-y-auto overscroll-none [--size:24px] md:[--size:36px]"
+      data-fill-width
     >
       {shadows && (
         <motion.div

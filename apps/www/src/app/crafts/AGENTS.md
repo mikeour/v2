@@ -11,7 +11,8 @@ crafts/
     ├── {slug}.jpg            # Cover image for listing (required)
     └── demos/                # Demo subdirectories
         └── {demo-name}/
-            ├── demo.tsx      # The rendered component (required)
+            ├── index.tsx     # Exports composed Demo component (required)
+            ├── preview.tsx   # The rendered preview component (required)
             ├── data.ts       # Mock data, constants (optional)
             └── *.tsx/*.ts    # Implementation files shown in code tabs (optional)
 ```
@@ -20,16 +21,18 @@ crafts/
 
 Each demo is a self-contained subdirectory under `demos/`:
 
-- `demo.tsx` - The component that gets rendered. Props match control names.
-- `data.ts` - Mock data and constants (keeps demo.tsx clean)
+- `index.tsx` - Exports a named component that composes `<Demo>` with all configuration
+- `preview.tsx` - The actual preview component. Props match control names.
+- `data.ts` - Mock data and constants (keeps preview.tsx clean)
 - Additional files - Implementation details shown in code tabs
 
 Example structure:
 
 ```
 demos/scroll-shadows/
-├── demo.tsx              # Uses ScrollShadows, receives { shadows } prop
-├── data.ts               # NOTIFICATIONS array, ICON_COLORS
+├── index.tsx               # Exports ScrollShadowsDemo
+├── preview.tsx             # Uses ScrollShadows, receives { shadows } prop
+├── data.ts                 # NOTIFICATIONS array, ICON_COLORS
 ├── use-scroll-progress.ts  # Hook implementation
 └── scroll-shadows.tsx      # Component implementation
 ```
@@ -44,9 +47,8 @@ demos/scroll-shadows/
 
 ```mdx
 import { Alert } from "~/components/crafts/alert";
-import { Demo } from "~/components/crafts/demo";
-import * as ScrollShadowsDemo from "./demos/scroll-shadows/demo";
-import * as ProgressDemo from "./demos/progress/demo";
+import { ScrollShadowsDemo } from "./demos/scroll-shadows";
+import { ProgressDemo } from "./demos/progress";
 
 export const metadata = {
   title: "Post Title",
@@ -60,52 +62,61 @@ export const metadata = {
 
 Introduction paragraph...
 
-<Demo
-  demo={ScrollShadowsDemo}
-  caption="Scroll the content and toggle shadows."
-  controls={[
-    { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
-  ]}
-  path="app/crafts/{slug}/demos/scroll-shadows"
-  files={["demo.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
-/>
+<ScrollShadowsDemo />
 
 ## Section Heading
 
 Content...
 
-<Demo
-  demo={ProgressDemo}
-  caption="Scroll to see the progress value."
-  inspector={[
-    { name: "progress", label: "--scroll-progress", defaultValue: "0" },
-  ]}
-  path="app/crafts/{slug}/demos/progress"
-/>
+<ProgressDemo />
 
 <Alert variant="note">Callout content...</Alert>
 ```
 
-## Demo Component Props
+## Demo index.tsx Structure
+
+The index.tsx file exports a named component that composes the Demo with all configuration:
+
+```tsx
+import { Demo } from "~/components/crafts/demo";
+import Preview from "./preview";
+
+export function ScrollShadowsDemo() {
+  return (
+    <Demo
+      preview={Preview}
+      caption="Scroll the content and toggle shadows."
+      controls={[
+        { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
+      ]}
+      path="app/crafts/{slug}/demos/scroll-shadows"
+      files={["preview.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
+    />
+  );
+}
+```
+
+### Demo Props
 
 ```tsx
 <Demo
-  demo={DemoModule}           // Required: import * as DemoModule from "./demos/xxx/demo"
-  path="app/crafts/.../demos/xxx"  // Required: path to demo directory (relative to src/)
-  caption="Description"       // Optional: shown below demo
-  controls={[...]}            // Optional: interactive controls in toolbar
-  inspector={[...]}           // Optional: read-only value displays in toolbar
-  files={["demo.tsx", ...]}   // Optional: files to show in code tabs (order = tab order)
-  className="w-full"          // Optional: container styling
-  isolated={true}             // Optional: default true, adds padding
+  preview={PreviewComponent}      // Required: the preview component
+  path="app/crafts/.../demos/xxx" // Required: path to demo directory (relative to src/)
+  caption="Description"           // Optional: shown below demo
+  controls={[...]}                // Optional: interactive controls
+  inspector={[...]}               // Optional: read-only value displays
+  files={["preview.tsx", ...]}    // Optional: files to show in code tabs
+  className="w-full"              // Optional: container styling
+  isolated={true}                 // Optional: default true, adds padding
+  mockBrowser                     // Optional: show browser chrome
 />
 ```
 
 ### files Prop Behavior
 
 - Not provided or empty `[]` → No code tabs, no code toggle button
-- `files={["demo.tsx"]}` → Shows just the demo code
-- `files={["demo.tsx", "hook.ts", "component.tsx"]}` → Multiple tabs in order
+- `files={["preview.tsx"]}` → Shows just the preview code
+- `files={["preview.tsx", "hook.ts", "component.tsx"]}` → Multiple tabs in order
 
 ### Control Types
 
@@ -119,17 +130,18 @@ Content...
 
 ### Inspector
 
-Maps callback props to read-only value displays in the toolbar:
+Maps callback props to read-only value displays:
 
 ```tsx
-// name: display label, prop: callback prop name, format: "decimal" or omit, defaultValue: initial display
-{ name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" }
-{ name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" }
+inspector={[
+  { name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" },
+  { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
+]}
 ```
 
-## demo.tsx Structure
+## preview.tsx Structure
 
-Demo components should be **copy-paste ready** for readers. Avoid internal implementation details like `setInspector` - instead use clean, idiomatic callback props.
+Preview components should be **copy-paste ready** for readers. Props match control names.
 
 ```tsx
 "use client";
@@ -139,7 +151,7 @@ import { ScrollShadows } from "./scroll-shadows";
 import { NOTIFICATIONS, ICON_COLORS } from "./data";
 
 // Props match control names from the Demo component
-export default function Demo({ shadows = true }: { shadows?: boolean }) {
+export default function Preview({ shadows = true }: { shadows?: boolean }) {
   return (
     <ScrollShadows showShadows={shadows}>{/* Demo content */}</ScrollShadows>
   );
@@ -148,10 +160,10 @@ export default function Demo({ shadows = true }: { shadows?: boolean }) {
 
 ### With Inspector (callback props)
 
-When a demo needs to report values to the inspector, use **clean callback props** that readers would naturally use:
+When a preview needs to report values to the inspector, use clean callback props:
 
 ```tsx
-export default function Demo({
+export default function Preview({
   onProgressChange,
 }: {
   onProgressChange?: (value: number) => void;
@@ -167,27 +179,11 @@ export default function Demo({
 }
 ```
 
-The `<Demo>` component maps these callbacks to inspector displays via the `inspector` prop:
-
-```tsx
-<Demo
-  demo={ProgressDemo}
-  inspector={[
-    {
-      name: "progress",
-      prop: "onProgressChange",
-      format: "decimal",
-      defaultValue: "0.00",
-    },
-  ]}
-/>
-```
-
-**Key principle**: Demo code is shown to users who will copy it. Keep it clean and focused on the concept being taught, not internal wiring.
+**Key principle**: Preview code is shown to users who will copy it. Keep it clean and focused on the concept being taught.
 
 ## data.ts Structure
 
-Keep mock data separate from demo logic:
+Keep mock data separate from preview logic:
 
 ```ts
 export const NOTIFICATIONS = [
@@ -243,7 +239,8 @@ import imgNewPost from "./{slug}/{slug}.jpg";
 - [ ] Create folder: `crafts/{slug}/`
 - [ ] Create `page.mdx` with metadata and content
 - [ ] Create `demos/{demo-name}/` directories with:
-  - [ ] `demo.tsx` - rendered component
+  - [ ] `index.tsx` - exports composed Demo component
+  - [ ] `preview.tsx` - rendered preview component
   - [ ] `data.ts` - mock data (if needed)
   - [ ] Implementation files (if showing code)
 - [ ] Add cover image: `{slug}.jpg`

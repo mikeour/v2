@@ -18,7 +18,11 @@ export default function Demo({
   });
 
   return (
-    <div ref={ref} className="max-h-75 w-full overflow-y-auto">
+    <div
+      ref={ref}
+      className="max-h-75 w-full overflow-y-auto overscroll-none"
+      data-fill-width
+    >
       <Article />
     </div>
   );

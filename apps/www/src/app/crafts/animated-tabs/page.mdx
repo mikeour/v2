@@ -1,7 +1,5 @@
 import { Alert } from "~/components/crafts/alert";
-import { Demo } from "~/components/crafts/demo";
-import * as BasicDemo from "./demos/basic/demo";
-import * as InteractiveDemo from "./demos/interactive/demo";
+import { InteractiveDemo } from "./demos/interactive";
 
 export const metadata = {
   title: "Animated Tabs",
@@ -14,12 +12,7 @@ export const metadata = {
 
 Animated tabs use a sliding indicator to show which tab is active. The indicator smoothly transitions between tabs, creating a polished feel that makes the interface feel responsive.
 
-<Demo
-  demo={InteractiveDemo}
-  caption="Click the tabs to see the animated indicator."
-  path="app/crafts/animated-tabs/demos/interactive"
-  controls={[{ type: "slider", name: "duration", label: "Duration", min: 0, max: 1000, step: 50, defaultValue: 300, unit: "ms" }]}
-/>
+<InteractiveDemo />
 
 By the end of this post, we'll build animated tabs with a sliding indicator using only CSS transitions — no animation libraries required.
 
@@ -37,6 +30,7 @@ Before diving in, let's define our acceptance criteria:
 The trick is to use a single indicator element positioned absolutely, then update its `left` and `width` via inline styles when the active tab changes. CSS `transition` handles the animation.
 
 We need to:
+
 1. Track which tab is active
 2. Measure the active tab's position and width
 3. Apply those values to the indicator
@@ -60,12 +54,6 @@ useEffect(() => {
   }
 }, [activeTab]);
 ```
-
-<Demo
-  demo={BasicDemo}
-  caption="A minimal implementation with CSS transitions."
-  path="app/crafts/animated-tabs/demos/basic"
-/>
 
 <Alert variant="note">
   We store refs in a Map so we can look up any tab by its ID. This is cleaner

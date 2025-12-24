@@ -49,7 +49,10 @@ export function ScrollShadows({ className, children }: ScrollShadowsProps) {
   const ref = useScrollProgress();
 
   return (
-    <div ref={ref} className={cn("relative overflow-y-auto", className)}>
+    <div
+      ref={ref}
+      className={cn("relative overflow-y-auto overscroll-none", className)}
+    >
       <div
         className="pointer-events-none sticky top-0 z-10 -mb-10 h-10 shrink-0 bg-linear-to-b from-white to-transparent"
         style={{ opacity: "var(--scroll-progress, 0)" }}
