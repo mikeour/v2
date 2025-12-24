@@ -4,6 +4,7 @@
   "assist": {
     "actions": {
       "source": {
+        "useSortedAttributes": "off",
         "organizeImports": {
           "level": "on",
           "options": {
