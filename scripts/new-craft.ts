@@ -84,6 +84,7 @@ Introduction paragraph describing what this craft explores.
   caption="Interact with the demo to see the effect."
   path="app/crafts/${slug}/demos/interactive"
   controls={[{ type: "switch", name: "enabled", label: "Enabled", defaultValue: true }]}
+  files={["demo.tsx"]}
 />
 
 ## Overview
@@ -141,8 +142,10 @@ export default function Demo({ enabled = true }: { enabled?: boolean }) {
     console.log(`      └── interactive/`);
     console.log(`          └── demo.tsx`);
     console.log("\nNext steps:");
-    console.log(`  1. Run pnpm generate:craft-images (after pnpm dev)`);
-    console.log(`  2. Edit page.mdx and demos/interactive/demo.tsx\n`);
+    console.log(`  1. Edit page.mdx and demos/interactive/demo.tsx`);
+    console.log(
+      `  2. Run pnpm generate:craft-images (with dev server running)\n`
+    );
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error("Error creating craft:", message);

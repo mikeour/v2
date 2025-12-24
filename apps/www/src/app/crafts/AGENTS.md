@@ -173,7 +173,12 @@ The `<Demo>` component maps these callbacks to inspector displays via the `inspe
 <Demo
   demo={ProgressDemo}
   inspector={[
-    { name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" }
+    {
+      name: "progress",
+      prop: "onProgressChange",
+      format: "decimal",
+      defaultValue: "0.00",
+    },
   ]}
 />
 ```
