@@ -26,7 +26,7 @@ export default function Demo({
   return (
     <div
       ref={ref}
-      className="group flex h-75 grow flex-col overflow-y-auto [--size:36px]"
+      className="group flex h-75 w-full grow flex-col overflow-y-auto [--size:36px]"
     >
       {showShadows && (
         <motion.div

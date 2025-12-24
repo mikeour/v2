@@ -53,6 +53,8 @@ type DemoProps = {
   caption?: string;
   isolated?: boolean;
   className?: string;
+  /** Show mock browser chrome */
+  mockBrowser?: boolean;
 };
 
 const LANG_MAP: Record<string, string> = {
@@ -75,6 +77,7 @@ export async function Demo({
   caption,
   isolated,
   className,
+  mockBrowser,
 }: DemoProps) {
   const Component = demo.default;
 
@@ -109,6 +112,7 @@ export async function Demo({
         Component={Component}
         isolated={isolated}
         className={className}
+        mockBrowser={mockBrowser}
       />
       <DemoCodeTabs />
       {caption && <DemoCaption>{caption}</DemoCaption>}

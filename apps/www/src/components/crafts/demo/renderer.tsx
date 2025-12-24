@@ -305,9 +305,15 @@ type PreviewProps = {
   Component: ComponentType<any>;
   isolated?: boolean;
   className?: string;
+  mockBrowser?: boolean;
 };
 
-function Preview({ Component, isolated = true, className }: PreviewProps) {
+function Preview({
+  Component,
+  isolated = true,
+  className,
+  mockBrowser,
+}: PreviewProps) {
   const { values, inspectorProps, resetKey } = useDemoContext();
 
   return (
@@ -320,13 +326,26 @@ function Preview({ Component, isolated = true, className }: PreviewProps) {
     >
       <div
         className={cn(
-          "relative flex w-full items-center justify-center overflow-hidden",
+          "relative flex w-full flex-col items-center justify-center overflow-hidden",
           isolated && "rounded-lg",
+          mockBrowser && "border border-slate-700 bg-slate-800",
           className
         )}
         data-slot="demo-content"
         key={resetKey}
       >
+        {mockBrowser && (
+          <div
+            className="flex w-full items-center gap-2 border-slate-700 border-b bg-slate-900 px-3 py-2"
+            data-slot="mock-browser"
+          >
+            <div className="flex gap-1.5">
+              <div className="size-3 rounded-full bg-red-500" />
+              <div className="size-3 rounded-full bg-yellow-500" />
+              <div className="size-3 rounded-full bg-green-500" />
+            </div>
+          </div>
+        )}
         <Component {...values} {...inspectorProps} />
       </div>
     </div>

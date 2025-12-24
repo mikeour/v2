@@ -24,6 +24,7 @@ Scroll shadows are a visual cue that indicates more content exists beyond the vi
   caption="Scroll the article — notice how shadows appear and disappear at the edges."
   controls={[{ type: "switch", name: "shadows", label: "Shadows", defaultValue: true }]}
   path="app/crafts/scroll-shadows/demos/interactive"
+  mockBrowser
 />
 
 By the end of this post, we'll build a reusable `<ScrollShadows />` component that adds this effect to any scrollable container. The goal is to make it as simple as:
@@ -87,6 +88,7 @@ const { scrollYProgress } = useScroll({ container: articleRef });
   caption="Scroll the article to see the value update in real-time."
   path="app/crafts/scroll-shadows/demos/progress"
   inspector={[{ name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" }]}
+  mockBrowser
 />
 
 This gives us our starting point. The `scrollYProgress` value already matches what we need for `startingShadowVisibility` — it's `0` at the top and increases as we scroll.
@@ -123,6 +125,7 @@ Let's visualize both values. Toggle the shadows on to see them respond to scroll
     { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
     { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "1.00" }
   ]}
+  mockBrowser
 />
 
 Looking good! But there's a bug hiding. Let's see what happens when the content doesn't overflow:
@@ -138,6 +141,7 @@ Looking good! But there's a bug hiding. Let's see what happens when the content 
     { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "1.00" },
     { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
   ]}
+  mockBrowser
 />
 
 When a container doesn't overflow, `useScroll` defaults `scrollYProgress` to `1` (not `0`). This means our starting shadow shows at full opacity even though there's nothing to scroll.
@@ -169,6 +173,7 @@ Now both shadows correctly hide when there's no overflow:
     { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
     { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
   ]}
+  mockBrowser
 />
 
 Here's the complete hook:
@@ -205,6 +210,7 @@ Here's why it works:
   path="app/crafts/scroll-shadows/demos/markup"
   files={["demo.tsx"]}
   controls={[{ type: "slider", name: "size", label: "Size", min: 16, max: 64, step: 16, defaultValue: 48 }]}
+  mockBrowser
 />
 
 <Alert variant="tip">

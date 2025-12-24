@@ -9,16 +9,17 @@ const CRAFTS_DIR = join(__dirname, "../apps/www/src/app/crafts");
 const OUTPUT_DIR = join(__dirname, "../apps/www/public/images/crafts");
 const BASE_URL = "http://localhost:3000";
 
-const OUTPUT_WIDTH = 600;
-const OUTPUT_HEIGHT = 400;
+const DEVICE_SCALE = 3;
+const OUTPUT_WIDTH = 600 * DEVICE_SCALE;
+const OUTPUT_HEIGHT = 400 * DEVICE_SCALE;
 
-// Target component size range (will scale to fit within this)
-const MIN_COMPONENT_WIDTH = 350;
-const MAX_COMPONENT_WIDTH = 520;
-const MAX_COMPONENT_HEIGHT = 320;
+// Target component size range (in output pixels, accounting for scale)
+const MIN_COMPONENT_WIDTH = 350 * DEVICE_SCALE;
+const MAX_COMPONENT_WIDTH = 520 * DEVICE_SCALE;
+const MAX_COMPONENT_HEIGHT = 320 * DEVICE_SCALE;
 
 function createStripedBackground() {
-  const tileSize = 12;
+  const tileSize = 72;
 
   const svg = `
     <svg width="${OUTPUT_WIDTH}" height="${OUTPUT_HEIGHT}" xmlns="http://www.w3.org/2000/svg">
@@ -62,14 +63,22 @@ async function captureSlug(
   console.log(`📸 Capturing ${slug}...`);
 
   await page.goto(url, { waitUntil: "networkidle" });
+  await page.waitForTimeout(500); // Wait for components to fully render
 
-  const inner = await page.$("[data-slot='demo-preview'] > *");
-  if (!inner) {
+  // Check if mockBrowser is present - if so, capture the whole demo-content
+  // Otherwise capture just the inner component to avoid background artifacts
+  const demoContent = await page.$("[data-slot='demo-content']");
+  if (!demoContent) {
     console.log(`   ⚠️  No component found for ${slug}, skipping`);
     return;
   }
 
-  let componentBuffer = await inner.screenshot({ type: "png" });
+  const hasMockBrowser = await demoContent.$("[data-slot='mock-browser']");
+  const target = hasMockBrowser
+    ? demoContent
+    : (await demoContent.$(":scope > *")) || demoContent;
+
+  let componentBuffer = await target.screenshot({ type: "png" });
   const componentMeta = await sharp(componentBuffer).metadata();
 
   let compWidth = componentMeta.width || 0;
@@ -109,9 +118,11 @@ async function captureSlug(
 
 async function generateCraftImages() {
   const browser = await chromium.launch();
-  const page = await browser.newPage();
-
-  await page.setViewportSize({ width: 1200, height: 900 });
+  const context = await browser.newContext({
+    viewport: { width: 1200, height: 900 },
+    deviceScaleFactor: DEVICE_SCALE,
+  });
+  const page = await context.newPage();
 
   const stripedBg = await createStripedBackground();
 
@@ -128,6 +139,17 @@ async function generateCraftImages() {
       console.error(`   ✗ Failed: ${message}`);
     }
   }
+
+  // Capture homepage preview - wait for images to refresh
+  console.log(`\n📸 Capturing homepage preview...`);
+  await page.goto(BASE_URL, { waitUntil: "networkidle" });
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForTimeout(2000);
+  await page.screenshot({
+    path: join(OUTPUT_DIR, "_homepage-preview.png"),
+    fullPage: true,
+  });
+  console.log(`   ✓ Saved _homepage-preview.png`);
 
   await browser.close();
   console.log("\n✅ Done!");
