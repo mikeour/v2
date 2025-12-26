@@ -52,6 +52,14 @@
         "noExplicitAny": "warn",
         "noArrayIndexKey": "off"
       },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 20
+          }
+        }
+      },
       "performance": { "noBarrelFile": "off" },
       "nursery": {
         "noLeakedRender": "off",

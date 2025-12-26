@@ -15,10 +15,12 @@ import { type HighlightedCode, Pre } from "codehike/code";
 import {
   Check,
   ChevronDown,
+  ChevronUp,
   Code,
   Copy,
   ExternalLink,
   RotateCcw,
+  Settings,
 } from "lucide-react";
 
 import { wordWrap } from "./annotations/word-wrap";
@@ -62,6 +64,7 @@ type InspectorValues = Record<string, string>;
 type DemoContextValue = {
   id: string;
   path?: string;
+  cwd?: string;
   controls?: Control[];
   inspector?: Inspector[];
   code?: HighlightedCode[];
@@ -91,13 +94,14 @@ function useDemoContext() {
 
 type RootProps = {
   path?: string;
+  cwd?: string;
   controls?: Control[];
   inspector?: Inspector[];
   code?: HighlightedCode[];
   children: ReactNode;
 };
 
-function Root({ path, controls, inspector, code, children }: RootProps) {
+function Root({ path, cwd, controls, inspector, code, children }: RootProps) {
   const id = useId();
   const [resetKey, setResetKey] = useState(0);
   const [showCode, setShowCode] = useState(false);
@@ -142,6 +146,7 @@ function Root({ path, controls, inspector, code, children }: RootProps) {
       value={{
         id,
         path,
+        cwd,
         controls,
         inspector,
         code,
@@ -159,16 +164,16 @@ function Root({ path, controls, inspector, code, children }: RootProps) {
         className={cn(
           "code-example overflow-hidden rounded-xl bg-slate-800 lg:mx-[calc(var(--gutter)*-1.75)]",
           "grid grid-cols-1",
-          // toolbar only: toolbar(1fr) content(auto)
-          "has-data-[slot=demo-toolbar]:grid-rows-[1fr_auto]",
-          // caption only: content(auto) caption(1fr)
-          "has-data-[slot=demo-caption]:grid-rows-[auto_1fr]",
-          // toolbar + caption: toolbar(1fr) content(auto) caption(1fr)
-          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-caption]:grid-rows-[1fr_auto_1fr]",
-          // toolbar + code: toolbar(1fr) content(auto) code-toolbar(1fr) code-content(auto)
-          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-code]:grid-rows-[1fr_auto_1fr_auto]",
-          // toolbar + code + caption: toolbar(1fr) content(auto) code-toolbar(1fr) code-content(auto) caption(1fr)
-          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-code]:has-data-[slot=demo-caption]:grid-rows-[1fr_auto_1fr_auto_1fr]"
+          // toolbar only: toolbar(auto) content(auto)
+          "has-data-[slot=demo-toolbar]:grid-rows-[auto_auto]",
+          // caption only: content(auto) caption(auto)
+          "has-data-[slot=demo-caption]:grid-rows-[auto_auto]",
+          // toolbar + caption: toolbar(auto) content(auto) caption(auto)
+          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-caption]:grid-rows-[auto_auto_auto]",
+          // toolbar + code: toolbar(auto) content(auto) code-toolbar(auto) code-content(auto)
+          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-code]:grid-rows-[auto_auto_auto_auto]",
+          // toolbar + code + caption: toolbar(auto) content(auto) code-toolbar(auto) code-content(auto) caption(auto)
+          "has-data-[slot=demo-toolbar]:has-data-[slot=demo-code]:has-data-[slot=demo-caption]:grid-rows-[auto_auto_auto_auto_auto]"
         )}
       >
         {children}
@@ -178,38 +183,21 @@ function Root({ path, controls, inspector, code, children }: RootProps) {
 }
 
 // =============================================================================
-// Toolbar
+// Toolbar (minimal - just utility buttons)
 // =============================================================================
 
 function Toolbar() {
-  const {
-    id,
-    controls,
-    inspector,
-    code,
-    values,
-    setValues,
-    path,
-    inspectorValues,
-    showCode,
-    setShowCode,
-    handleReset,
-  } = useDemoContext();
+  const { code, path, cwd, showCode, setShowCode, handleReset } =
+    useDemoContext();
 
-  const hasControls = controls && controls.length > 0;
-  const hasInspector = inspector && inspector.length > 0;
   const hasCode = code && code.length > 0;
-
-  if (!(hasControls || hasInspector || hasCode)) {
-    return null;
-  }
 
   return (
     <div
-      className="flex items-center justify-between gap-4 border-slate-700 border-b bg-slate-900/50 px-4 py-3"
+      className="flex items-center justify-between gap-4 border-slate-700 border-b bg-slate-900/50 px-4 py-2"
       data-slot="demo-toolbar"
     >
-      <div className="flex w-20 items-center justify-start gap-2">
+      <div className="flex items-center gap-1">
         {hasCode && (
           <button
             aria-label={showCode ? "Hide code" : "Show code"}
@@ -235,58 +223,18 @@ function Toolbar() {
         </button>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-5">
-        {hasControls &&
-          controls.map((control) => (
-            <ControlRenderer
-              control={control}
-              id={`${id}-${control.name}`}
-              key={control.name}
-              onChange={(v) =>
-                setValues((prev) => ({ ...prev, [control.name]: v }))
-              }
-              value={values[control.name]}
-            />
-          ))}
-
-        {hasInspector &&
-          inspector.map((item) => (
-            <div
-              key={item.name}
-              className="flex items-center gap-2 rounded-md bg-slate-800 px-3 py-1.5"
-            >
-              <span className="text-slate-300 text-sm">
-                {item.label ?? item.name}
-              </span>
-              <span className="min-w-12 rounded bg-slate-700 px-2 py-0.5 text-center font-mono text-blue-400 text-sm tabular-nums">
-                {inspectorValues[item.name]}
-              </span>
-            </div>
-          ))}
-      </div>
-
-      <div className="flex w-20 items-center justify-end">
+      <div className="flex items-center">
         {path && (
           <a
-            aria-label={
-              process.env.NODE_ENV === "development"
-                ? "Open in VS Code"
-                : "View source on GitHub"
-            }
+            aria-label="View source on GitHub"
             className="rounded p-1.5 text-slate-400 transition-colors hover:bg-slate-700 hover:text-white"
             href={
-              process.env.NODE_ENV === "development"
-                ? `vscode://file/${process.cwd()}/src/${path}/demo.tsx`
-                : `https://github.com/mikeour/v2/tree/main/apps/www/src/${path}/demo.tsx`
+              cwd
+                ? `vscode://file/${cwd}/src/${path}/preview.tsx:1:1`
+                : `https://github.com/mikeour/v2/tree/main/apps/www/src/${path}/preview.tsx`
             }
-            target={
-              process.env.NODE_ENV === "development" ? undefined : "_blank"
-            }
-            rel={
-              process.env.NODE_ENV === "development"
-                ? undefined
-                : "noopener noreferrer"
-            }
+            target={cwd ? undefined : "_blank"}
+            rel={cwd ? undefined : "noopener noreferrer"}
           >
             <ExternalLink size={16} />
           </a>
@@ -297,12 +245,40 @@ function Toolbar() {
 }
 
 // =============================================================================
-// Preview
+// Panel
+// =============================================================================
+
+function Panel({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex min-w-36 flex-col gap-4 rounded-lg border border-slate-700 border-dashed bg-slate-900/95 p-3 shadow-lg backdrop-blur-sm",
+        className
+      )}
+    >
+      <span className="font-medium text-slate-500 text-xs uppercase tracking-wider">
+        {title}
+      </span>
+
+      {children}
+    </div>
+  );
+}
+
+// =============================================================================
+// Preview (with floating panels)
 // =============================================================================
 
 type PreviewProps = {
-  // biome-ignore lint/suspicious/noExplicitAny: Demo components have dynamic props
-  Component: ComponentType<any>;
+  Component: ComponentType;
   isolated?: boolean;
   className?: string;
   mockBrowser?: boolean;
@@ -314,40 +290,174 @@ function Preview({
   className,
   mockBrowser,
 }: PreviewProps) {
-  const { values, inspectorProps, resetKey } = useDemoContext();
+  const {
+    id,
+    controls,
+    inspector,
+    values,
+    setValues,
+    inspectorValues,
+    inspectorProps,
+    resetKey,
+  } = useDemoContext();
+
+  const [mobileExpanded, setMobileExpanded] = useState(false);
+
+  const hasControls = controls && controls.length > 0;
+  const hasInspector = inspector && inspector.length > 0;
+  const hasInteractivity = hasControls || hasInspector;
 
   return (
-    <div
-      data-slot="demo-preview"
-      className={cn(
-        "not-prose component-bg relative flex items-center justify-center",
-        isolated && "px-(--gutter) py-8 sm:py-12"
-      )}
-    >
+    <div data-slot="demo-preview" className="relative">
+      {/* Desktop: Three-column layout */}
       <div
         className={cn(
-          "relative flex w-full flex-col items-center justify-center overflow-hidden",
-          isolated && "rounded-lg",
-          mockBrowser && "border border-slate-700 bg-slate-800",
-          className
+          "not-prose component-bg relative flex items-start justify-center gap-4",
+          isolated && "px-(--gutter) py-8 sm:px-8 sm:py-10"
         )}
-        data-slot="demo-content"
-        key={resetKey}
       >
-        {mockBrowser && (
-          <div
-            className="flex w-full items-center gap-2 border-slate-700 border-b bg-slate-900 px-3 py-2"
-            data-slot="mock-browser"
-          >
-            <div className="flex gap-1.5">
-              <div className="size-3 rounded-full bg-red-500" />
-              <div className="size-3 rounded-full bg-yellow-500" />
-              <div className="size-3 rounded-full bg-green-500" />
+        {/* Left panel - Controls (desktop only) */}
+        {hasControls && (
+          <Panel title="Controls" className={cn("hidden shrink-0 lg:flex")}>
+            <div className="flex flex-col gap-3">
+              {controls.map((control) => (
+                <ControlRenderer
+                  control={control}
+                  id={`${id}-${control.name}`}
+                  key={control.name}
+                  onChange={(v) =>
+                    setValues((prev) => ({ ...prev, [control.name]: v }))
+                  }
+                  value={values[control.name]}
+                  vertical
+                />
+              ))}
             </div>
-          </div>
+          </Panel>
         )}
-        <Component {...values} {...inspectorProps} />
+
+        {/* Demo content - grows to fill available space */}
+        <div
+          className={cn(
+            "relative overflow-hidden has-[>[data-fill-width]]:w-full",
+            isolated && "rounded-lg",
+            mockBrowser && "border border-slate-700 bg-slate-800",
+            className
+          )}
+          data-slot="demo-content"
+          key={resetKey}
+        >
+          {mockBrowser && (
+            <div
+              className="flex w-full items-center gap-2 border-slate-700 border-b bg-slate-900 px-3 py-2"
+              data-slot="mock-browser"
+            >
+              <div className="flex gap-1.5">
+                <div className="size-3 rounded-full bg-red-500" />
+                <div className="size-3 rounded-full bg-yellow-500" />
+                <div className="size-3 rounded-full bg-green-500" />
+              </div>
+            </div>
+          )}
+          <Component {...values} {...inspectorProps} />
+        </div>
+
+        {/* Right panel - Inspector (desktop only) */}
+        {hasInspector && (
+          <Panel title="Values" className={cn("hidden shrink-0 lg:flex")}>
+            <div className="flex flex-col gap-2">
+              {inspector.map((item) => (
+                <div
+                  key={item.name}
+                  className="flex items-center justify-between gap-2"
+                >
+                  <span className="text-slate-400 text-xs">
+                    {item.label ?? item.name}
+                  </span>
+                  <span className="min-w-12 rounded bg-slate-700 px-2 py-0.5 text-center font-mono text-blue-400 text-xs tabular-nums">
+                    {inspectorValues[item.name]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        )}
       </div>
+
+      {/* Mobile: Bottom sheet trigger */}
+      {hasInteractivity && (
+        <div className="lg:hidden">
+          {/* Collapsed pill */}
+          <button
+            type="button"
+            onClick={() => setMobileExpanded(!mobileExpanded)}
+            className={cn(
+              "flex w-full items-center justify-center gap-2 border-slate-700 border-t bg-slate-900/80 px-4 py-2 text-slate-300 text-sm transition-colors hover:bg-slate-900",
+              mobileExpanded && "border-b"
+            )}
+          >
+            <Settings size={14} />
+            <span>{mobileExpanded ? "Hide" : "Show"} Controls</span>
+            {mobileExpanded ? (
+              <ChevronDown size={14} />
+            ) : (
+              <ChevronUp size={14} />
+            )}
+          </button>
+
+          {/* Expanded content */}
+          {mobileExpanded && (
+            <div className="grid grid-cols-2 gap-4 border-slate-700 border-t bg-slate-900/95 p-4">
+              {/* Controls column */}
+              {hasControls && (
+                <div className={cn(!hasInspector && "col-span-2")}>
+                  <div className="mb-2 font-medium text-slate-500 text-xs uppercase tracking-wider">
+                    Controls
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {controls.map((control) => (
+                      <ControlRenderer
+                        control={control}
+                        id={`${id}-mobile-${control.name}`}
+                        key={control.name}
+                        onChange={(v) =>
+                          setValues((prev) => ({ ...prev, [control.name]: v }))
+                        }
+                        value={values[control.name]}
+                        vertical
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Inspector column */}
+              {hasInspector && (
+                <div className={cn(!hasControls && "col-span-2")}>
+                  <div className="mb-2 font-medium text-slate-500 text-xs uppercase tracking-wider">
+                    Values
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {inspector.map((item) => (
+                      <div
+                        key={item.name}
+                        className="flex items-center justify-between gap-2"
+                      >
+                        <span className="text-slate-400 text-xs">
+                          {item.label ?? item.name}
+                        </span>
+                        <span className="min-w-12 rounded bg-slate-700 px-2 py-0.5 text-center font-mono text-blue-400 text-xs tabular-nums">
+                          {inspectorValues[item.name]}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -456,26 +566,60 @@ function ControlRenderer({
   value,
   onChange,
   id,
+  vertical = false,
 }: {
   control: Control;
   value: boolean | number;
   onChange: (v: boolean | number) => void;
   id: string;
+  vertical?: boolean;
 }) {
   if (control.type === "switch") {
     return (
-      <div className="flex items-center gap-2.5">
+      <div
+        className={cn(
+          "flex items-center gap-2.5",
+          vertical && "flex-row-reverse justify-end"
+        )}
+      >
+        <label className="cursor-pointer text-slate-300 text-sm" htmlFor={id}>
+          {control.label}
+        </label>
+
         <Switch
           checked={value as boolean}
           id={id}
           onCheckedChange={(c) => typeof c === "boolean" && onChange(c)}
         />
-        <label className="cursor-pointer text-slate-300 text-sm" htmlFor={id}>
-          {control.label}
-        </label>
       </div>
     );
   }
+
+  if (vertical) {
+    return (
+      <div className="flex flex-col gap-1.5">
+        <label className="text-slate-400 text-xs" htmlFor={id}>
+          {control.label}
+        </label>
+        <div className="flex items-center gap-2">
+          <Slider
+            className="w-full"
+            id={id}
+            max={control.max}
+            min={control.min}
+            onValueChange={(v) => onChange(Array.isArray(v) ? v[0] : v)}
+            step={control.step ?? 1}
+            value={[value as number]}
+          />
+          <span className="font-mono text-slate-300 text-xs tabular-nums">
+            {value}
+            {control.unit ?? "px"}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center gap-2.5">
       <label className="shrink-0 text-slate-400 text-sm" htmlFor={id}>
@@ -490,7 +634,7 @@ function ControlRenderer({
         step={control.step ?? 1}
         value={[value as number]}
       />
-      <span className="min-w-10 font-mono text-slate-300 text-sm tabular-nums">
+      <span className="font-mono text-slate-300 text-sm tabular-nums">
         {value}
         {control.unit ?? "px"}
       </span>

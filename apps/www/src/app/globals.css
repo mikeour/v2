@@ -51,21 +51,39 @@
 }
 
 @keyframes accordion-down {
-  from { height: 0; }
-  to { height: var(--radix-accordion-content-height); }
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
 }
 
 @keyframes accordion-up {
-  from { height: var(--radix-accordion-content-height); }
-  to { height: 0; }
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
 }
 
 @keyframes up-and-down {
-  10% { height: 30%; }
-  30% { height: 100%; }
-  60% { height: 50%; }
-  80% { height: 75%; }
-  100% { height: 60%; }
+  10% {
+    height: 30%;
+  }
+  30% {
+    height: 100%;
+  }
+  60% {
+    height: 50%;
+  }
+  80% {
+    height: 75%;
+  }
+  100% {
+    height: 60%;
+  }
 }
 
 @layer base {
@@ -162,12 +180,12 @@
 
 /* codeblocks from code-hike */
 .ch-codeblock {
-  @apply !my-8 bg-slate-800;
+  @apply my-8! bg-slate-800;
 }
 
 /* interactive components */
 .code-example {
-  @apply my-12;
+  @apply mt-8 mb-12;
 }
 
 /* notes, callouts, etc */

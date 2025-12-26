@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { ComponentType } from "react";
+import type { ComponentProps, ComponentType } from "react";
 import { type HighlightedCode, highlight } from "codehike/code";
 
 import theme from "~/themes/one-monokai.mjs";
@@ -12,43 +12,71 @@ import {
   DemoToolbar,
 } from "./renderer";
 
-type Control =
-  | { type: "switch"; name: string; label: string; defaultValue?: boolean }
-  | {
-      type: "slider";
-      name: string;
-      label: string;
-      min: number;
-      max: number;
-      step?: number;
-      defaultValue?: number;
-      unit?: string;
-    };
+// =============================================================================
+// Type utilities
+// =============================================================================
 
-type Inspector = {
+// Extract keys where the value is assignable to T
+type KeysMatching<Obj, T> = {
+  [K in keyof Obj]: Obj[K] extends T ? K : never;
+}[keyof Obj];
+
+// Props that accept boolean (for switches)
+type BooleanProps<P> = KeysMatching<P, boolean | undefined>;
+
+// Props that accept number (for sliders)
+type NumberProps<P> = KeysMatching<P, number | undefined>;
+
+// Props that are callback functions (for inspector)
+type CallbackProps<P> = KeysMatching<P, ((value: number) => void) | undefined>;
+
+// =============================================================================
+// Control & Inspector types (generic over component props)
+// =============================================================================
+
+type SwitchControl<P> = {
+  type: "switch";
+  prop: BooleanProps<P>;
+  label: string;
+  defaultValue?: boolean;
+};
+
+type SliderControl<P> = {
+  type: "slider";
+  prop: NumberProps<P>;
+  label: string;
+  min: number;
+  max: number;
+  step?: number;
+  defaultValue?: number;
+  unit?: string;
+};
+
+type Control<P> = SwitchControl<P> | SliderControl<P>;
+
+type Inspector<P> = {
   name: string;
   label?: string;
-  prop: string;
+  prop: CallbackProps<P>;
   format?: "decimal";
   defaultValue?: string;
 };
 
-export type DemoModule = {
-  // biome-ignore lint/suspicious/noExplicitAny: Demo components have dynamic props
-  default: ComponentType<any>;
-};
+// =============================================================================
+// Demo props
+// =============================================================================
 
-type DemoProps = {
-  /** The demo component module */
-  demo: DemoModule;
+type DemoProps<C extends ComponentType> = {
+  /** The preview component */
+  preview: C;
   /** Path to demo directory relative to src/ */
   path: string;
-  /** Additional implementation files to show in tabs */
+  /** Files to show in code tabs */
   files?: string[];
-  /** Control definitions */
-  controls?: Control[];
-  /** Inspector definitions - maps display name to callback prop */
-  inspector?: Inspector[];
+  /** Control definitions - props must match preview component */
+  controls?: Control<ComponentProps<C>>[];
+  /** Inspector definitions - props must be callbacks on preview component */
+  inspector?: Inspector<ComponentProps<C>>[];
   /** Caption text */
   caption?: string;
   isolated?: boolean;
@@ -57,19 +85,31 @@ type DemoProps = {
   mockBrowser?: boolean;
 };
 
+// =============================================================================
+// Implementation
+// =============================================================================
+
 const LANG_MAP: Record<string, string> = {
   ".tsx": "tsx",
   ".ts": "tsx",
   ".css": "css",
 };
 
-// Clean up implementation details for display
 function cleanCodeForDisplay(code: string): string {
   return code.replace(/@mikeour\/ui\/lib\/utils/g, "~/lib/utils");
 }
 
-export async function Demo({
-  demo,
+// Convert typed controls to renderer format (which uses `name` instead of `prop`)
+function toRendererControls<P>(controls?: Control<P>[]) {
+  return controls?.map((c) => ({ ...c, name: c.prop as string }));
+}
+
+function toRendererInspector<P>(inspector?: Inspector<P>[]) {
+  return inspector?.map((i) => ({ ...i, prop: i.prop as string }));
+}
+
+export async function Demo<C extends ComponentType>({
+  preview: Component,
   path,
   files,
   controls,
@@ -78,10 +118,10 @@ export async function Demo({
   isolated,
   className,
   mockBrowser,
-}: DemoProps) {
-  const Component = demo.default;
-
+}: DemoProps<C>) {
   const fullPath = join(process.cwd(), "src", path);
+  const cwd =
+    process.env.NODE_ENV === "development" ? process.cwd() : undefined;
 
   let highlighted: HighlightedCode[] | undefined;
   if (files?.length) {
@@ -103,8 +143,9 @@ export async function Demo({
   return (
     <DemoRoot
       path={path}
-      controls={controls}
-      inspector={inspector}
+      cwd={cwd}
+      controls={toRendererControls(controls)}
+      inspector={toRendererInspector(inspector)}
       code={highlighted}
     >
       <DemoToolbar />

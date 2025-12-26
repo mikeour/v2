@@ -1,10 +1,9 @@
 import { Alert } from "~/components/crafts/alert";
 import { ComparisonTable } from "~/components/crafts/comparison-table";
-import { Demo } from "~/components/crafts/demo";
-import * as ScrollShadowsDemo from "./demos/scroll-shadows/demo";
-import * as ProgressDemo from "./demos/progress/demo";
-import * as HorizontalDemo from "./demos/horizontal/demo";
-import * as ComparisonDemo from "./demos/comparison/demo";
+import { ScrollShadowsDemo } from "./demos/scroll-shadows";
+import { ProgressDemo } from "./demos/progress";
+import { HorizontalDemo } from "./demos/horizontal";
+import { ComparisonDemo } from "./demos/comparison";
 
 export const metadata = {
   title: "Scroll Shadows (Pt. 2)",
@@ -19,15 +18,7 @@ In [Part 1](/crafts/scroll-shadows), we built scroll shadows using Framer Motion
 
 But Framer Motion adds ~30kb to your bundle. What if we could achieve the same effect with just a small hook and CSS?
 
-<Demo
-  demo={ScrollShadowsDemo}
-  caption="Scroll the content and toggle shadows to see the effect."
-  controls={[
-    { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
-  ]}
-  path="app/crafts/scroll-shadows-pt-2/demos/scroll-shadows"
-  files={["demo.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
-/>
+<ScrollShadowsDemo />
 
 ## The Goal
 
@@ -53,14 +44,7 @@ const progress =
 
 Dividing gives us a normalized `0` to `1` value, just like Framer Motion.
 
-<Demo
-  demo={ProgressDemo}
-  caption="Scroll to see the progress value update in real-time."
-  inspector={[
-    { name: "progress", label: "--scroll-progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" },
-  ]}
-  path="app/crafts/scroll-shadows-pt-2/demos/progress"
-/>
+<ProgressDemo />
 
 ## Building the Hook
 
@@ -209,15 +193,7 @@ opacity: calc((1 - var(--scroll-progress, 1)) * var(--has-overflow, 0));
 
 The same pattern works for horizontal scrolling — just swap the axes:
 
-<Demo
-  demo={HorizontalDemo}
-  caption="Horizontal scroll shadows using the same technique."
-  controls={[
-    { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
-  ]}
-  path="app/crafts/scroll-shadows-pt-2/demos/horizontal"
-  files={["demo.tsx"]}
-/>
+<HorizontalDemo />
 
 ```tsx
 export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
@@ -256,12 +232,7 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
 
 ## Comparing the Approaches
 
-<Demo
-  demo={ComparisonDemo}
-  caption="Both approaches animate opacity — the visual result is identical."
-  path="app/crafts/scroll-shadows-pt-2/demos/comparison"
-  files={["demo.tsx", "framer-motion.tsx", "css-variables.tsx"]}
-/>
+<ComparisonDemo />
 
 <ComparisonTable
   headers={["Part 1 (Framer Motion)", "Part 2 (CSS Variables)"]}

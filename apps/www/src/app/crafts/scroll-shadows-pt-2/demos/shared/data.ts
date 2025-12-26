@@ -1,4 +1,12 @@
-export const NOTIFICATIONS = [
+export type NotificationType = {
+  id: number;
+  type: string;
+  title: string;
+  time: string;
+  read: boolean;
+};
+
+export const NOTIFICATIONS: NotificationType[] = [
   {
     id: 1,
     type: "message",

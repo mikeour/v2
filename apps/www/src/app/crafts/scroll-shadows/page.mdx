@@ -1,12 +1,11 @@
 import { Alert } from "~/components/crafts/alert";
-import { Demo } from "~/components/crafts/demo";
-import * as InteractiveDemo from "./demos/interactive/demo";
-import * as ProgressDemo from "./demos/progress/demo";
-import * as BrokenProgressOverflowDemo from "./demos/broken-progress-overflow/demo";
-import * as BrokenProgressNoOverflowDemo from "./demos/broken-progress-no-overflow/demo";
-import * as FixedProgressNoOverflowDemo from "./demos/fixed-progress-no-overflow/demo";
-import * as MarkupDemo from "./demos/markup/demo";
-import * as CarouselDemo from "./demos/carousel/demo";
+import { InteractiveDemo } from "./demos/interactive";
+import { ProgressDemo } from "./demos/progress";
+import { BrokenProgressOverflowDemo } from "./demos/broken-progress-overflow";
+import { BrokenProgressNoOverflowDemo } from "./demos/broken-progress-no-overflow";
+import { FixedProgressNoOverflowDemo } from "./demos/fixed-progress-no-overflow";
+import { MarkupDemo } from "./demos/markup";
+import { CarouselDemo } from "./demos/carousel";
 
 export const metadata = {
   title: "Scroll Shadows",
@@ -19,13 +18,7 @@ export const metadata = {
 
 Scroll shadows are a visual cue that indicates more content exists beyond the visible area. They fade in as you scroll away from an edge and fade out as you approach it.
 
-<Demo
-  demo={InteractiveDemo}
-  caption="Scroll the article — notice how shadows appear and disappear at the edges."
-  controls={[{ type: "switch", name: "shadows", label: "Shadows", defaultValue: true }]}
-  path="app/crafts/scroll-shadows/demos/interactive"
-  mockBrowser
-/>
+<InteractiveDemo />
 
 By the end of this post, we'll build a reusable `<ScrollShadows />` component that adds this effect to any scrollable container. The goal is to make it as simple as:
 
@@ -83,13 +76,7 @@ const { scrollYProgress } = useScroll({ container: articleRef });
 </article>;
 ```
 
-<Demo
-  demo={ProgressDemo}
-  caption="Scroll the article to see the value update in real-time."
-  path="app/crafts/scroll-shadows/demos/progress"
-  inspector={[{ name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" }]}
-  mockBrowser
-/>
+<ProgressDemo />
 
 This gives us our starting point. The `scrollYProgress` value already matches what we need for `startingShadowVisibility` — it's `0` at the top and increases as we scroll.
 
@@ -117,32 +104,13 @@ Here's our initial hook:
 
 Let's visualize both values. Toggle the shadows on to see them respond to scroll:
 
-<Demo
-  demo={BrokenProgressOverflowDemo}
-  path="app/crafts/scroll-shadows/demos/broken-progress-overflow"
-  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
-  inspector={[
-    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
-    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "1.00" }
-  ]}
-  mockBrowser
-/>
+<BrokenProgressOverflowDemo />
 
 Looking good! But there's a bug hiding. Let's see what happens when the content doesn't overflow:
 
 ## Handling Edge Cases
 
-<Demo
-  demo={BrokenProgressNoOverflowDemo}
-  caption="Toggle shadows ON — why is the top shadow visible?"
-  path="app/crafts/scroll-shadows/demos/broken-progress-no-overflow"
-  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
-  inspector={[
-    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "1.00" },
-    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
-  ]}
-  mockBrowser
-/>
+<BrokenProgressNoOverflowDemo />
 
 When a container doesn't overflow, `useScroll` defaults `scrollYProgress` to `1` (not `0`). This means our starting shadow shows at full opacity even though there's nothing to scroll.
 
@@ -165,16 +133,7 @@ const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
 
 Now both shadows correctly hide when there's no overflow:
 
-<Demo
-  demo={FixedProgressNoOverflowDemo}
-  path="app/crafts/scroll-shadows/demos/fixed-progress-no-overflow"
-  controls={[{ type: "switch", name: "showShadows", label: "Shadows", defaultValue: true }]}
-  inspector={[
-    { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
-    { name: "end", prop: "onEndChange", format: "decimal", defaultValue: "0.00" }
-  ]}
-  mockBrowser
-/>
+<FixedProgressNoOverflowDemo />
 
 Here's the complete hook:
 
@@ -204,14 +163,7 @@ Here's why it works:
 </div>
 ```
 
-<Demo
-  demo={MarkupDemo}
-  caption="Drag the slider to see how shadow size affects the layout."
-  path="app/crafts/scroll-shadows/demos/markup"
-  files={["demo.tsx"]}
-  controls={[{ type: "slider", name: "size", label: "Size", min: 16, max: 64, step: 16, defaultValue: 48 }]}
-  mockBrowser
-/>
+<MarkupDemo />
 
 <Alert variant="tip">
   I'm using Tailwind with a `cn` helper from
@@ -294,10 +246,7 @@ Then update the component to position shadows on left/right for horizontal scrol
 
 Here's horizontal scrolling in action:
 
-<Demo
-  demo={CarouselDemo}
-  path="app/crafts/scroll-shadows/demos/carousel"
-/>
+<CarouselDemo />
 
 ## Final Code
 
@@ -420,9 +369,15 @@ export function ScrollShadows({
 
   return (
     <div ref={ref} data-axis={axis} className={`scroll-shadows ${className}`}>
-      <motion.div style={{ opacity: start }} className="scroll-shadow scroll-shadow-start" />
+      <motion.div
+        style={{ opacity: start }}
+        className="scroll-shadow scroll-shadow-start"
+      />
       {children}
-      <motion.div style={{ opacity: end }} className="scroll-shadow scroll-shadow-end" />
+      <motion.div
+        style={{ opacity: end }}
+        className="scroll-shadow scroll-shadow-end"
+      />
     </div>
   );
 }

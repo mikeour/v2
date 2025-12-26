@@ -13,7 +13,7 @@ export default function Demo() {
   return (
     <div
       ref={ref}
-      className="group relative flex max-h-100 w-full flex-row overflow-x-auto bg-white [--size:25px]"
+      className="group relative flex max-h-100 w-full flex-row overflow-x-auto overscroll-none bg-white [--size:25px]"
     >
       <motion.div
         className="pointer-events-none sticky top-0 bottom-0 left-0 -mr-(--size) w-(--size) shrink-0 bg-blue-400/30"

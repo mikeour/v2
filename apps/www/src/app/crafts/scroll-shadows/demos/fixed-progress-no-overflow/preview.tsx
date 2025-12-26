@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { type MotionValue, motion, useMotionValueEvent } from "framer-motion";
 
 import { Article } from "../shared/components";
-import { formatDecimal, useBrokenScrollShadows } from "../shared/hooks";
+import { formatDecimal, useFixedScrollShadows } from "../shared/hooks";
 
 type DemoProps = {
   showShadows?: boolean;
@@ -18,7 +18,7 @@ export default function Demo({
   onEndChange,
 }: DemoProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [start, end] = useBrokenScrollShadows({ ref });
+  const [start, end] = useFixedScrollShadows({ ref });
 
   useMotionValueEvent(start, "change", (latest) => onStartChange?.(latest));
   useMotionValueEvent(end, "change", (latest) => onEndChange?.(latest));
@@ -27,6 +27,7 @@ export default function Demo({
     <div
       ref={ref}
       className="group flex h-75 w-full grow flex-col overflow-y-auto [--size:36px]"
+      data-fill-width
     >
       {showShadows && (
         <motion.div
