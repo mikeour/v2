@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+
+import { DynamicBreadcrumbs } from "~/components/dynamic-breadcrumbs";
 
 const url = new URL("https://mikeour.io");
 
@@ -24,11 +25,9 @@ export const metadata: Metadata = {
 export default function Layout({ children }: React.PropsWithChildren) {
   return (
     <div className="mx-auto flex w-full max-w-188 flex-col gap-8 py-(--gutter)">
-      <Link className="self-start" href="/">
-        Go Back
-      </Link>
+      <DynamicBreadcrumbs />
 
-      <article className="prose mt-10 prose-figcaption:mt-0 prose-pre:mt-4 prose-pre:mb-16 w-full max-w-full prose-headings:scroll-m-8 prose-code:text-blue-400 prose-headings:text-white prose-strong:text-gray-200 prose-code:before:hidden prose-code:after:hidden">
+      <article className="prose prose-figcaption:mt-0 prose-pre:mt-4 prose-pre:mb-16 w-full max-w-full prose-headings:scroll-m-8 prose-code:text-blue-400 prose-headings:text-white prose-strong:text-gray-200 prose-code:before:hidden prose-code:after:hidden">
         {children}
       </article>
     </div>
