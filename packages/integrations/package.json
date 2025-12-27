@@ -5,7 +5,8 @@
   "exports": {
     "./lastfm": "./src/lastfm/index.ts",
     "./letterboxd": "./src/letterboxd/index.ts",
-    "./spotify": "./src/spotify/index.ts"
+    "./spotify": "./src/spotify/index.ts",
+    "./tmdb": "./src/tmdb/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
