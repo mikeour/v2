@@ -6,84 +6,93 @@
 @source "../**/*.tsx";
 @source "../../../../packages/ui/src/**/*.tsx";
 
-@theme {
-  /* Custom colors using CSS variables */
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  /* Border radius */
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-
-  /* Font families */
-  --font-sans: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-fira), ui-monospace, monospace;
-
-  /* Animations */
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-up-and-down: up-and-down 1.3s ease infinite alternate;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 }
 
-@keyframes accordion-down {
-  from {
-    height: 0;
-  }
-  to {
-    height: var(--radix-accordion-content-height);
-  }
+:root {
+  --radius: 0.625rem;
+  --background: var(--color-white);
+  --foreground: var(--color-zinc-900);
+  --card: var(--color-white);
+  --card-foreground: var(--color-zinc-900);
+  --popover: var(--color-white);
+  --popover-foreground: var(--color-zinc-900);
+  --primary: var(--color-zinc-800);
+  --primary-foreground: var(--color-zinc-50);
+  --secondary: --alpha(var(--color-black) / 4%);
+  --secondary-foreground: var(--color-zinc-900);
+  --muted: --alpha(var(--color-black) / 4%);
+  --muted-foreground: var(--color-zinc-600);
+  --accent: --alpha(var(--color-black) / 4%);
+  --accent-foreground: var(--color-zinc-900);
+  --destructive: var(--color-red-500);
+  --destructive-foreground: var(--color-red-700);
+  --info: var(--color-blue-500);
+  --info-foreground: var(--color-blue-700);
+  --success: var(--color-emerald-500);
+  --success-foreground: var(--color-emerald-700);
+  --warning: var(--color-amber-500);
+  --warning-foreground: var(--color-amber-700);
+  --border: --alpha(var(--color-black) / 12%);
+  --input: --alpha(var(--color-black) / 12%);
+  --ring: var(--color-zinc-400);
 }
 
-@keyframes accordion-up {
-  from {
-    height: var(--radix-accordion-content-height);
-  }
-  to {
-    height: 0;
-  }
-}
-
-@keyframes up-and-down {
-  10% {
-    height: 30%;
-  }
-  30% {
-    height: 100%;
-  }
-  60% {
-    height: 50%;
-  }
-  80% {
-    height: 75%;
-  }
-  100% {
-    height: 60%;
-  }
+.dark {
+  --background: var(--color-slate-950);
+  --foreground: var(--color-slate-100);
+  --card: color-mix(
+    in srgb,
+    var(--color-slate-900) 80%,
+    var(--color-slate-950)
+  );
+  --card-foreground: var(--color-slate-100);
+  --popover: var(--color-slate-900);
+  --popover-foreground: var(--color-slate-100);
+  --primary: var(--color-slate-100);
+  --primary-foreground: var(--color-slate-900);
+  --secondary: --alpha(var(--color-white) / 6%);
+  --secondary-foreground: var(--color-slate-100);
+  --muted: --alpha(var(--color-white) / 6%);
+  --muted-foreground: var(--color-slate-400);
+  --accent: --alpha(var(--color-white) / 6%);
+  --accent-foreground: var(--color-slate-100);
+  --destructive: var(--color-red-500);
+  --destructive-foreground: var(--color-red-400);
+  --info: var(--color-blue-500);
+  --info-foreground: var(--color-blue-400);
+  --success: var(--color-emerald-500);
+  --success-foreground: var(--color-emerald-400);
+  --warning: var(--color-amber-500);
+  --warning-foreground: var(--color-amber-400);
+  --border: --alpha(var(--color-white) / 12%);
+  --input: --alpha(var(--color-white) / 12%);
+  --ring: var(--color-slate-500);
 }
 
 @layer base {
@@ -93,70 +102,6 @@
     @media (width >= 1024px) {
       --gutter: 48px;
     }
-  }
-
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --ring: 240 5% 64.9%;
-
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 85.7% 97.3%;
-
-    --ring: 240 3.7% 15.9%;
   }
 
   * {
@@ -224,52 +169,38 @@
   display: none;
 }
 
-.scroll-shadow-root {
-  --size: 25px;
-  position: relative;
-  display: flex;
-
-  .scroll-shadow-start,
-  .scroll-shadow-end {
-    pointer-events: none;
-    position: sticky;
-    flex-shrink: 0;
+@keyframes accordion-down {
+  from {
+    height: 0;
   }
-
-  &[data-axis="x"] {
-    flex-direction: row;
-    overflow-x: auto;
-
-    .scroll-shadow-start {
-      bottom: 0;
-      left: 0;
-      margin-right: calc(var(--size) * -1);
-      width: var(--size);
-    }
-
-    .scroll-shadow-end {
-      bottom: 0;
-      right: 0;
-      top: 0;
-      margin-left: calc(var(--size) * -1);
-      width: var(--size);
-    }
+  to {
+    height: var(--radix-accordion-content-height);
   }
+}
 
-  &[data-axis="y"] {
-    flex-direction: column;
-    overflow-y: auto;
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
 
-    .scroll-shadow-start {
-      top: 0;
-      height: var(--size);
-      margin-bottom: calc(var(--size) * -1);
-    }
-
-    .scroll-shadow-end {
-      bottom: 0;
-      margin-top: calc(var(--size) * -1);
-      height: var(--size);
-    }
+@keyframes up-and-down {
+  10% {
+    height: 30%;
+  }
+  30% {
+    height: 100%;
+  }
+  60% {
+    height: 50%;
+  }
+  80% {
+    height: 75%;
+  }
+  100% {
+    height: 60%;
   }
 }

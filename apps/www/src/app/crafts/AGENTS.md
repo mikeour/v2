@@ -87,7 +87,12 @@ export function ScrollShadowsDemo() {
       preview={Preview}
       caption="Scroll the content and toggle shadows."
       controls={[
-        { type: "switch", name: "shadows", label: "Shadows", defaultValue: true },
+        {
+          type: "switch",
+          name: "shadows",
+          label: "Shadows",
+          defaultValue: true,
+        },
       ]}
       path="app/crafts/{slug}/demos/scroll-shadows"
       files={["preview.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
@@ -138,6 +143,135 @@ inspector={[
   { name: "start", prop: "onStartChange", format: "decimal", defaultValue: "0.00" },
 ]}
 ```
+
+## Demo Components
+
+### Inspector Component
+
+The Inspector is a composable component for displaying read-only values in the demo UI. It follows the shadcn composition pattern with namespaced sub-components.
+
+**Location**: `~/components/crafts/demo/inspector`
+
+**Components**:
+- `Inspector.Root` - Outer container (`flex flex-col gap-0.5`)
+- `Inspector.Header` - Row container for name/value (`flex items-center justify-between gap-2`)
+- `Inspector.Name` - Label text (slate-400, text-sm)
+- `Inspector.Value` - Monospace value display (badge style with tabular-nums)
+- `Inspector.Description` - Optional description (slate-500, text-xs)
+
+**Usage**:
+
+```tsx
+import { Inspector } from "~/components/crafts/demo/inspector";
+
+<Inspector.Root>
+  <Inspector.Header>
+    <Inspector.Name>Progress</Inspector.Name>
+    <Inspector.Value>0.75</Inspector.Value>
+  </Inspector.Header>
+  <Inspector.Description>Current scroll progress</Inspector.Description>
+</Inspector.Root>
+```
+
+**All components accept `className`** for style overrides via the `cn()` utility.
+
+**Pattern**: When creating new demo UI components, follow this composition pattern:
+1. Create a new directory under `~/components/crafts/demo/`
+2. Export namespaced components that accept `className` and `children`
+3. Use `cn()` to compose base styles with custom className
+4. Each component handles one specific piece of UI
+
+### Control Component
+
+The Control is a context-based composable component for rendering interactive controls (switches, sliders, etc.). It automatically handles ID generation, type-aware rendering, and value management through React Context.
+
+**Location**: `~/components/crafts/demo/control`
+
+**Architecture**: Control.Root creates a context containing the control type, value, onChange handler, and configuration. Child components read from this context to render appropriately.
+
+**Components**:
+- `Control.Root` - Provider component that accepts control configuration and creates context
+- `Control.Input` - Type-aware input renderer (automatically renders Switch or Slider based on type)
+- `Control.Label` - Auto-wired label (automatically gets `htmlFor` from context)
+- `Control.Value` - Auto-wired value display (only renders for slider type, reads value/unit from context)
+- `Control.Description` - Optional description text
+- `Control.Row` - Layout helper for horizontal arrangements
+
+**Key Features**:
+- ✅ Automatic ID generation using React's `useId()`
+- ✅ Type-safe props based on control type (switch vs slider)
+- ✅ No manual prop passing between Label, Input, and Value
+- ✅ Control.Input dynamically renders the correct component based on type
+- ✅ Switch and Slider components imported directly (no prop drilling)
+
+**Usage Examples**:
+
+```tsx
+import { Control } from "~/components/crafts/demo/control";
+
+// Switch control
+<Control.Root type="switch" value={enabled} onChange={setEnabled}>
+  <Control.Row className="flex-row-reverse justify-end">
+    <Control.Label>Enable Shadows</Control.Label>
+    <Control.Input />
+  </Control.Row>
+  <Control.Description>Toggle shadows on/off</Control.Description>
+</Control.Root>
+
+// Slider control
+<Control.Root
+  type="slider"
+  value={size}
+  onChange={setSize}
+  min={16}
+  max={64}
+  step={8}
+  unit="px"
+>
+  <Control.Label>Shadow Size</Control.Label>
+  <Control.Row>
+    <Control.Input className="w-full" />
+    <Control.Value />
+  </Control.Row>
+  <Control.Description>Adjust the shadow size</Control.Description>
+</Control.Root>
+```
+
+**All components accept `className`** for style overrides via the `cn()` utility.
+
+**Extensibility**: To add new control types (e.g., color picker, select):
+1. Extend the `ControlConfig` union type in `control/index.tsx`
+2. Import the new component at the top of the file
+3. Add a new `case` to the exhaustive switch in `Control.Input`
+4. Add a new `case` to the exhaustive switch in `ControlRenderer` (in `renderer.tsx`)
+
+**Type Safety**: Both `Control.Input` and `ControlRenderer` use exhaustive switch statements with `never` checks:
+```tsx
+switch (control.type) {
+  case "switch":
+    return <Switch ... />;
+  case "slider":
+    return <Slider ... />;
+  default: {
+    const _exhaustive: never = control;
+    throw new Error(`Unhandled control type: ${JSON.stringify(_exhaustive)}`);
+  }
+}
+```
+This ensures TypeScript will error at compile-time if a new control type is added to `ControlConfig` but not handled in the switch. The `never` type proves all cases are covered.
+
+**Example**: If you add a new type to `ControlConfig`:
+```tsx
+type ControlConfig =
+  | SwitchConfig
+  | SliderConfig
+  | { type: "color-picker"; value: string; onChange: (v: string) => void }; // New type!
+```
+TypeScript will immediately error in both `Control.Input` and `ControlRenderer` at the `default` case:
+```
+Type 'ColorPickerConfig' is not assignable to type 'never'
+```
+This forces you to handle the new case, preventing runtime errors.
 
 ## preview.tsx Structure
 
