@@ -1,21 +1,20 @@
 "use client";
 
-import { cn } from "@mikeour/ui/lib/utils";
-
 import { Notification } from "../shared/components";
 import { NOTIFICATIONS } from "../shared/data";
 import { ScrollShadows } from "./scroll-shadows";
 
-type DemoProps = React.ComponentProps<typeof ScrollShadows>;
+type ScrollShadowsPreviewProps = {
+  showShadows?: boolean;
+};
 
-export default function Demo({ className, ...props }: DemoProps) {
+export default function ScrollShadowsPreview({
+  showShadows = true,
+}: ScrollShadowsPreviewProps) {
   return (
     <ScrollShadows
-      className={cn(
-        "h-72 w-96 max-w-full overscroll-none rounded-lg bg-white",
-        className
-      )}
-      {...props}
+      className="h-72 w-96 max-w-full overscroll-none rounded-lg bg-white"
+      showShadows={showShadows}
     >
       <div className="flex flex-col py-1">
         {NOTIFICATIONS.map((notification) => (
