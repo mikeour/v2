@@ -31,6 +31,13 @@ function toSlug(title: string): string {
     .replace(/^-|-$/g, "");
 }
 
+function toPascalCase(slug: string): string {
+  return slug
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("");
+}
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const craftsDir = join(__dirname, "../apps/www/src/app/crafts");
 
@@ -60,13 +67,15 @@ async function main() {
     slug = await prompt("Slug", defaultSlug);
   }
 
+  const componentName = `${toPascalCase(slug)}Demo`;
   const postDir = join(craftsDir, slug);
   const demosDir = join(postDir, "demos");
   const interactiveDir = join(demosDir, "interactive");
 
+  // page.mdx - Main content file
   const pageMdx = `import { Alert } from "~/components/crafts/alert";
-import { Demo } from "~/components/crafts/demo";
-import * as InteractiveDemo from "./demos/interactive/demo";
+import { Demo } from "~/components/crafts/demo/server";
+import { ${componentName} } from "./demos/interactive";
 
 export const metadata = {
   title: "${title}",
@@ -80,11 +89,9 @@ export const metadata = {
 Introduction paragraph describing what this craft explores.
 
 <Demo
-  demo={InteractiveDemo}
-  caption="Interact with the demo to see the effect."
+  use={${componentName}}
   path="app/crafts/${slug}/demos/interactive"
-  controls={[{ type: "switch", name: "enabled", label: "Enabled", defaultValue: true }]}
-  files={["demo.tsx"]}
+  files={["preview.tsx"]}
 />
 
 ## Overview
@@ -108,20 +115,37 @@ Walk through the implementation step by step.
 Wrap up with key takeaways.
 `;
 
-  const demoTsx = `"use client";
+  // index.tsx - createDemo definition
+  const indexTsx = `"use client";
 
-function Placeholder() {
-  return (
-    <div className="flex h-40 items-center justify-center rounded-lg bg-zinc-200">
-      <span className="text-zinc-500">Demo content here</span>
-    </div>
-  );
-}
+import { createDemo } from "~/components/crafts/demo";
+import Preview from "./preview";
 
-export default function Demo({ enabled = true }: { enabled?: boolean }) {
+export const ${componentName} = createDemo({
+  path: import.meta.url,
+  caption: "Interact with the demo to see the effect.",
+
+  controls: [
+    { type: "switch", name: "enabled", label: "Enabled", default: true },
+  ] as const,
+
+  preview: ({ controls }) => <Preview enabled={controls.enabled} />,
+});
+`;
+
+  // preview.tsx - The actual preview component
+  const previewTsx = `"use client";
+
+type PreviewProps = {
+  enabled?: boolean;
+};
+
+export default function Preview({ enabled = true }: PreviewProps) {
   return (
     <div className="p-8">
-      <Placeholder />
+      <div className="flex h-40 items-center justify-center rounded-lg bg-zinc-200">
+        <span className="text-zinc-500">Demo content here</span>
+      </div>
       <p className="mt-4 text-center text-sm text-zinc-500">
         Enabled: {String(enabled)}
       </p>
@@ -133,16 +157,18 @@ export default function Demo({ enabled = true }: { enabled?: boolean }) {
   try {
     await mkdir(interactiveDir, { recursive: true });
     await writeFile(join(postDir, "page.mdx"), pageMdx);
-    await writeFile(join(interactiveDir, "demo.tsx"), demoTsx);
+    await writeFile(join(interactiveDir, "index.tsx"), indexTsx);
+    await writeFile(join(interactiveDir, "preview.tsx"), previewTsx);
 
     console.log(`\n✓ Created craft post: ${slug}`);
     console.log(`  ${postDir}/`);
     console.log(`  ├── page.mdx`);
     console.log(`  └── demos/`);
     console.log(`      └── interactive/`);
-    console.log(`          └── demo.tsx`);
+    console.log(`          ├── index.tsx`);
+    console.log(`          └── preview.tsx`);
     console.log("\nNext steps:");
-    console.log(`  1. Edit page.mdx and demos/interactive/demo.tsx`);
+    console.log(`  1. Edit page.mdx and demos/interactive/*.tsx`);
     console.log(
       `  2. Run pnpm generate:craft-images (with dev server running)\n`
     );
