@@ -1,4 +1,5 @@
 import { Alert } from "~/components/crafts/alert";
+import { Demo } from "~/components/crafts/demo/server";
 import { InteractiveDemo } from "./demos/interactive";
 
 export const metadata = {
@@ -12,7 +13,7 @@ export const metadata = {
 
 Animated tabs use a sliding indicator to show which tab is active. The indicator smoothly transitions between tabs, creating a polished feel that makes the interface feel responsive.
 
-<InteractiveDemo />
+<Demo use={InteractiveDemo} />
 
 By the end of this post, we'll build animated tabs with a sliding indicator using only CSS transitions — no animation libraries required.
 
