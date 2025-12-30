@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Carousel } from "../shared/components";
 import { useScrollShadows } from "../shared/hooks";
 
-export default function Demo() {
+export default function HorizontalScrollShadows() {
   const ref = useRef<HTMLDivElement>(null);
   const [start, end] = useScrollShadows({ ref, axis: "x" });
 

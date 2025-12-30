@@ -1,35 +1,30 @@
-import { Demo } from "~/components/crafts/demo";
-import Preview from "./preview";
+"use client";
 
-export function FixedProgressNoOverflowDemo() {
-  return (
-    <Demo
-      preview={Preview}
-      caption="Without any overflow on our scrolling container, both shadows are correctly hidden."
-      path="app/crafts/scroll-shadows/demos/fixed-progress-no-overflow"
-      controls={[
-        {
-          type: "switch",
-          prop: "showShadows",
-          label: "Shadows",
-          defaultValue: true,
-        },
-      ]}
-      inspector={[
-        {
-          name: "Starting Opacity",
-          prop: "onStartChange",
-          format: "decimal",
-          defaultValue: "0.00",
-        },
-        {
-          name: "Ending Opacity",
-          prop: "onEndChange",
-          format: "decimal",
-          defaultValue: "0.00",
-        },
-      ]}
-      mockBrowser
+import { createDemo } from "~/components/crafts/demo";
+import FixedProgressNoOverflow from "./preview";
+
+export const FixedProgressNoOverflowDemo = createDemo({
+  path: import.meta.url,
+  caption:
+    "Without any overflow on our scrolling container, both shadows are correctly hidden.",
+  mockBrowser: true,
+
+  controls: [
+    { type: "switch", name: "showShadows", label: "Shadows", default: true },
+  ] as const,
+
+  inspector: [
+    { name: "startingOpacity", label: "Starting Opacity" },
+    { name: "endingOpacity", label: "Ending Opacity" },
+  ] as const,
+
+  preview: ({ controls, inspector }) => (
+    <FixedProgressNoOverflow
+      showShadows={controls.showShadows}
+      onOpacityChange={(start, end) => {
+        inspector.startingOpacity.track(start, (v) => v.toFixed(2));
+        inspector.endingOpacity.track(end, (v) => v.toFixed(2));
+      }}
     />
-  );
-}
+  ),
+});

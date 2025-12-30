@@ -1,22 +1,20 @@
 "use client";
 
 import { useRef } from "react";
-import { type MotionValue, motion, useMotionValueEvent } from "framer-motion";
+import { motion, useMotionValueEvent } from "framer-motion";
 
 import { Article } from "../shared/components";
-import { formatDecimal, useBrokenScrollShadows } from "../shared/hooks";
+import { useBrokenScrollShadows } from "../shared/hooks";
 
-type DemoProps = {
-  showShadows?: boolean;
+type BrokenProgressOverflowDemoProps = {
   onStartChange?: (value: number) => void;
   onEndChange?: (value: number) => void;
 };
 
-export default function Demo({
-  showShadows = true,
+export default function BrokenProgressOverflowDemo({
   onStartChange,
   onEndChange,
-}: DemoProps) {
+}: BrokenProgressOverflowDemoProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [start, end] = useBrokenScrollShadows({ ref });
 
@@ -29,27 +27,17 @@ export default function Demo({
       className="group flex h-75 w-full grow flex-col overflow-y-auto overscroll-none [--size:36px]"
       data-fill-width
     >
-      {showShadows && (
-        <motion.div
-          className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
-          style={{ opacity: start }}
-        >
-          <code className="text-sm">
-            opacity: {formatDecimal((start as MotionValue<number>).get())}
-          </code>
-        </motion.div>
-      )}
+      <motion.div
+        className="pointer-events-none sticky top-0 -mb-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+        style={{ opacity: start }}
+      />
+
       <Article className="grow" count={3} />
-      {showShadows && (
-        <motion.div
-          className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
-          style={{ opacity: end }}
-        >
-          <code className="text-sm">
-            opacity: {formatDecimal((end as MotionValue<number>).get())}
-          </code>
-        </motion.div>
-      )}
+
+      <motion.div
+        className="pointer-events-none sticky bottom-0 -mt-(--size) flex h-(--size) shrink-0 items-center justify-center bg-blue-400/30"
+        style={{ opacity: end }}
+      />
     </div>
   );
 }
