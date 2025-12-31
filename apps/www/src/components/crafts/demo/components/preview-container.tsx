@@ -117,15 +117,20 @@ export function PreviewContainer<
 
   return (
     <div
-      className="flex flex-1 items-center justify-center"
+      className={cn(
+        "flex min-w-0 items-center justify-center",
+        // mockBrowser demos fill available space (full-app previews)
+        // non-mockBrowser demos are content-sized (component showcases)
+        mockBrowser && "flex-1",
+        className
+      )}
       data-slot="demo-content"
       key={resetKey}
     >
       <div
         className={cn(
-          "relative flex flex-col overflow-hidden rounded-lg has-[>[data-fill-width]]:w-full",
-          mockBrowser && "border border-slate-700 bg-slate-800",
-          className
+          "relative grid justify-items-center overflow-hidden rounded-lg",
+          mockBrowser && "w-full border border-slate-700 bg-slate-800"
         )}
       >
         {mockBrowser && (

@@ -13,7 +13,7 @@ export default function ScrollShadowsPreview({
 }: ScrollShadowsPreviewProps) {
   return (
     <ScrollShadows
-      className="h-72 w-96 max-w-full overscroll-none rounded-lg bg-white"
+      className="h-72 w-96 overscroll-none rounded-lg bg-white"
       showShadows={showShadows}
     >
       <div className="flex flex-col py-1">

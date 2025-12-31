@@ -119,7 +119,7 @@ export function createDemo<
         />
 
         {/* Main content area */}
-        <div className="component-bg flex flex-col gap-4 p-4 px-(--gutter) py-4 sm:px-8 sm:py-8 lg:flex-row lg:items-start">
+        <div className="component-bg flex flex-col gap-4 p-4 px-(--gutter) py-4 sm:px-8 sm:py-8 lg:flex-row lg:items-start lg:justify-center">
           {/* Preview */}
           <PreviewContainer
             Preview={Preview}
@@ -128,7 +128,6 @@ export function createDemo<
             setInspector={store.setInspector}
             resetKey={store.resetKey}
             mockBrowser={mockBrowser}
-            className="flex-1"
           />
 
           {/* Desktop panels (controls + inspector + code output) */}
