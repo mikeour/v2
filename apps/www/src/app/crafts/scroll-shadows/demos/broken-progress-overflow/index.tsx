@@ -1,26 +1,24 @@
-import { Demo } from "~/components/crafts/demo";
-import Preview from "./preview";
+"use client";
 
-export function BrokenProgressOverflowDemo() {
-  return (
-    <Demo
-      preview={Preview}
-      path="app/crafts/scroll-shadows/demos/broken-progress-overflow"
-      inspector={[
-        {
-          name: "Starting Opacity",
-          prop: "onStartChange",
-          format: "decimal",
-          defaultValue: "0.00",
-        },
-        {
-          name: "Ending Opacity",
-          prop: "onEndChange",
-          format: "decimal",
-          defaultValue: "1.00",
-        },
-      ]}
-      mockBrowser
+import { createDemo } from "~/components/crafts/demo";
+import { formatDecimal } from "../shared/hooks";
+import BrokenProgressOverflow from "./preview";
+
+export const BrokenProgressOverflowDemo = createDemo({
+  path: import.meta.url,
+  mockBrowser: true,
+
+  inspector: [
+    { name: "startingOpacity", label: "Starting Opacity" },
+    { name: "endingOpacity", label: "Ending Opacity" },
+  ] as const,
+
+  preview: ({ inspector }) => (
+    <BrokenProgressOverflow
+      onStartChange={(start) =>
+        inspector.startingOpacity.set(formatDecimal(start))
+      }
+      onEndChange={(end) => inspector.endingOpacity.set(formatDecimal(end))}
     />
-  );
-}
+  ),
+});

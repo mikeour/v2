@@ -1,13 +1,13 @@
-import { Demo } from "~/components/crafts/demo";
-import Preview from "./preview";
+"use client";
 
-export function InteractiveDemo() {
-  return (
-    <Demo
-      preview={Preview}
-      caption="Scroll the article — notice how shadows appear and disappear at the edges."
-      path="app/crafts/scroll-shadows/demos/interactive"
-      mockBrowser
-    />
-  );
-}
+import { createDemo } from "~/components/crafts/demo";
+import ScrollShadowsInteractive from "./preview";
+
+export const InteractiveDemo = createDemo({
+  path: import.meta.url,
+  caption:
+    "Scroll the article — notice how shadows appear and disappear at the edges.",
+  mockBrowser: true,
+
+  preview: () => <ScrollShadowsInteractive />,
+});

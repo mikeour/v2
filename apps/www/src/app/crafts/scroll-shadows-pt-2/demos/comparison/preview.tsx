@@ -5,9 +5,9 @@ import { NOTIFICATIONS } from "../shared/data";
 import { ScrollShadows as CSSVariablesScrollShadows } from "./css-variables";
 import { ScrollShadows as FramerMotionScrollShadows } from "./framer-motion";
 
-export default function Demo() {
+export default function ComparisonPreview() {
   return (
-    <div className="grid w-full gap-8 sm:grid-cols-2">
+    <div className="grid w-full gap-8 sm:grid-cols-2" data-fill-width>
       <div className="flex flex-col gap-2">
         <span className="text-center text-slate-400 text-sm">
           Part 1: Framer Motion

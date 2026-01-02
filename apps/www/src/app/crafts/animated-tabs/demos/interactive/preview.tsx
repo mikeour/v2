@@ -8,7 +8,7 @@ const tabs = [
   { id: "settings", label: "Settings" },
 ];
 
-export default function Demo({ duration = 300 }: { duration?: number }) {
+export default function AnimatedTabs() {
   const [activeTab, setActiveTab] = useState(tabs[0].id);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
   const tabRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
@@ -23,11 +23,10 @@ export default function Demo({ duration = 300 }: { duration?: number }) {
   return (
     <div className="relative mx-auto flex w-fit gap-1 rounded-full bg-zinc-200 p-1">
       <span
-        className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm"
+        className="absolute top-1 bottom-1 rounded-full bg-white shadow-sm transition-all duration-300"
         style={{
           left: indicatorStyle.left,
           width: indicatorStyle.width,
-          transition: `all ${duration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
         }}
       />
       {tabs.map((tab) => (

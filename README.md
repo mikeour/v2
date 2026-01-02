@@ -7,9 +7,10 @@ Personal website and portfolio built with Next.js, deployed on Vercel.
 ```
 apps/
   www/                 # Next.js website (@mikeour/www)
+  storybook/           # Component documentation (@mikeour/storybook)
 packages/
   ui/                  # Shared UI components (@mikeour/ui)
-  integrations/        # Shared third-party integrations (Spotify, Letterboxd, etc)
+  integrations/        # Third-party integrations (Spotify, Letterboxd, TMDB)
   typescript-config/   # Shared TypeScript configs (@mikeour/typescript-config)
 ```
 
@@ -125,32 +126,54 @@ Captures demo screenshots and composites them onto a consistent background. Imag
 ```
 crafts/{slug}/
 ├── page.mdx           # Content with Demo components
-├── demos/             # Self-contained demo directories
-│   └── {demo-name}/
-│       ├── demo.tsx   # Rendered component (required)
-│       ├── data.ts    # Mock data (optional)
-│       └── *.tsx      # Implementation files for code tabs
-└── snippets/          # Code snippets referenced in content
+└── demos/             # Self-contained demo directories
+    └── {demo-name}/
+        ├── index.tsx  # createDemo() definition (required)
+        ├── preview.tsx # Preview component (required)
+        ├── data.ts    # Mock data (optional)
+        └── *.tsx      # Implementation files for code tabs
 ```
 
-### Demo Component
+### Demo System
+
+The demo system has two parts:
+
+1. **`createDemo()`** - Client-side factory that defines controls, inspector, and preview
+2. **`<Demo />`** - Server component that reads code files for display
 
 ```tsx
-import { Demo } from "~/components/crafts/demo";
-import * as MyDemo from "./demos/my-demo/demo";
+// demos/my-demo/index.tsx
+"use client";
+import { createDemo } from "~/components/crafts/demo";
+import Preview from "./preview";
+
+export const MyDemo = createDemo({
+  path: import.meta.url,
+  caption: "Description shown below",
+  controls: [
+    { type: "switch", name: "enabled", label: "Enable", default: true },
+    { type: "slider", name: "size", label: "Size", min: 0, max: 100, default: 50 },
+  ] as const,
+  inspector: [
+    { name: "progress", label: "Progress" },
+  ] as const,
+  preview: ({ controls, inspector }) => (
+    <Preview
+      enabled={controls.enabled}
+      size={controls.size}
+      onProgressChange={(v) => inspector.progress.set(v.toFixed(2))}
+    />
+  ),
+});
+
+// page.mdx
+import { Demo } from "~/components/crafts/demo/server";
+import { MyDemo } from "./demos/my-demo";
 
 <Demo
-  demo={MyDemo}
+  use={MyDemo}
   path="app/crafts/{slug}/demos/my-demo"
-  caption="Description shown below"
-  controls={[
-    { type: "switch", name: "enabled", label: "Enable", defaultValue: true },
-    { type: "slider", name: "size", min: 0, max: 100, defaultValue: 50 },
-  ]}
-  inspector={[
-    { name: "progress", prop: "onProgressChange", format: "decimal", defaultValue: "0.00" },
-  ]}
-  files={["demo.tsx", "component.tsx"]}
+  files={["preview.tsx"]}
 />
 ```
 
@@ -161,7 +184,7 @@ See `apps/www/src/app/crafts/AGENTS.md` for complete conventions.
 ```
 apps/www/src/components/
 ├── crafts/            # Craft-specific components
-│   ├── demo/          # DemoRenderer system (compound components)
+│   ├── demo/          # Demo system (createDemo factory + server component)
 │   ├── alert.tsx      # Callout boxes
 │   └── craft-card.tsx # Listing cards
 ├── mdx/               # MDX rendering components
@@ -184,5 +207,6 @@ This project uses React Server Components. Key patterns:
 
 - Use `"use client"` directive for interactive components
 - Object property access (e.g., `Component.Sub`) doesn't work across RSC boundary - use named exports
-- Functions can't be passed as props across the boundary - use string identifiers (e.g., `format: "decimal"`)
+- Functions can't be passed as props from server to client components
+- The Demo system handles this by having `createDemo()` run client-side while `<Demo />` server component only passes serializable data (highlighted code)
 - `process.env.NODE_ENV` checks work in client components for dev-only features

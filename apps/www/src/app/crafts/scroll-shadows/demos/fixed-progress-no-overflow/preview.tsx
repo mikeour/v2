@@ -1,27 +1,29 @@
 "use client";
 
-import { useRef } from "react";
-import { type MotionValue, motion, useMotionValueEvent } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { type MotionValue, motion } from "framer-motion";
 
 import { Article } from "../shared/components";
 import { formatDecimal, useFixedScrollShadows } from "../shared/hooks";
 
-type DemoProps = {
+type FixedProgressNoOverflowProps = {
   showShadows?: boolean;
-  onStartChange?: (value: number) => void;
-  onEndChange?: (value: number) => void;
+  onOpacityChange?: (
+    start: MotionValue<number>,
+    end: MotionValue<number>
+  ) => void;
 };
 
-export default function Demo({
+export default function FixedProgressNoOverflow({
   showShadows = true,
-  onStartChange,
-  onEndChange,
-}: DemoProps) {
+  onOpacityChange,
+}: FixedProgressNoOverflowProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [start, end] = useFixedScrollShadows({ ref });
 
-  useMotionValueEvent(start, "change", (latest) => onStartChange?.(latest));
-  useMotionValueEvent(end, "change", (latest) => onEndChange?.(latest));
+  useEffect(() => {
+    onOpacityChange?.(start, end);
+  }, [start, end, onOpacityChange]);
 
   return (
     <div

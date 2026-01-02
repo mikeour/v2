@@ -3,19 +3,21 @@
 import { Notification } from "../shared/components";
 import { NOTIFICATIONS } from "../shared/data";
 
-export default function Demo({
+type ScrollProgressProps = {
+  onProgressChange?: (progress: number) => void;
+};
+
+export default function ScrollProgress({
   onProgressChange,
-}: {
-  onProgressChange?: (value: number) => void;
-}) {
+}: ScrollProgressProps) {
   return (
     <div
       className="h-72 w-sm max-w-full overflow-y-auto overscroll-none rounded-lg bg-white"
       onScroll={(e) => {
         const el = e.currentTarget;
         const maxScroll = el.scrollHeight - el.clientHeight;
-        const progress = maxScroll > 0 ? el.scrollTop / maxScroll : 0;
-        onProgressChange?.(progress);
+        const scrollProgress = maxScroll > 0 ? el.scrollTop / maxScroll : 0;
+        onProgressChange?.(scrollProgress);
       }}
     >
       <div className="flex flex-col py-1">

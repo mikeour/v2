@@ -6,6 +6,9 @@
       "~/*": ["./src/*", "../../packages/integrations/src/*"]
     }
   },
+  "mdx": {
+    "checkMdx": true
+  },
   "include": [
     "next-env.d.ts",
     "**/*.ts",

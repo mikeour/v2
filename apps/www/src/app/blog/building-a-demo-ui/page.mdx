@@ -1,0 +1,238 @@
+import { Demo } from "~/components/crafts/demo/server";
+import { TypeInferenceDemo } from "./demos/type-inference";
+import { InspectorFlowDemo } from "./demos/inspector-flow";
+
+# Building a Demo UI: A Journey Through Type-Safe Interactive Components
+
+When building a technical blog, static code snippets only go so far. Readers learn better when they can *interact* with concepts—toggle a switch and see the effect, drag a slider and watch values change. But building interactive demos that are both developer-friendly and type-safe? That's where things get interesting.
+
+This post documents how we built a demo system for our crafts blog. It's a story of constraints, type inference magic, and the dance between server and client in React Server Components.
+
+---
+
+## The Vision
+
+We wanted demos that could:
+
+1. **Show live, interactive previews** of UI components
+2. **Display source code** alongside the preview
+3. **Offer controls** (switches, sliders, selects) that modify the preview
+4. **Report values** from the preview back to an inspector panel
+5. **Be fully type-safe**—no `any` types, full autocomplete
+
+The dream was a simple API like this:
+
+```tsx
+export const MyDemo = createDemo({
+  controls: [
+    { type: "switch", name: "enabled", default: true },
+    { type: "slider", name: "size", min: 0, max: 100, default: 50 },
+  ] as const,
+
+  preview: ({ controls }) => (
+    // TypeScript knows: controls.enabled is boolean, controls.size is number
+    <MyComponent enabled={controls.enabled} size={controls.size} />
+  ),
+});
+```
+
+---
+
+## The Challenge: React Server Components
+
+Our first hurdle was React Server Components (RSC). We needed to:
+
+- **Read source files from disk** to display code (requires `node:fs`)
+- **Handle user interaction** with controls (requires client-side state)
+
+These two concerns can't live in the same component. Server components can read files but can't have state. Client components can have state but can't read files.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    The RSC Boundary                      │
+├─────────────────────────────────────────────────────────┤
+│  SERVER                    │  CLIENT                    │
+│  ✅ Read files (node:fs)   │  ❌ No filesystem access   │
+│  ✅ Syntax highlighting    │  ❌ Would bloat bundle     │
+│  ❌ No useState/useEffect  │  ✅ Full interactivity     │
+│  ❌ No event handlers      │  ✅ Event handlers         │
+└─────────────────────────────────────────────────────────┘
+```
+
+The solution: **split the demo into two components**.
+
+---
+
+## The Architecture
+
+We designed a two-part system:
+
+### 1. `createDemo()` — The Client-Side Factory
+
+A factory function that returns an interactive React component. It handles:
+
+- State management for controls and inspector values
+- Rendering the toolbar, panels, and preview
+- All user interaction
+
+### 2. `<Demo />` — The Server Component
+
+A thin wrapper that:
+
+- Reads source files from disk
+- Syntax-highlights the code with CodeHike
+- Passes the highlighted code to the client component
+
+Here's how they connect:
+
+```tsx
+// page.mdx (Server Context)
+import { Demo } from "~/components/crafts/demo/server";
+import { MyDemo } from "./demos/my-demo";
+
+<Demo
+  use={MyDemo}                              // The client component
+  path="app/blog/my-post/demos/my-demo"     // Where to find the files
+  files={["preview.tsx"]}                   // Which files to show
+/>
+```
+
+The server component reads the files, highlights them, and passes them as a `code` prop to `MyDemo`. The client component renders everything interactive.
+
+---
+
+## Type Inference Magic
+
+Here's where things get fun. We wanted TypeScript to *infer* the shape of controls from the configuration. No manual type annotations required.
+
+The secret ingredient? `as const`.
+
+```tsx
+// Without `as const` — types are widened
+controls: [
+  { type: "switch", name: "enabled", default: true },
+]
+// TypeScript sees: { type: string, name: string, default: boolean }[]
+// Result: controls.enabled is `boolean | number | string` 😢
+
+// With `as const` — types are preserved
+controls: [
+  { type: "switch", name: "enabled", default: true },
+] as const
+// TypeScript sees: readonly [{ type: "switch", name: "enabled", ... }]
+// Result: controls.enabled is `boolean` 🎉
+```
+
+The type system uses the literal `"switch"` type to know this control produces a boolean. Here it is in action:
+
+<Demo
+  use={TypeInferenceDemo}
+  path="app/blog/building-a-demo-ui/demos/type-inference"
+  files={["index.tsx", "preview.tsx"]}
+/>
+
+Look at the "Inferred Types" panel on the right—it shows exactly what TypeScript knows about your controls, derived entirely from the configuration.
+
+---
+
+## The Inspector: Data Flowing Upward
+
+Controls flow *down* to the preview. But what about data that needs to flow *up*? That's what the inspector is for.
+
+Consider a scroll progress demo. The preview tracks scroll position and needs to report it back to the UI. We provide an `inspector` API:
+
+```tsx
+export const ScrollDemo = createDemo({
+  inspector: [
+    { name: "progress", label: "Scroll Progress" },
+  ] as const,
+
+  preview: ({ inspector }) => (
+    <ScrollContainer
+      onScroll={(progress) => {
+        inspector.progress.set(progress.toFixed(2));  // Report value up
+      }}
+    />
+  ),
+});
+```
+
+The `inspector.progress.set()` method updates the inspector panel in real-time. Here's a demo that tracks mouse position:
+
+<Demo
+  use={InspectorFlowDemo}
+  path="app/blog/building-a-demo-ui/demos/inspector-flow"
+  files={["index.tsx", "preview.tsx"]}
+/>
+
+Move your mouse over the box and watch the inspector panel update. The preview component calls `inspector.mouseX.set()` and `inspector.mouseY.set()` on every mouse move.
+
+---
+
+## The Complete Flow
+
+Let's trace what happens when a demo renders:
+
+```
+1. MDX imports the demo
+   └─→ import { MyDemo } from "./demos/my-demo"
+
+2. Server component reads files
+   └─→ Read preview.tsx from disk
+   └─→ Syntax highlight with CodeHike
+   └─→ Pass { code } to MyDemo
+
+3. Client component hydrates
+   └─→ Initialize state from control defaults
+   └─→ Render toolbar, panels, preview
+
+4. User toggles a switch
+   └─→ setControl("enabled", false)
+   └─→ Store updates
+   └─→ Preview re-renders with new prop
+
+5. Preview reports a value
+   └─→ inspector.progress.set("0.75")
+   └─→ Store updates
+   └─→ Inspector panel shows new value
+```
+
+---
+
+## Lessons Learned
+
+### 1. Embrace the RSC Split
+
+At first, having two components felt awkward. But the separation is actually clean:
+
+- Server = data preparation (reading files, highlighting)
+- Client = interactivity (state, events)
+
+Each does one thing well.
+
+### 2. `as const` is Your Friend
+
+TypeScript's literal type inference with `as const` is powerful. It lets you define configuration objects that carry their own type information. No need for generics or manual type annotations.
+
+### 3. Design for Copy-Paste
+
+Preview components should be clean enough to copy into a reader's project. We avoid injecting demo-specific logic into previews—they receive props and report callbacks, nothing more.
+
+### 4. The Factory Pattern Scales
+
+`createDemo()` returns a component, not JSX. This means demos are first-class components that can be imported, tested, and composed. The factory handles all the wiring; you just provide the configuration.
+
+---
+
+## Try It Yourself
+
+If you're building interactive documentation, consider this pattern:
+
+1. **Separate server and client concerns** — Read files on the server, render interactivity on the client
+2. **Use `as const` for configuration** — Get type inference for free
+3. **Design bidirectional data flow** — Controls flow down, inspector values flow up
+4. **Keep previews pure** — They should be copy-paste ready
+
+The full implementation lives in `apps/www/src/components/crafts/demo/`. It's around 500 lines of TypeScript, and the result is a demo system that's a joy to use.
+
+Happy building!

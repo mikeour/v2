@@ -1,5 +1,6 @@
 import { Alert } from "~/components/crafts/alert";
 import { ComparisonTable } from "~/components/crafts/comparison-table";
+import { Demo } from "~/components/crafts/demo/server";
 import { ScrollShadowsDemo } from "./demos/scroll-shadows";
 import { ProgressDemo } from "./demos/progress";
 import { HorizontalDemo } from "./demos/horizontal";
@@ -18,7 +19,7 @@ In [Part 1](/crafts/scroll-shadows), we built scroll shadows using Framer Motion
 
 But Framer Motion adds ~30kb to your bundle. What if we could achieve the same effect with just a small hook and CSS?
 
-<ScrollShadowsDemo />
+<Demo use={ScrollShadowsDemo} />
 
 ## The Goal
 
@@ -44,7 +45,7 @@ const progress =
 
 Dividing gives us a normalized `0` to `1` value, just like Framer Motion.
 
-<ProgressDemo />
+<Demo use={ProgressDemo} />
 
 ## Building the Hook
 
@@ -193,7 +194,7 @@ opacity: calc((1 - var(--scroll-progress, 1)) * var(--has-overflow, 0));
 
 The same pattern works for horizontal scrolling — just swap the axes:
 
-<HorizontalDemo />
+<Demo use={HorizontalDemo} />
 
 ```tsx
 export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
@@ -232,7 +233,7 @@ export function useScrollProgress<T extends HTMLElement = HTMLDivElement>(
 
 ## Comparing the Approaches
 
-<ComparisonDemo />
+<Demo use={ComparisonDemo} />
 
 <ComparisonTable
   headers={["Part 1 (Framer Motion)", "Part 2 (CSS Variables)"]}

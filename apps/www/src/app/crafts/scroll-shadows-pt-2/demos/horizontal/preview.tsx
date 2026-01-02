@@ -5,7 +5,13 @@ import { cn } from "@mikeour/ui/lib/utils";
 import { CAROUSEL_ITEMS } from "./data";
 import { ScrollShadows } from "./scroll-shadows";
 
-export default function Demo({ shadows = true }: { shadows?: boolean }) {
+type HorizontalScrollShadowsProps = {
+  shadows?: boolean;
+};
+
+export default function HorizontalScrollShadows({
+  shadows = true,
+}: HorizontalScrollShadowsProps) {
   return (
     <ScrollShadows
       axis="x"

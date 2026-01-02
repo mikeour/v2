@@ -1,21 +1,22 @@
-import { Demo } from "~/components/crafts/demo";
-import Preview from "./preview";
+"use client";
 
-export function ScrollShadowsDemo() {
-  return (
-    <Demo
-      preview={Preview}
-      caption="Scroll the content and toggle shadows to see the effect."
-      controls={[
-        {
-          type: "switch",
-          prop: "showShadows",
-          label: "Display Shadows",
-          defaultValue: true,
-        },
-      ]}
-      path="app/crafts/scroll-shadows-pt-2/demos/scroll-shadows"
-      files={["preview.tsx", "use-scroll-progress.ts", "scroll-shadows.tsx"]}
-    />
-  );
-}
+import { createDemo } from "~/components/crafts/demo";
+import ScrollShadowsPreview from "./preview";
+
+export const ScrollShadowsDemo = createDemo({
+  path: import.meta.url,
+  caption: "Scroll the content and toggle shadows to see the effect.",
+
+  controls: [
+    {
+      type: "switch",
+      name: "showShadows",
+      label: "Display Shadows",
+      default: true,
+    },
+  ] as const,
+
+  preview: ({ controls }) => (
+    <ScrollShadowsPreview showShadows={controls.showShadows} />
+  ),
+});
