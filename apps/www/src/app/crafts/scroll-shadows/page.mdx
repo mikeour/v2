@@ -1,4 +1,5 @@
 import { Alert } from "~/components/crafts/alert";
+import { Demo } from "~/components/crafts/demo/server";
 import { InteractiveDemo } from "./demos/interactive";
 import { ProgressDemo } from "./demos/progress";
 import { BrokenProgressOverflowDemo } from "./demos/broken-progress-overflow";
@@ -18,7 +19,7 @@ export const metadata = {
 
 Scroll shadows are a visual cue that indicates more content exists beyond the visible area. They fade in as you scroll away from an edge and fade out as you approach it.
 
-<InteractiveDemo />
+<Demo use={InteractiveDemo} />
 
 By the end of this post, we'll build a reusable `<ScrollShadows />` component that adds this effect to any scrollable container. The goal is to make it as simple as:
 
@@ -76,7 +77,11 @@ const { scrollYProgress } = useScroll({ container: articleRef });
 </article>;
 ```
 
-<ProgressDemo />
+<Demo
+  use={ProgressDemo}
+  path="app/crafts/scroll-shadows/demos/progress"
+  files={["preview.tsx"]}
+/>
 
 This gives us our starting point. The `scrollYProgress` value already matches what we need for `startingShadowVisibility` — it's `0` at the top and increases as we scroll.
 
@@ -104,13 +109,13 @@ Here's our initial hook:
 
 Let's visualize both values. Toggle the shadows on to see them respond to scroll:
 
-<BrokenProgressOverflowDemo />
+<Demo use={BrokenProgressOverflowDemo} />
 
 Looking good! But there's a bug hiding. Let's see what happens when the content doesn't overflow:
 
 ## Handling Edge Cases
 
-<BrokenProgressNoOverflowDemo />
+<Demo use={BrokenProgressNoOverflowDemo} />
 
 When a container doesn't overflow, `useScroll` defaults `scrollYProgress` to `1` (not `0`). This means our starting shadow shows at full opacity even though there's nothing to scroll.
 
@@ -133,7 +138,7 @@ const startingShadowVisibility = useTransform(scrollYProgress, (latest) => {
 
 Now both shadows correctly hide when there's no overflow:
 
-<FixedProgressNoOverflowDemo />
+<Demo use={FixedProgressNoOverflowDemo} />
 
 Here's the complete hook:
 
@@ -163,7 +168,11 @@ Here's why it works:
 </div>
 ```
 
-<MarkupDemo />
+<Demo
+  use={MarkupDemo}
+  path="app/crafts/scroll-shadows/demos/markup"
+  files={["preview.tsx"]}
+/>
 
 <Alert variant="tip">
   I'm using Tailwind with a `cn` helper from
@@ -246,7 +255,7 @@ Then update the component to position shadows on left/right for horizontal scrol
 
 Here's horizontal scrolling in action:
 
-<CarouselDemo />
+<Demo use={CarouselDemo} />
 
 ## Final Code
 

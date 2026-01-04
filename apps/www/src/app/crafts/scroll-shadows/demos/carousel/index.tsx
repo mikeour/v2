@@ -1,8 +1,9 @@
-import { Demo } from "~/components/crafts/demo";
-import Preview from "./preview";
+"use client";
 
-export function CarouselDemo() {
-  return (
-    <Demo preview={Preview} path="app/crafts/scroll-shadows/demos/carousel" />
-  );
-}
+import { createDemo } from "~/components/crafts/demo";
+import HorizontalScrollShadows from "./preview";
+
+export const CarouselDemo = createDemo({
+  path: import.meta.url,
+  preview: () => <HorizontalScrollShadows />,
+});
