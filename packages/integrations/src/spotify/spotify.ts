@@ -1,15 +1,17 @@
 import type { TrackData } from "@mikeour/integrations/spotify";
 
-import { getSpotifyAuth, millisToMinutesAndSeconds } from "~/utils";
+import { spotify } from "~/env";
+import { millisToMinutesAndSeconds } from "~/utils";
 
 function getBasicAuth(): string {
-  const { clientId, clientSecret } = getSpotifyAuth();
+  const { clientId, clientSecret } = spotify();
   return Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 }
 
 function getRefreshToken(): string {
-  return getSpotifyAuth().refreshToken;
+  return spotify().refreshToken;
 }
+
 const NOW_PLAYING_ENDPOINT =
   "https://api.spotify.com/v1/me/player/currently-playing";
 const TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks";

@@ -3,23 +3,15 @@ import type {
   TMDBSearchResponse,
 } from "@mikeour/integrations/tmdb";
 
-function getTMDBAuth() {
-  const apiKey = process.env.TMDB_API_KEY;
+import { tmdb } from "~/env";
 
-  if (!apiKey) {
-    throw new Error("TMDB_API_KEY is not set");
-  }
-
-  return { apiKey };
-}
-
-const { apiKey } = getTMDBAuth();
 const BASE_URL = "https://api.themoviedb.org/3";
 
 async function fetchTMDB<T>(
   endpoint: string,
   params: Record<string, string> = {}
 ): Promise<T> {
+  const { apiKey } = tmdb();
   const url = new URL(`${BASE_URL}${endpoint}`);
   url.searchParams.set("api_key", apiKey);
 

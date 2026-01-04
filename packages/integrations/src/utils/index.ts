@@ -15,5 +15,3 @@ export function millisToMinutesAndSeconds(millis: number): string {
   const seconds = ((millis % 60_000) / 1000).toFixed(0);
   return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
 }
-
-export { getLastFMAuth, getSpotifyAuth } from "./auth";
