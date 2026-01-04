@@ -4,9 +4,7 @@ import type {
 } from "@mikeour/integrations/lastfm";
 import type { TrackData } from "@mikeour/integrations/spotify";
 
-import { getLastFMAuth } from "~/utils";
-
-const { apiKey, username } = getLastFMAuth();
+import { lastfm } from "~/env";
 
 const BASE_URL = "https://ws.audioscrobbler.com/2.0/";
 
@@ -14,6 +12,7 @@ async function fetchLastFm<T>(
   method: string,
   params: Record<string, string> = {}
 ): Promise<T> {
+  const { apiKey, username } = lastfm();
   const url = new URL(BASE_URL);
   url.searchParams.set("method", method);
   url.searchParams.set("user", username);

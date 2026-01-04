@@ -21,6 +21,16 @@
     "check": {
       "dependsOn": ["^build"]
     },
+    "test": {
+      "dependsOn": [],
+      "inputs": ["src/**", "vitest.config.ts"],
+      "outputs": ["coverage/**"]
+    },
+    "test:coverage": {
+      "dependsOn": [],
+      "inputs": ["src/**", "vitest.config.ts"],
+      "outputs": ["coverage/**"]
+    },
     "typecheck": {},
     "fix": {},
     "clean": {

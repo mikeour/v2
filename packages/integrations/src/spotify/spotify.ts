@@ -1,10 +1,17 @@
 import type { TrackData } from "@mikeour/integrations/spotify";
 
-import { getSpotifyAuth } from "~/utils";
+import { spotify } from "~/env";
+import { millisToMinutesAndSeconds } from "~/utils";
 
-const { clientId, clientSecret, refreshToken } = getSpotifyAuth();
+function getBasicAuth(): string {
+  const { clientId, clientSecret } = spotify();
+  return Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+}
 
-const basic = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+function getRefreshToken(): string {
+  return spotify().refreshToken;
+}
+
 const NOW_PLAYING_ENDPOINT =
   "https://api.spotify.com/v1/me/player/currently-playing";
 const TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks";
@@ -15,13 +22,13 @@ const RECENTLY_PLAYED_ENDPOINT =
 async function getAccessToken(): Promise<{ access_token: string }> {
   const body = new URLSearchParams({
     grant_type: "refresh_token",
-    refresh_token: refreshToken,
+    refresh_token: getRefreshToken(),
   });
 
   const response = await fetch(TOKEN_ENDPOINT, {
     method: "POST",
     headers: {
-      Authorization: `Basic ${basic}`,
+      Authorization: `Basic ${getBasicAuth()}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: body.toString(),
@@ -119,10 +126,4 @@ export async function getRecentlyPlayedTracks() {
   });
 
   return tracks;
-}
-
-function millisToMinutesAndSeconds(millis: number) {
-  const minutes = Math.floor(millis / 60_000);
-  const seconds = ((millis % 60_000) / 1000).toFixed(0);
-  return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
 }
